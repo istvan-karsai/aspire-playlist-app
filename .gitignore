@@ -427,3 +427,10 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# =========================
+# React / Node Dependencies
+# =========================
+node_modules/
+dist/
+build/
