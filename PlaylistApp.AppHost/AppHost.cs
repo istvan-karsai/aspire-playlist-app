@@ -1,10 +1,12 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder.AddPostgres("postgres")
+                      .WithPgAdmin()
                       .AddDatabase("playlistdb");
 
 var apiService = builder.AddProject<Projects.PlaylistApp_ApiService>("apiservice")
-                        .WithReference(postgres);
+                        .WithReference(postgres)
+                        .WaitFor(postgres);
 
 builder.AddNpmApp("react", "../PlaylistApp.Web", "dev")
        .WithReference(apiService)
