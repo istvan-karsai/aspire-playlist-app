@@ -1,10 +1,12 @@
+using ApiService.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add services to the container.
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
+builder.AddNpgsqlDbContext<AppDbContext>("playlistdb");
 
 var app = builder.Build();
 
