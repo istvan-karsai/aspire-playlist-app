@@ -1,6 +1,6 @@
 namespace ApiService.Entities;
 
-internal class Song
+internal sealed class Song
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;

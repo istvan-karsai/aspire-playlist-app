@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiService.Data;
 
-internal class AppDbContext : DbContext
+internal sealed class AppDbContext : DbContext
 {
     public DbSet<Song> Songs => Set<Song>();
 

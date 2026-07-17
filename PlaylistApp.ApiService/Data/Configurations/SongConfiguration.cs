@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ApiService.Data.Configurations;
 
-internal class SongConfiguration : IEntityTypeConfiguration<Song>
+internal sealed class SongConfiguration : IEntityTypeConfiguration<Song>
 {
     public void Configure(EntityTypeBuilder<Song> builder)
     {
         builder.ToTable("Songs");
 
         builder.HasKey(s => s.Id);
-        
+
         builder.Property(s => s.Id)
                .HasDefaultValueSql("gen_random_uuid()");
 
