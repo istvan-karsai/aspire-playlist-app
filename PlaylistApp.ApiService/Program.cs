@@ -1,5 +1,6 @@
 using PlaylistApp.ApiService.Data;
 using Microsoft.EntityFrameworkCore;
+using PlaylistApp.ApiService.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,4 +28,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapDefaultEndpoints();
+app.MapSongEndpoints();
 app.Run();
