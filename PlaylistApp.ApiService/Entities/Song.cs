@@ -1,4 +1,4 @@
-namespace ApiService.Entities;
+namespace PlaylistApp.ApiService.Entities;
 
 internal sealed class Song
 {

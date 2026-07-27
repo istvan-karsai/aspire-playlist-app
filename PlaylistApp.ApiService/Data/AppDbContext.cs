@@ -1,7 +1,7 @@
-using ApiService.Entities;
+using PlaylistApp.ApiService.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiService.Data;
+namespace PlaylistApp.ApiService.Data;
 
 internal sealed class AppDbContext : DbContext
 {

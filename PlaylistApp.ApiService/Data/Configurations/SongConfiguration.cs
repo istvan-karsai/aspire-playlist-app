@@ -1,8 +1,8 @@
-using ApiService.Entities;
+using PlaylistApp.ApiService.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ApiService.Data.Configurations;
+namespace PlaylistApp.ApiService.Data.Configurations;
 
 internal sealed class SongConfiguration : IEntityTypeConfiguration<Song>
 {
