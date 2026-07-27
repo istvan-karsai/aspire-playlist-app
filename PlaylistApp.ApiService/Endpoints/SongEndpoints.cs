@@ -37,5 +37,18 @@ public static class SongEndpoints
 
             return Results.Created($"/api/songs/{song.Id}", response);
         });
+
+        group.MapGet("/{id:guid}", async (Guid id, AppDbContext db) =>
+        {
+            var song = await db.Songs
+                               .Where(s => s.Id == id)
+                               .Select(s => new SongResponse(s.Id, s.Title, s.Artist, s.Duration))
+                               .FirstOrDefaultAsync();
+            
+            return song is not null ?
+                Results.Ok(song) :
+                Results.NotFound();
+        })
+        .WithName("GetSongById");
     }
 }
