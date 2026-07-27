@@ -30,4 +30,32 @@ public class SongEndpointsTests
         Assert.NotNull(songs);
         Assert.Empty(songs);
     }
+
+    [Fact]
+    public async Task PostSong_CreatesRecord_AndReturns201Created()
+    {
+        // Given
+        var appHost = await DistributedApplicationTestingBuilder
+            .CreateAsync<Projects.PlaylistApp_AppHost>();
+
+        await using var app = await appHost.BuildAsync();
+        await app.StartAsync();
+
+        using var httpClient = app.CreateHttpClient("apiservice");
+
+        var newSong = new CreateSongRequest("Bohemian Rhapsody", "Queen", TimeSpan.FromMinutes(5.91));
+    
+        // When
+        var response = await httpClient.PostAsJsonAsync("/api/songs", newSong);
+    
+        // Then
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        var createdSong = await response.Content.ReadFromJsonAsync<SongResponse>();
+        Assert.NotNull(createdSong);
+        Assert.Equal(newSong.Title, createdSong.Title);
+        Assert.Equal(newSong.Artist, createdSong.Artist);
+        Assert.Equal(newSong.Duration, createdSong.Duration);
+        Assert.NotEqual(Guid.Empty, createdSong.Id);
+    }
 }
