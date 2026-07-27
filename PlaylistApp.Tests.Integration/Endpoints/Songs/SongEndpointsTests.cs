@@ -104,4 +104,58 @@ public class SongEndpointsTests
         // Then
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+
+    [Fact]
+    public async Task PutSong_WhenSongExists_UpdatesRecordAndReturnsNoContent()
+    {
+        // Given
+        var appHost = await DistributedApplicationTestingBuilder
+            .CreateAsync<Projects.PlaylistApp_AppHost>();
+
+        await using var app = await appHost.BuildAsync();
+        await app.StartAsync();
+
+        using var httpClient = app.CreateHttpClient("apiservice");
+
+        var initialSong = new CreateSongRequest("Under Pressure", "Queen", TimeSpan.FromMinutes(4.0));
+        var postResponse = await httpClient.PostAsJsonAsync("/api/songs", initialSong);
+        var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
+        
+        var updateRequest = new UpdateSongRequest("Under Pressure", "Queen & David Bowie", TimeSpan.FromMinutes(4.08));
+    
+        // When
+        var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
+        var putResponse = await httpClient.PutAsJsonAsync(uriWithId, updateRequest);
+    
+        // Then
+        Assert.Equal(HttpStatusCode.NoContent, putResponse.StatusCode);
+
+        var getResponse = await httpClient.GetAsync(uriWithId);
+        var fetchedSong = await getResponse.Content.ReadFromJsonAsync<SongResponse>();
+
+        Assert.Equal("Queen & David Bowie", fetchedSong!.Artist);
+        Assert.Equal(TimeSpan.FromMinutes(4.08), fetchedSong.Duration);
+    }
+
+    [Fact]
+    public async Task PutSong_WhenSongDoesNotExist_ReturnsNotFound()
+    {
+        // Given
+        var appHost = await DistributedApplicationTestingBuilder
+            .CreateAsync<Projects.PlaylistApp_AppHost>();
+
+        await using var app = await appHost.BuildAsync();
+        await app.StartAsync();
+
+        using var httpClient = app.CreateHttpClient("apiservice");
+
+        var updateRequest = new UpdateSongRequest("Ghost Song", "Nobody", TimeSpan.FromMinutes(3));
+    
+        // When
+        var putUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
+        var response = await httpClient.PutAsJsonAsync(putUri, updateRequest);
+    
+        // Then
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }

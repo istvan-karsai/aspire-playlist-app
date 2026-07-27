@@ -50,5 +50,23 @@ public static class SongEndpoints
                 Results.NotFound();
         })
         .WithName("GetSongById");
+
+        group.MapPut("/{id:guid}", async (Guid id, UpdateSongRequest request, AppDbContext db) =>
+        {
+            var song = await db.Songs.FindAsync(id);
+
+            if (song is null)
+            {
+                return Results.NotFound();
+            }
+
+            song.Title = request.Title;
+            song.Artist = request.Artist;
+            song.Duration = request.Duration;
+
+            await db.SaveChangesAsync();
+
+            return Results.NoContent();
+        });
     }
 }
