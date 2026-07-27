@@ -68,5 +68,14 @@ public static class SongEndpoints
 
             return Results.NoContent();
         });
+
+        group.MapDelete("/{id:guid}", async (Guid id, AppDbContext db) =>
+        {
+            var deletedCount = await db.Songs
+                                       .Where(s => s.Id == id)
+                                       .ExecuteDeleteAsync();
+            
+            return deletedCount > 0 ? Results.NoContent() : Results.NotFound();
+        });
     }
 }

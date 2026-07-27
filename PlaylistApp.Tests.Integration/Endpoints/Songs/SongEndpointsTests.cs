@@ -158,4 +158,51 @@ public class SongEndpointsTests
         // Then
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+
+    [Fact]
+    public async Task DeleteSong_WhenSongExists_RemovesRecordAndReturns204NoContent()
+    {
+        // Given
+        var appHost = await DistributedApplicationTestingBuilder
+            .CreateAsync<Projects.PlaylistApp_AppHost>();
+
+        await using var app = await appHost.BuildAsync();
+        await app.StartAsync();
+
+        using var httpClient = app.CreateHttpClient("apiservice");
+
+        var newSong = new CreateSongRequest("Hotel California", "Eagles", TimeSpan.FromMinutes(6.5));
+        var postResponse = await httpClient.PostAsJsonAsync("/api/songs", newSong);
+        var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
+    
+        // When
+        var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
+        var deleteResponse = await httpClient.DeleteAsync(uriWithId);
+    
+        // Then
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        var getResponse = await httpClient.GetAsync(uriWithId);
+        Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteSong_WhenSongDoesNotExist_ReturnsNotFound()
+    {
+        // Given
+        var appHost = await DistributedApplicationTestingBuilder
+            .CreateAsync<Projects.PlaylistApp_AppHost>();
+
+        await using var app = await appHost.BuildAsync();
+        await app.StartAsync();
+
+        using var httpClient = app.CreateHttpClient("apiservice");
+    
+        // When
+        var deleteUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
+        var response = await httpClient.DeleteAsync(deleteUri);
+    
+        // Then
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }
