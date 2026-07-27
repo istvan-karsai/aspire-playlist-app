@@ -1,4 +1,4 @@
-using ApiService.Data;
+using PlaylistApp.ApiService.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
