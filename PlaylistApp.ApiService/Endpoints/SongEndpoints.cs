@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PlaylistApp.ApiService.Data;
 using PlaylistApp.ApiService.DTOs.Songs;
 using PlaylistApp.ApiService.Entities;
+using PlaylistApp.ApiService.Filters;
 
 namespace PlaylistApp.ApiService.Endpoints;
 
@@ -36,7 +37,8 @@ public static class SongEndpoints
             var response = new SongResponse(song.Id, song.Title, song.Artist, song.Duration);
 
             return Results.Created($"/api/songs/{song.Id}", response);
-        });
+        })
+        .AddEndpointFilter<ValidationFilter<CreateSongRequest>>();
 
         group.MapGet("/{id:guid}", async (Guid id, AppDbContext db) =>
         {
@@ -67,7 +69,8 @@ public static class SongEndpoints
             await db.SaveChangesAsync();
 
             return Results.NoContent();
-        });
+        })
+        .AddEndpointFilter<ValidationFilter<UpdateSongRequest>>();
 
         group.MapDelete("/{id:guid}", async (Guid id, AppDbContext db) =>
         {

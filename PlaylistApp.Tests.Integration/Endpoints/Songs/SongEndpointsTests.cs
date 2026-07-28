@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Aspire.Hosting;
 using Aspire.Hosting.Testing;
+using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.DTOs.Songs;
 
 namespace PlaylistApp.Tests.Integration.Endpoints.Songs;
@@ -171,5 +172,58 @@ public class SongEndpointsTests : IAsyncLifetime
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostSong_WhenDataIsInvalid_ReturnsBadRequestAndValidationErrors()
+    {
+        // Arrange
+        var invalidSong = new CreateSongRequest(
+            Title: string.Empty,
+            Artist: new string('A', 101),
+            Duration: TimeSpan.FromMinutes(-1)
+        );
+    
+        // Act
+        var response = await _httpClient.PostAsJsonAsync("/api/songs", invalidSong);
+    
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+        Assert.NotNull(problemDetails);
+        Assert.Multiple(
+            () => Assert.True(problemDetails.Errors.ContainsKey("Title")),
+            () => Assert.True(problemDetails.Errors.ContainsKey("Artist")),
+            () => Assert.True(problemDetails.Errors.ContainsKey("Duration"))
+        );
+    }
+
+    [Fact]
+    public async Task PutSong_WhenDataIsInvalid_ReturnsBadRequestAndValidationErrors()
+    {
+        // Arrange
+        var invalidSong = new UpdateSongRequest(
+            Title: new string('X', 201),
+            Artist: string.Empty,
+            Duration: TimeSpan.Zero
+        );
+        var uri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
+    
+        // Act
+        var response = await _httpClient.PutAsJsonAsync(uri, invalidSong);
+    
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+        Assert.NotNull(problemDetails);
+        Assert.Multiple(
+            () => Assert.True(problemDetails.Errors.ContainsKey("Title")),
+            () => Assert.True(problemDetails.Errors.ContainsKey("Artist")),
+            () => Assert.True(problemDetails.Errors.ContainsKey("Duration"))
+        );
     }
 }

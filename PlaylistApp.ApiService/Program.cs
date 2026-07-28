@@ -1,12 +1,14 @@
 using PlaylistApp.ApiService.Data;
 using Microsoft.EntityFrameworkCore;
 using PlaylistApp.ApiService.Endpoints;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
 builder.Services.AddProblemDetails();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddOpenApi();
 builder.AddNpgsqlDbContext<AppDbContext>("playlistdb");
 
