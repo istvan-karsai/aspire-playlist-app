@@ -16,11 +16,11 @@ internal sealed class SongConfiguration : IEntityTypeConfiguration<Song>
                .HasDefaultValueSql("gen_random_uuid()");
 
         builder.Property(s => s.Title)
-               .HasMaxLength(200)
+               .HasMaxLength(Song.MaxTitleLength)
                .IsRequired();
 
         builder.Property(s => s.Artist)
-               .HasMaxLength(100)
+               .HasMaxLength(Song.MaxArtistLength)
                .IsRequired();
 
         builder.Property(s => s.Duration)
