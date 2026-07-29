@@ -11,13 +11,14 @@ public class ApiSmokeTests
         // Given
         var appHost = await DistributedApplicationTestingBuilder
             .CreateAsync<Projects.PlaylistApp_AppHost>();
-        var healthUri = new Uri("/health", UriKind.Relative);
 
         await using var app = await appHost.BuildAsync();
         await app.StartAsync();
+        
+        using var httpClient = app.CreateHttpClient("apiservice");
+        var healthUri = new Uri("/health", UriKind.Relative);
 
         // When
-        using var httpClient = app.CreateHttpClient("apiservice");
         var response = await httpClient.GetAsync(healthUri);
 
         // Then
