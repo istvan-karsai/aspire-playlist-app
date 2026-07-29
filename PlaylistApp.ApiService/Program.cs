@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PlaylistApp.ApiService.Endpoints;
 using FluentValidation;
 using PlaylistApp.ApiService.ExceptionHandlers;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,11 @@ app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.Title = "Playlist API";
+        options.Theme = ScalarTheme.DeepSpace;
+    });
 }
 
 app.UseHttpsRedirection();
