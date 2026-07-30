@@ -60,3 +60,28 @@ export const deleteSong = async (id: string): Promise<void> => {
         throw new Error('A server error occurred while trying to delete this song. Please try again later.');
     }
 };
+
+export const updateSong = async (id: string, song: Omit<Song, 'id'>): Promise<void> => {
+    const response = await fetch(`/api/songs/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(song),
+    });
+
+    if (!response.ok) {
+        try {
+            const errorData = await response.json();
+
+            if (errorData.errors) {
+                const allMessages = Object.values(errorData.errors).flat() as string[];
+                throw new ApiValidationError(allMessages);
+            }
+        } catch (e) {
+            if (e instanceof ApiValidationError) throw e;
+            if (e instanceof Error && e.message != 'Unexpected end of JSON input') throw e;
+        }
+        throw new Error('An unexpected error occurred while saving.');
+    }
+};
