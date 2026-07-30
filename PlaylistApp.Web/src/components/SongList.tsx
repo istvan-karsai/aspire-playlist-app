@@ -1,9 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteSong, fetchSongs } from "../api/client";
 import type { Song } from "../types/song";
+import { useState } from "react";
+import { EditSongModal } from "./EditSongModal";
 
 export const SongList = () => {
     const queryClient = useQueryClient();
+
+    const [editingSong, setEditingSong] = useState<Song | null>(null);
     
     const { data: songs, isLoading, isError, error } = useQuery<Song[]>({
         queryKey: ['songs'],
@@ -73,6 +77,12 @@ export const SongList = () => {
                                 <td className="p-4 text-gray-600">{song.duration}</td>
                                 <td className="p-4 text-right">
                                     <button
+                                        onClick={() => setEditingSong(song)}
+                                        className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
                                         type="button"
                                         onClick={() => handleDelete(song.id, song.title)}
                                         disabled={deleteMutation.isPending}
@@ -86,6 +96,12 @@ export const SongList = () => {
                     </tbody>
                 </table>
             </div>
+            {editingSong && (
+                <EditSongModal 
+                    song={editingSong} 
+                    onClose={() => setEditingSong(null)} 
+                />
+            )}
         </div>
     );
 };
