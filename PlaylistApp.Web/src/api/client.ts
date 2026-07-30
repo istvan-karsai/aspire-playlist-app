@@ -46,3 +46,17 @@ export const createSong = async (newSong: Omit<Song, 'id'>): Promise<Song> => {
 
     return response.json();
 };
+
+export const deleteSong = async (id: string): Promise<void> => {
+    const response = await fetch(`/api/songs/${id}`, {
+        method: 'DELETE',
+    });
+
+    if (response.status === 404) {
+        throw new Error('This song could not be found. It may have already been deleted.');
+    }
+
+    if (!response.ok) {
+        throw new Error('A server error occurred while trying to delete this song. Please try again later.');
+    }
+};

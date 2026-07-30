@@ -1,12 +1,30 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchSongs } from "../api/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteSong, fetchSongs } from "../api/client";
 import type { Song } from "../types/song";
 
 export const SongList = () => {
+    const queryClient = useQueryClient();
+    
     const { data: songs, isLoading, isError, error } = useQuery<Song[]>({
         queryKey: ['songs'],
         queryFn: fetchSongs,
     });
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteSong,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['songs'] });
+        },
+        onError: (err) => {
+            alert(`Error deleting song: ${err.message}`);
+        }
+    });
+
+    const handleDelete = (id: string, title: string) => {
+        if (window.confirm(`Are you sure you want to permanently delete "${title}"?`)) {
+            deleteMutation.mutate(id);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -33,6 +51,7 @@ export const SongList = () => {
         );
     }
 
+    console.log("Cache State:", queryClient.getQueryCache().getAll());
     return (
         <div className="space-y-4 w-full">
             <h2 className="text-2xl font-semibold tracking-tight">Current Library</h2>
@@ -40,9 +59,10 @@ export const SongList = () => {
                 <table className="w-full min-w-full text-sm table-fixed">
                     <thead className="bg-gray-50 border-b">
                         <tr>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-1/3">Title</th>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-1/3">Artist</th>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-1/3">Duration</th>
+                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-5/12">Title</th>
+                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-4/12">Artist</th>
+                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-2/12">Duration</th>
+                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-1/12">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -51,6 +71,16 @@ export const SongList = () => {
                                 <td className="p-4 font-medium text-gray-900 truncate">{song.title}</td>
                                 <td className="p-4 text-gray-600 truncate">{song.artist}</td>
                                 <td className="p-4 text-gray-600">{song.duration}</td>
+                                <td className="p-4 text-right">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDelete(song.id, song.title)}
+                                        disabled={deleteMutation.isPending}
+                                        className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors disabled:opacity-50"
+                                    >
+                                        {deleteMutation.isPending && deleteMutation.variables === song.id ? 'Deleting...' : 'Delete'}
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
