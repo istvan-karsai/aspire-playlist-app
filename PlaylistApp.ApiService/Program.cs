@@ -4,15 +4,24 @@ using PlaylistApp.ApiService.Endpoints;
 using FluentValidation;
 using PlaylistApp.ApiService.ExceptionHandlers;
 using Scalar.AspNetCore;
+using PlaylistApp.ApiService.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.Services.AddSingleton<PlaylistMetrics>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddOpenApi();
+
+builder.Services.AddOpenTelemetry()
+                .WithMetrics(metrics =>
+                {
+                    metrics.AddMeter(PlaylistMetrics.MeterName);
+                });
+
 builder.AddNpgsqlDbContext<AppDbContext>("playlistdb");
 
 var app = builder.Build();
