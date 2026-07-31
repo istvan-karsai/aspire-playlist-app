@@ -7,35 +7,27 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    name: Build Solution
+  backend:
+    name: .NET Backend
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET 10
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '10.0.x'
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-
-    - name: Build .NET Backend
-      run: dotnet build PlaylistApp.slnx -c Release
-
-    - name: Install Frontend Dependencies
-      working-directory: ./PlaylistApp.Web
-      run: npm ci
-
-    - name: Test React Frontend
-      working-directory: ./PlaylistApp.Web
-      run: npm test -- --run
-
-    - name: Build React Frontend
-      working-directory: ./PlaylistApp.Web
-      run: npm run build
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet build PlaylistApp.slnx -c Release
+  
+  frontend:
+    name: React Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - working-directory: ./PlaylistApp.Web
+        run: npm ci
+      - working-directory: ./PlaylistApp.Web
+        run: npm test -- --run
+      - working-directory: ./PlaylistApp.Web
+        run: npm run build
