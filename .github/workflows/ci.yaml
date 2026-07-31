@@ -23,13 +23,19 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
 
     - name: Build .NET Backend
       run: dotnet build PlaylistApp.slnx -c Release
 
+    - name: Install Frontend Dependencies
+      working-directory: ./PlaylistApp.Web
+      run: npm ci
+
+    - name: Test React Frontend
+      working-directory: ./PlaylistApp.Web
+      run: npm test -- --run
+
     - name: Build React Frontend
       working-directory: ./PlaylistApp.Web
-      run: |
-        npm ci
-        npm run build
+      run: npm run build
