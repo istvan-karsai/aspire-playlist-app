@@ -56,8 +56,9 @@ export const SharedSongForm = ({
             )}
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                 <input
+                    id="title"
                     type="text"
                     required
                     value={title}
@@ -68,8 +69,9 @@ export const SharedSongForm = ({
             </div>
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Artist *</label>
+                <label htmlFor="artist" className="block text-sm font-medium text-gray-700 mb-1">Artist *</label>
                 <input
+                    id="artist"
                     type="text"
                     required
                     value={artist}
@@ -80,8 +82,9 @@ export const SharedSongForm = ({
             </div>
 
             <div className={isHorizontal ? "w-32" : ""}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Duration *</label>
+                <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-1">Duration *</label>
                 <input
+                    id="duration"
                     type="text"
                     required
                     value={duration}
