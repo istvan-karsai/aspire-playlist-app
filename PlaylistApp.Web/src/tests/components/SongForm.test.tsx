@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, expect, it } from 'vitest';
 import { SongForm } from '../../components/SongForm';
+import { UIButtons, UILabels, ValidationMessages } from '../../constants/uiText';
 
 const renderWithQueryClient = (ui: React.ReactElement) => {
     const queryClient = new QueryClient({
@@ -24,10 +25,10 @@ const setupAndFillForm = async (durationValue: string) => {
     const user = userEvent.setup();
     renderWithQueryClient(<SongForm />);
 
-    const titleInput = screen.getByLabelText(/title \*/i);
-    const artistInput = screen.getByLabelText(/artist \*/i);
-    const durationInput = screen.getByLabelText(/duration \*/i);
-    const submitButton = screen.getByRole('button', { name: /save/i });
+    const titleInput = screen.getByLabelText(UILabels.InputTitleLabel);
+    const artistInput = screen.getByLabelText(UILabels.InputArtistLabel);
+    const durationInput = screen.getByLabelText(UILabels.InputDurationLabel);
+    const submitButton = screen.getByRole('button', { name: UIButtons.Save });
 
     await user.type(titleInput, 'Bohemian Rhapsody');
     await user.type(artistInput, 'Queen');
@@ -45,7 +46,7 @@ describe('SongForm Component', () => {
         await user.click(submitButton);
 
         // Assert: Verify custom React validation fires
-        expect(await screen.findByText('Duration must be in hh:mm:ss format.')).toBeInTheDocument();
+        expect(await screen.findByText(ValidationMessages.InvalidDurationFormat)).toBeInTheDocument();
     });
 
     it('successfully submits the form with valid data and clears inputs', async () => {
@@ -56,9 +57,9 @@ describe('SongForm Component', () => {
 
         // Assert: Re-query the DOM to ensure the form was completely remounted and cleared
         await waitFor(() => {
-            expect(screen.getByLabelText(/title \*/i)).toHaveValue('');
-            expect(screen.getByLabelText(/artist \*/i)).toHaveValue('');
-            expect(screen.getByLabelText(/duration \*/i)).toHaveValue('');
+            expect(screen.getByLabelText(UILabels.InputTitleLabel)).toHaveValue('');
+            expect(screen.getByLabelText(UILabels.InputArtistLabel)).toHaveValue('');
+            expect(screen.getByLabelText(UILabels.InputDurationLabel)).toHaveValue('');
         });
     });
 });
