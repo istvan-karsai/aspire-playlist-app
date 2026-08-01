@@ -1,10 +1,11 @@
+import { ApiMessages } from "../constants/uiText";
 import type { Song } from "../types/song";
 
 export class ApiValidationError extends Error {
     public messages: string[];
 
     constructor(messages: string[]) {
-        super("Validation Failed");
+        super(ApiMessages.ValidationFailed);
         this.messages = messages;
         this.name = "ApiValidationError";
     }
@@ -16,12 +17,12 @@ async function apiFetch(endpoint: string, options?: RequestInit): Promise<Respon
     try {
         response = await fetch(endpoint, options);
     } catch (error) {
-        throw new Error('Network error: Could not connect to the server. Please check your connection or try again later.', { cause: error });
+        throw new Error(ApiMessages.NetworkError, { cause: error });
     }
 
     if (!response.ok) {
         if (response.status === 404) {
-            throw new Error('The requested resource could not be found. It may have already been deleted.');
+            throw new Error(ApiMessages.NotFound);
         }
 
         try {

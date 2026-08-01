@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { SongList } from "../../components/SongList";
 import { server } from "../mocks/server";
 import { http, HttpResponse } from "msw";
+import { UILabels } from "../../constants/uiText";
 
 const renderWithQueryClient = (ui: React.ReactElement) => {
     const queryClient = new QueryClient({
@@ -25,7 +26,7 @@ describe('SongList Component', () => {
     it('displays a loading indicator while fetching songs', () => {
         renderWithQueryClient(<SongList />);
 
-        expect(screen.getByText(/loading the song library/i)).toBeInTheDocument();
+        expect(screen.getByText(UILabels.LoadingLibrary)).toBeInTheDocument();
     });
 
     it('displays an empty state message when no songs are returned', async () => {
@@ -37,7 +38,7 @@ describe('SongList Component', () => {
 
         renderWithQueryClient(<SongList />);
 
-        expect(await screen.findByText(/your library is currently empty/i)).toBeInTheDocument();
+        expect(await screen.findByText(UILabels.EmptyLibrary)).toBeInTheDocument();
     });
 
     it('renders a list of songs when data is successfully fetched', async () => {
