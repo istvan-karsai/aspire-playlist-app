@@ -2,5 +2,6 @@
   <Project Path="PlaylistApp.ApiService/PlaylistApp.ApiService.csproj" />
   <Project Path="PlaylistApp.AppHost/PlaylistApp.AppHost.csproj" />
   <Project Path="PlaylistApp.ServiceDefaults/PlaylistApp.ServiceDefaults.csproj" />
+  <Project Path="PlaylistApp.Tests.E2E/PlaylistApp.Tests.E2E.csproj" />
   <Project Path="PlaylistApp.Tests.Integration/PlaylistApp.Tests.Integration.csproj" />
 </Solution>
