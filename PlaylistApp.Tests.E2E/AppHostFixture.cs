@@ -27,9 +27,9 @@ public class AppHostFixture : IAsyncLifetime
 
         // 3. Extract the dynamic URL for the frontend
         var frontendResource = App.Services.GetRequiredService<ResourceNotificationService>();
-        await frontendResource.WaitForResourceAsync("react", KnownResourceStates.Running);
+        await frontendResource.WaitForResourceAsync("frontend", KnownResourceStates.Running);
 
-        using var httpClient = App.CreateHttpClient("react");
+        using var httpClient = App.CreateHttpClient("frontend");
         FrontendAddress = httpClient.BaseAddress?.ToString()
             ?? throw new InvalidOperationException("Could not resolve frontend URL from Aspire.");
     }

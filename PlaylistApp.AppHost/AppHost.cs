@@ -8,7 +8,7 @@ var apiService = builder.AddProject<Projects.PlaylistApp_ApiService>("apiservice
                         .WithReference(postgres)
                         .WaitFor(postgres);
 
-builder.AddNpmApp("react", "../PlaylistApp.Web", "dev")
+builder.AddNpmApp("frontend", "../PlaylistApp.Web", "dev")
        .WithReference(apiService)
        .WithHttpEndpoint(env: "PORT")
        .WithExternalHttpEndpoints();
