@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using PlaylistApp.ApiService.Constants;
 
 namespace PlaylistApp.ApiService.ExceptionHandlers;
 
@@ -18,9 +19,9 @@ public partial class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logg
         var problemDetails = new ProblemDetails
         {
             Status = StatusCodes.Status500InternalServerError,
-            Title = "Internal Server Error",
-            Detail = "An unexpected error occurred while processing your request.",
-            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
+            Title = ErrorTitles.InternalServerError,
+            Detail = ErrorMessages.InternalServerError,
+            Type = ErrorTypes.InternalServerError
         };
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;

@@ -1,4 +1,5 @@
 using FluentValidation;
+using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.DTOs.Songs;
 using PlaylistApp.ApiService.Entities;
 
@@ -9,16 +10,16 @@ public class CreateSongRequestValidator : AbstractValidator<CreateSongRequest>
     public CreateSongRequestValidator()
     {
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("Title is required.")
+            .NotEmpty().WithMessage(ValidationMessages.TitleRequired)
             .MaximumLength(Song.MaxTitleLength)
-            .WithMessage($"Title cannot exceed {Song.MaxTitleLength} characters.");
+            .WithMessage(ValidationMessages.TitleMaxLength);
 
         RuleFor(x => x.Artist)
-            .NotEmpty().WithMessage("Artist is required.")
+            .NotEmpty().WithMessage(ValidationMessages.ArtistRequired)
             .MaximumLength(Song.MaxArtistLength)
-            .WithMessage($"Artist cannot exceed {Song.MaxArtistLength} characters.");
+            .WithMessage(ValidationMessages.ArtistMaxLength);
         
         RuleFor(x => x.Duration)
-            .GreaterThan(TimeSpan.Zero).WithMessage("Duration must be greater than zero.");
+            .GreaterThan(TimeSpan.Zero).WithMessage(ValidationMessages.DurationGreaterThanZero);
     }
 }

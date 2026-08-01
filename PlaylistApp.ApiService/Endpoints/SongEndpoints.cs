@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Data;
 using PlaylistApp.ApiService.DTOs.Songs;
 using PlaylistApp.ApiService.Entities;
@@ -18,7 +21,7 @@ public static class SongEndpoints
                                 .Select(s => new SongResponse(s.Id, s.Title, s.Artist, s.Duration))
                                 .ToListAsync();
 
-            return Results.Ok(songs);       
+            return TypedResults.Ok(songs);       
         });
 
         group.MapPost("/", async (CreateSongRequest request, AppDbContext db) =>
@@ -36,30 +39,41 @@ public static class SongEndpoints
 
             var response = new SongResponse(song.Id, song.Title, song.Artist, song.Duration);
 
-            return Results.Created($"/api/songs/{song.Id}", response);
+            return TypedResults.Created($"/api/songs/{song.Id}", response);
         })
         .AddEndpointFilter<ValidationFilter<CreateSongRequest>>();
 
-        group.MapGet("/{id:guid}", async (Guid id, AppDbContext db) =>
+        group.MapGet("/{id:guid}", async Task<Results<Ok<SongResponse>, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
             var song = await db.Songs
                                .Where(s => s.Id == id)
                                .Select(s => new SongResponse(s.Id, s.Title, s.Artist, s.Duration))
                                .FirstOrDefaultAsync();
             
-            return song is not null ?
-                Results.Ok(song) :
-                Results.NotFound();
+            if (song is null)
+            {
+                return TypedResults.NotFound(new ProblemDetails
+                {
+                    Title = ErrorTitles.NotFound,
+                    Detail = ErrorMessages.SongNotFound
+                });
+            }
+
+            return TypedResults.Ok(song);
         })
         .WithName("GetSongById");
 
-        group.MapPut("/{id:guid}", async (Guid id, UpdateSongRequest request, AppDbContext db) =>
+        group.MapPut("/{id:guid}", async Task<Results<NoContent, NotFound<ProblemDetails>>> (Guid id, UpdateSongRequest request, AppDbContext db) =>
         {
             var song = await db.Songs.FindAsync(id);
 
             if (song is null)
             {
-                return Results.NotFound();
+                return TypedResults.NotFound(new ProblemDetails
+                {
+                    Title = ErrorTitles.NotFound,
+                    Detail = ErrorMessages.SongNotFound
+                });
             }
 
             song.Title = request.Title;
@@ -68,17 +82,26 @@ public static class SongEndpoints
 
             await db.SaveChangesAsync();
 
-            return Results.NoContent();
+            return TypedResults.NoContent();
         })
         .AddEndpointFilter<ValidationFilter<UpdateSongRequest>>();
 
-        group.MapDelete("/{id:guid}", async (Guid id, AppDbContext db) =>
+        group.MapDelete("/{id:guid}", async Task<Results<NoContent, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
             var deletedCount = await db.Songs
                                        .Where(s => s.Id == id)
                                        .ExecuteDeleteAsync();
             
-            return deletedCount > 0 ? Results.NoContent() : Results.NotFound();
+            if (deletedCount == 0)
+            {
+                return TypedResults.NotFound(new ProblemDetails
+                {
+                    Title = ErrorTitles.NotFound,
+                    Detail = ErrorMessages.SongNotFound
+                });
+            }
+
+            return TypedResults.NoContent();
         });
     }
 }
