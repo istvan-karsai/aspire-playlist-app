@@ -1,9 +1,12 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using Aspire.Hosting;
 using Aspire.Hosting.Testing;
 using Microsoft.AspNetCore.Mvc;
+using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.DTOs.Songs;
+using PlaylistApp.ApiService.Entities;
 
 namespace PlaylistApp.Tests.Integration.Endpoints.Songs;
 
@@ -100,6 +103,13 @@ public class SongEndpointsTests : IAsyncLifetime
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        Assert.Multiple(
+            () => Assert.NotNull(problemDetails),
+            () => Assert.Equal(ErrorTitles.NotFound, problemDetails?.Title),
+            () => Assert.Equal(ErrorMessages.SongNotFound, problemDetails?.Detail)
+        );
     }
 
     [Fact]
@@ -140,6 +150,14 @@ public class SongEndpointsTests : IAsyncLifetime
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        Assert.Multiple(
+            () => Assert.NotNull(problemDetails),
+            () => Assert.Equal(ErrorTitles.NotFound, problemDetails?.Title),
+            () => Assert.Equal(ErrorMessages.SongNotFound, problemDetails?.Detail)
+        );
     }
 
     [Fact]
@@ -172,6 +190,14 @@ public class SongEndpointsTests : IAsyncLifetime
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        Assert.Multiple(
+            () => Assert.NotNull(problemDetails),
+            () => Assert.Equal(ErrorTitles.NotFound, problemDetails?.Title),
+            () => Assert.Equal(ErrorMessages.SongNotFound, problemDetails?.Detail)
+        );
     }
 
     [Fact]
@@ -193,11 +219,16 @@ public class SongEndpointsTests : IAsyncLifetime
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.NotNull(problemDetails);
-        Assert.Multiple(
-            () => Assert.True(problemDetails.Errors.ContainsKey("Title")),
-            () => Assert.True(problemDetails.Errors.ContainsKey("Artist")),
-            () => Assert.True(problemDetails.Errors.ContainsKey("Duration"))
-        );
+
+        Assert.Contains(ValidationMessages.TitleRequired, problemDetails.Errors["Title"]);
+
+        var expectedArtistError = ValidationMessages.ArtistMaxLength
+            .Replace("{MaxLength}", 
+                Song.MaxArtistLength.ToString(CultureInfo.InvariantCulture),
+                StringComparison.Ordinal);
+        
+        Assert.Contains(expectedArtistError, problemDetails.Errors["Artist"]);
+        Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"]);
     }
 
     [Fact]
@@ -220,10 +251,17 @@ public class SongEndpointsTests : IAsyncLifetime
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
         Assert.NotNull(problemDetails);
+        
+        var expectedTitleError = ValidationMessages.TitleMaxLength
+            .Replace("{MaxLength}",
+                Song.MaxTitleLength.ToString(CultureInfo.InvariantCulture),
+                StringComparison.Ordinal
+            );
+
         Assert.Multiple(
-            () => Assert.True(problemDetails.Errors.ContainsKey("Title")),
-            () => Assert.True(problemDetails.Errors.ContainsKey("Artist")),
-            () => Assert.True(problemDetails.Errors.ContainsKey("Duration"))
+            () => Assert.Contains(expectedTitleError, problemDetails.Errors["Title"]),
+            () => Assert.Contains(ValidationMessages.ArtistRequired, problemDetails.Errors["Artist"]),
+            () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"])
         );
     }
 }

@@ -1,4 +1,5 @@
 using FluentValidation;
+using PlaylistApp.ApiService.Constants;
 
 namespace PlaylistApp.ApiService.Filters;
 
@@ -24,7 +25,10 @@ public class ValidationFilter<T> : IEndpointFilter
 
         if (!validationResult.IsValid)
         {
-            return Results.ValidationProblem(validationResult.ToDictionary());
+            return TypedResults.ValidationProblem(
+                validationResult.ToDictionary(),
+                title: ErrorTitles.ValidationFailed
+            );
         }
 
         return await next(context);

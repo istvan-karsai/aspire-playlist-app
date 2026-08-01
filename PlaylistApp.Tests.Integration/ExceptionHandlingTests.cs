@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using PlaylistApp.ApiService;
 using PlaylistApp.ApiService.DTOs.Songs;
 using PlaylistApp.ApiService.Data;
+using PlaylistApp.ApiService.Constants;
 
 namespace PlaylistApp.Tests.Integration;
 
@@ -59,9 +60,10 @@ public class ExceptionHandlingTests(WebApplicationFactory<ApiMarker> factory) : 
 
         Assert.Multiple(
             () => Assert.NotNull(problemDetails),
-            () => Assert.Equal("Internal Server Error", problemDetails?.Title),
+            () => Assert.Equal(ErrorTitles.InternalServerError, problemDetails?.Title),
+            () => Assert.Equal(ErrorMessages.InternalServerError, problemDetails?.Detail),
             () => Assert.Equal(StatusCodes.Status500InternalServerError, problemDetails?.Status),
-            () => Assert.Equal("https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1", problemDetails?.Type)
+            () => Assert.Equal(ErrorTypes.InternalServerError, problemDetails?.Type)
         );
     }
 }
