@@ -56,7 +56,7 @@ public class SongEndpointsTests : IAsyncLifetime
     public async Task PostSong_CreatesRecord_AndReturns201Created()
     {
         // Arrange
-        var newSong = new CreateSongRequest("Bohemian Rhapsody", "Queen", TimeSpan.FromMinutes(5.91));
+        var newSong = new CreateSongRequest("Bohemian Rhapsody", TimeSpan.FromMinutes(5.91));
     
         // Act
         var response = await _httpClient.PostAsJsonAsync("/api/songs", newSong);
@@ -68,7 +68,6 @@ public class SongEndpointsTests : IAsyncLifetime
         Assert.NotNull(createdSong);
         Assert.Multiple(
             () => Assert.Equal(newSong.Title, createdSong.Title),
-            () => Assert.Equal(newSong.Artist, createdSong.Artist),
             () => Assert.Equal(newSong.Duration, createdSong.Duration),
             () => Assert.NotEqual(Guid.Empty, createdSong.Id)
         );
@@ -78,7 +77,7 @@ public class SongEndpointsTests : IAsyncLifetime
     public async Task GetById_WhenSongExists_ReturnsOkAndSong()
     {
         // Arrange
-        var newSong = new CreateSongRequest("Stairway to Heaven", "Led Zeppelin", TimeSpan.FromMinutes(8.03));
+        var newSong = new CreateSongRequest("Stairway to Heaven", TimeSpan.FromMinutes(8.03));
         var postResponse = await _httpClient.PostAsJsonAsync("/api/songs", newSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         var getByIdUri = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
@@ -116,11 +115,11 @@ public class SongEndpointsTests : IAsyncLifetime
     public async Task PutSong_WhenSongExists_UpdatesRecordAndReturnsNoContent()
     {
         // Arrange
-        var initialSong = new CreateSongRequest("Under Pressure", "Queen", TimeSpan.FromMinutes(4.0));
+        var initialSong = new CreateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.0));
         var postResponse = await _httpClient.PostAsJsonAsync("/api/songs", initialSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         
-        var updateRequest = new UpdateSongRequest("Under Pressure", "Queen & David Bowie", TimeSpan.FromMinutes(4.08));
+        var updateRequest = new UpdateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.08));
         var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
     
         // Act
@@ -132,17 +131,14 @@ public class SongEndpointsTests : IAsyncLifetime
         var getResponse = await _httpClient.GetAsync(uriWithId);
         var fetchedSong = await getResponse.Content.ReadFromJsonAsync<SongResponse>();
 
-        Assert.Multiple(
-            () => Assert.Equal("Queen & David Bowie", fetchedSong!.Artist),
-            () => Assert.Equal(TimeSpan.FromMinutes(4.08), fetchedSong!.Duration)
-        );
+        Assert.Equal(TimeSpan.FromMinutes(4.08), fetchedSong!.Duration);
     }
 
     [Fact]
     public async Task PutSong_WhenSongDoesNotExist_ReturnsNotFound()
     {
         // Arrange
-        var updateRequest = new UpdateSongRequest("Ghost Song", "Nobody", TimeSpan.FromMinutes(3));
+        var updateRequest = new UpdateSongRequest("Ghost Song", TimeSpan.FromMinutes(3));
         var putUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
     
         // Act
@@ -164,7 +160,7 @@ public class SongEndpointsTests : IAsyncLifetime
     public async Task DeleteSong_WhenSongExists_RemovesRecordAndReturns204NoContent()
     {
         // Arrange
-        var newSong = new CreateSongRequest("Hotel California", "Eagles", TimeSpan.FromMinutes(6.5));
+        var newSong = new CreateSongRequest("Hotel California", TimeSpan.FromMinutes(6.5));
         var postResponse = await _httpClient.PostAsJsonAsync("/api/songs", newSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
@@ -206,7 +202,6 @@ public class SongEndpointsTests : IAsyncLifetime
         // Arrange
         var invalidSong = new CreateSongRequest(
             Title: string.Empty,
-            Artist: new string('A', 101),
             Duration: TimeSpan.FromMinutes(-1)
         );
     
@@ -220,15 +215,10 @@ public class SongEndpointsTests : IAsyncLifetime
 
         Assert.NotNull(problemDetails);
 
-        Assert.Contains(ValidationMessages.TitleRequired, problemDetails.Errors["Title"]);
-
-        var expectedArtistError = ValidationMessages.ArtistMaxLength
-            .Replace("{MaxLength}", 
-                Song.MaxArtistLength.ToString(CultureInfo.InvariantCulture),
-                StringComparison.Ordinal);
-        
-        Assert.Contains(expectedArtistError, problemDetails.Errors["Artist"]);
-        Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"]);
+        Assert.Multiple(
+            () => Assert.Contains(ValidationMessages.TitleRequired, problemDetails.Errors["Title"]),
+            () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"])
+        );
     }
 
     [Fact]
@@ -237,7 +227,6 @@ public class SongEndpointsTests : IAsyncLifetime
         // Arrange
         var invalidSong = new UpdateSongRequest(
             Title: new string('X', 201),
-            Artist: string.Empty,
             Duration: TimeSpan.Zero
         );
         var uri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
@@ -260,7 +249,6 @@ public class SongEndpointsTests : IAsyncLifetime
 
         Assert.Multiple(
             () => Assert.Contains(expectedTitleError, problemDetails.Errors["Title"]),
-            () => Assert.Contains(ValidationMessages.ArtistRequired, problemDetails.Errors["Artist"]),
             () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"])
         );
     }

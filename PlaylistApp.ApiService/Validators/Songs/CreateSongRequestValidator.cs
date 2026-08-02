@@ -13,11 +13,6 @@ public class CreateSongRequestValidator : AbstractValidator<CreateSongRequest>
             .NotEmpty().WithMessage(ValidationMessages.TitleRequired)
             .MaximumLength(Song.MaxTitleLength)
             .WithMessage(ValidationMessages.TitleMaxLength);
-
-        RuleFor(x => x.Artist)
-            .NotEmpty().WithMessage(ValidationMessages.ArtistRequired)
-            .MaximumLength(Song.MaxArtistLength)
-            .WithMessage(ValidationMessages.ArtistMaxLength);
         
         RuleFor(x => x.Duration)
             .GreaterThan(TimeSpan.Zero).WithMessage(ValidationMessages.DurationGreaterThanZero);

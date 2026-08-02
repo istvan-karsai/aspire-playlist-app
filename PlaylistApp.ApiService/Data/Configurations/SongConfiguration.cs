@@ -19,11 +19,12 @@ internal sealed class SongConfiguration : IEntityTypeConfiguration<Song>
                .HasMaxLength(Song.MaxTitleLength)
                .IsRequired();
 
-        builder.Property(s => s.Artist)
-               .HasMaxLength(Song.MaxArtistLength)
-               .IsRequired();
-
         builder.Property(s => s.Duration)
                .IsRequired();
+
+        // Skip Navigation Mapping
+        builder.HasMany(s => s.Artists)
+               .WithMany(a => a.Songs)
+               .UsingEntity<SongArtist>();
     }
 }
