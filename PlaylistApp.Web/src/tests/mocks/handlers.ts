@@ -1,9 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import type { Song } from '../../types/song';
-
-const mockSongs = [
-    { id: '123e4567-e89b-12d3-a456-426614174000', title: 'Test Song 1', artist: 'Test Artist', duration: '00:03:00' },
-];
+import { mockSongs } from './mockData';
 
 export const handlers = [
     http.get('/api/songs', () => {

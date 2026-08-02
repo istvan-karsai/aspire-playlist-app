@@ -5,6 +5,7 @@ import { SongList } from "../../components/SongList";
 import { server } from "../mocks/server";
 import { http, HttpResponse } from "msw";
 import { UILabels } from "../../constants/uiText";
+import { mockValidSong } from "../mocks/mockData";
 
 const renderWithQueryClient = (ui: React.ReactElement) => {
     const queryClient = new QueryClient({
@@ -46,8 +47,8 @@ describe('SongList Component', () => {
         renderWithQueryClient(<SongList />);
 
         // Act & Assert: Wait for the async API call to finish and populate the DOM
-        expect(await screen.findByText('Test Song 1')).toBeInTheDocument();
-        expect(screen.getByText('Test Artist')).toBeInTheDocument();
-        expect(screen.getByText('00:03:00')).toBeInTheDocument();
+        expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
+        expect(screen.getByText(mockValidSong.artist)).toBeInTheDocument();
+        expect(screen.getByText(mockValidSong.duration)).toBeInTheDocument();
     });
 });
