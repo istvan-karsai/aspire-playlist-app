@@ -2,9 +2,16 @@ namespace PlaylistApp.ApiService.Constants;
 
 public static class ValidationMessages
 {
-    public const string TitleRequired = "Title is required.";
-    public const string TitleMaxLength = "Title cannot exceed {MaxLength} characters.";
-    public const string ArtistRequired = "Artist is required.";
-    public const string ArtistMaxLength = "Artist cannot exceed {MaxLength} characters.";
+    // Song messages
+    public const string SongTitleRequired = "Title is required.";
+    public const string SongTitleMaxLength = "Title cannot exceed {MaxLength} characters.";
     public const string DurationGreaterThanZero = "Duration must be greater than zero.";
+
+    // Artist messages
+    public const string NameRequired = "Name is required.";
+    public const string NameMaxLength = "Name cannot exceed {MaxLength} characters.";
+    public const string BioMaxLength = "Bio cannot exceed {MaxLength} characters.";
+    public const string CountryMaxLength = "Country cannot exceed {MaxLength} characters.";
+    public const string ImageUrlMaxLength = "Image URL cannot exceed {MaxLength} characters.";
+    public const string InvalidYear = "Active From Year must be between {From} and {To}.";
 }

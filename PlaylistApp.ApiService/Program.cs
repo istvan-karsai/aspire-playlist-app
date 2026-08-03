@@ -54,6 +54,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapDefaultEndpoints();
 app.MapSongEndpoints();
+app.MapArtistEndpoints();
 app.Run();
 
 // This exists purely so WebApplicationFactory can locate this assembly without name collisions
