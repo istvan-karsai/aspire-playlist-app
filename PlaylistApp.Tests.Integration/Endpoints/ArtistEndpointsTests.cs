@@ -8,7 +8,7 @@ using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.DTOs.Artists;
 using PlaylistApp.ApiService.Entities;
 
-namespace PlaylistApp.Tests.Integration.Endpoints.Artists;
+namespace PlaylistApp.Tests.Integration.Endpoints;
 
 public class ArtistEndpointsTests : IAsyncLifetime
 {
