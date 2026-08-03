@@ -10,9 +10,9 @@ public class CreateSongRequestValidator : AbstractValidator<CreateSongRequest>
     public CreateSongRequestValidator()
     {
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage(ValidationMessages.TitleRequired)
+            .NotEmpty().WithMessage(ValidationMessages.SongTitleRequired)
             .MaximumLength(Song.MaxTitleLength)
-            .WithMessage(ValidationMessages.TitleMaxLength);
+            .WithMessage(ValidationMessages.SongTitleMaxLength);
         
         RuleFor(x => x.Duration)
             .GreaterThan(TimeSpan.Zero).WithMessage(ValidationMessages.DurationGreaterThanZero);

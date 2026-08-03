@@ -216,7 +216,7 @@ public class SongEndpointsTests : IAsyncLifetime
         Assert.NotNull(problemDetails);
 
         Assert.Multiple(
-            () => Assert.Contains(ValidationMessages.TitleRequired, problemDetails.Errors["Title"]),
+            () => Assert.Contains(ValidationMessages.SongTitleRequired, problemDetails.Errors["Title"]),
             () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"])
         );
     }
@@ -241,7 +241,7 @@ public class SongEndpointsTests : IAsyncLifetime
 
         Assert.NotNull(problemDetails);
         
-        var expectedTitleError = ValidationMessages.TitleMaxLength
+        var expectedTitleError = ValidationMessages.SongTitleMaxLength
             .Replace("{MaxLength}",
                 Song.MaxTitleLength.ToString(CultureInfo.InvariantCulture),
                 StringComparison.Ordinal
