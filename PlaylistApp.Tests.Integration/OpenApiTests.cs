@@ -8,6 +8,7 @@ using PlaylistApp.ApiService.Data;
 
 namespace PlaylistApp.Tests.Integration;
 
+[Trait("Category", "Integration")]
 public class OpenApiTests(WebApplicationFactory<ApiMarker> factory) : IClassFixture<WebApplicationFactory<ApiMarker>>
 {
     [Fact]
