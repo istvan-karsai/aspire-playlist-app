@@ -49,7 +49,7 @@ public class ExceptionHandlingTests(WebApplicationFactory<ApiMarker> factory) : 
             });
         }).CreateClient();
 
-        var request = new CreateSongRequest("Valid Title", TimeSpan.FromMinutes(3));
+        var request = new CreateSongRequest("Valid Title", TimeSpan.FromMinutes(3), []);
 
         // Act
         var response = await client.PostAsJsonAsync("/api/songs", request);

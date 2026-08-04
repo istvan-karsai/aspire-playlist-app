@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
+using PlaylistApp.ApiService.DTOs.Artists;
 using PlaylistApp.ApiService.DTOs.Songs;
 using PlaylistApp.ApiService.Entities;
 
@@ -30,7 +31,7 @@ public class SongEndpointsTests : BaseIntegrationTest
     public async Task PostSong_CreatesRecord_AndReturns201Created()
     {
         // Arrange
-        var newSong = new CreateSongRequest("Bohemian Rhapsody", TimeSpan.FromMinutes(5.91));
+        var newSong = new CreateSongRequest("Bohemian Rhapsody", TimeSpan.FromMinutes(5.91), []);
     
         // Act
         var response = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
@@ -43,7 +44,40 @@ public class SongEndpointsTests : BaseIntegrationTest
         Assert.Multiple(
             () => Assert.Equal(newSong.Title, createdSong.Title),
             () => Assert.Equal(newSong.Duration, createdSong.Duration),
-            () => Assert.NotEqual(Guid.Empty, createdSong.Id)
+            () => Assert.NotEqual(Guid.Empty, createdSong.Id),
+            () => Assert.Empty(createdSong.Artists)
+        );
+    }
+
+    [Fact]
+    public async Task PostSong_WithArtistIds_CreatesRecordAndLinksArtists()
+    {
+        // Arrange
+        var createArtistRequest = new CreateArtistRequest(
+            Name: "Queen", 
+            Bio: null, 
+            ActiveFromYear: null, 
+            Country: null, 
+            ImageUrl: null
+        );
+        var artistPostResponse = await HttpClient.PostAsJsonAsync("/api/artists", createArtistRequest);
+        var createdArtist = await artistPostResponse.Content.ReadFromJsonAsync<ArtistResponse>();
+
+        var newSong = new CreateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.08), [createdArtist!.Id]);
+    
+        // Act
+        var response = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
+    
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        var createdSong = await response.Content.ReadFromJsonAsync<SongResponse>();
+        Assert.NotNull(createdSong);
+
+        Assert.Multiple(
+            () => Assert.Single(createdSong.Artists),
+            () => Assert.Equal(createdArtist.Id, createdSong.Artists[0].Id),
+            () => Assert.Equal(createdArtist.Name, createdSong.Artists[0].Name)
         );
     }
 
@@ -51,7 +85,7 @@ public class SongEndpointsTests : BaseIntegrationTest
     public async Task GetById_WhenSongExists_ReturnsOkAndSong()
     {
         // Arrange
-        var newSong = new CreateSongRequest("Stairway to Heaven", TimeSpan.FromMinutes(8.03));
+        var newSong = new CreateSongRequest("Stairway to Heaven", TimeSpan.FromMinutes(8.03), []);
         var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         var getByIdUri = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
@@ -89,11 +123,11 @@ public class SongEndpointsTests : BaseIntegrationTest
     public async Task PutSong_WhenSongExists_UpdatesRecordAndReturnsNoContent()
     {
         // Arrange
-        var initialSong = new CreateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.0));
+        var initialSong = new CreateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.0), []);
         var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", initialSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         
-        var updateRequest = new UpdateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.08));
+        var updateRequest = new UpdateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.08), []);
         var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
     
         // Act
@@ -112,7 +146,7 @@ public class SongEndpointsTests : BaseIntegrationTest
     public async Task PutSong_WhenSongDoesNotExist_ReturnsNotFound()
     {
         // Arrange
-        var updateRequest = new UpdateSongRequest("Ghost Song", TimeSpan.FromMinutes(3));
+        var updateRequest = new UpdateSongRequest("Ghost Song", TimeSpan.FromMinutes(3), []);
         var putUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
     
         // Act
@@ -134,7 +168,7 @@ public class SongEndpointsTests : BaseIntegrationTest
     public async Task DeleteSong_WhenSongExists_RemovesRecordAndReturns204NoContent()
     {
         // Arrange
-        var newSong = new CreateSongRequest("Hotel California", TimeSpan.FromMinutes(6.5));
+        var newSong = new CreateSongRequest("Hotel California", TimeSpan.FromMinutes(6.5), []);
         var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
@@ -176,7 +210,8 @@ public class SongEndpointsTests : BaseIntegrationTest
         // Arrange
         var invalidSong = new CreateSongRequest(
             Title: string.Empty,
-            Duration: TimeSpan.FromMinutes(-1)
+            Duration: TimeSpan.FromMinutes(-1),
+            ArtistIds: null! // Simulates missing property in JSON payload
         );
     
         // Act
@@ -191,7 +226,8 @@ public class SongEndpointsTests : BaseIntegrationTest
 
         Assert.Multiple(
             () => Assert.Contains(ValidationMessages.SongTitleRequired, problemDetails.Errors["Title"]),
-            () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"])
+            () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"]),
+            () => Assert.Contains(ValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
         );
     }
 
@@ -201,7 +237,8 @@ public class SongEndpointsTests : BaseIntegrationTest
         // Arrange
         var invalidSong = new UpdateSongRequest(
             Title: new string('X', 201),
-            Duration: TimeSpan.Zero
+            Duration: TimeSpan.Zero,
+            ArtistIds: null! // Simulates missing property in JSON payload
         );
         var uri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
     
@@ -223,7 +260,8 @@ public class SongEndpointsTests : BaseIntegrationTest
 
         Assert.Multiple(
             () => Assert.Contains(expectedTitleError, problemDetails.Errors["Title"]),
-            () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"])
+            () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"]),
+            () => Assert.Contains(ValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
         );
     }
 }

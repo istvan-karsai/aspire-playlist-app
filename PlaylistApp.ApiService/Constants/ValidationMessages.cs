@@ -6,6 +6,7 @@ public static class ValidationMessages
     public const string SongTitleRequired = "Title is required.";
     public const string SongTitleMaxLength = "Title cannot exceed {MaxLength} characters.";
     public const string DurationGreaterThanZero = "Duration must be greater than zero.";
+    public const string ArtistIdsRequired = "The Artist identifiers collection cannot be null";
 
     // Artist messages
     public const string NameRequired = "Name is required.";
