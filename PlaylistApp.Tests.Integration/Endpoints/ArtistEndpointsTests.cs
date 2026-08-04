@@ -1,8 +1,6 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
-using Aspire.Hosting;
-using Aspire.Hosting.Testing;
 using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.DTOs.Artists;
@@ -10,31 +8,8 @@ using PlaylistApp.ApiService.Entities;
 
 namespace PlaylistApp.Tests.Integration.Endpoints;
 
-public class ArtistEndpointsTests : IAsyncLifetime
+public class ArtistEndpointsTests : BaseIntegrationTest
 {
-    private DistributedApplication _app = null!;
-    private HttpClient _httpClient = null!;
-
-    public async Task InitializeAsync()
-    {
-        var appHost = await DistributedApplicationTestingBuilder
-            .CreateAsync<Projects.PlaylistApp_AppHost>();
-        
-        _app = await appHost.BuildAsync();
-        await _app.StartAsync();
-
-        _httpClient = _app.CreateHttpClient("apiservice");
-    }
-
-    public async Task DisposeAsync()
-    {
-        _httpClient.Dispose();
-        if (_app is not null)
-        {
-            await _app.DisposeAsync();
-        }
-    }
-
     [Fact]
     public async Task GetArtists_ReturnsOk_AndEmptyListInitially()
     {
@@ -42,7 +17,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
         var getUri = new Uri("/api/artists", UriKind.Relative);
     
         // Act
-        var response = await _httpClient.GetAsync(getUri);
+        var response = await HttpClient.GetAsync(getUri);
         var artists = await response.Content.ReadFromJsonAsync<List<ArtistResponse>>();
     
         // Assert
@@ -64,7 +39,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
         );
     
         // Act
-        var response = await _httpClient.PostAsJsonAsync("/api/artists", newArtist);
+        var response = await HttpClient.PostAsJsonAsync("/api/artists", newArtist);
     
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -91,12 +66,12 @@ public class ArtistEndpointsTests : IAsyncLifetime
             Country: "UK",
             ImageUrl: null
         );
-        var postResponse = await _httpClient.PostAsJsonAsync("/api/artists", newArtist);
+        var postResponse = await HttpClient.PostAsJsonAsync("/api/artists", newArtist);
         var createdArtist = await postResponse.Content.ReadFromJsonAsync<ArtistResponse>();
         var getByIdUri = new Uri($"/api/artists/{createdArtist!.Id}", UriKind.Relative);
     
         // Act
-        var getResponse = await _httpClient.GetAsync(getByIdUri);
+        var getResponse = await HttpClient.GetAsync(getByIdUri);
     
         // Assert
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
@@ -112,7 +87,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
         var getByIdUri = new Uri($"/api/artists/{Guid.NewGuid()}", UriKind.Relative);
 
         // Act
-        var response = await _httpClient.GetAsync(getByIdUri);
+        var response = await HttpClient.GetAsync(getByIdUri);
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -136,7 +111,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
             Country: null,
             ImageUrl: null
         );
-        var postResponse = await _httpClient.PostAsJsonAsync("/api/artists", initialArtist);
+        var postResponse = await HttpClient.PostAsJsonAsync("/api/artists", initialArtist);
         var createdArtist = await postResponse.Content.ReadFromJsonAsync<ArtistResponse>();
 
         var updateRequest = new UpdateArtistRequest(
@@ -149,12 +124,12 @@ public class ArtistEndpointsTests : IAsyncLifetime
         var uriWithId = new Uri($"/api/artists/{createdArtist!.Id}", UriKind.Relative);
     
         // Act
-        var putResponse = await _httpClient.PutAsJsonAsync(uriWithId, updateRequest);
+        var putResponse = await HttpClient.PutAsJsonAsync(uriWithId, updateRequest);
     
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, putResponse.StatusCode);
 
-        var getResponse = await _httpClient.GetAsync(uriWithId);
+        var getResponse = await HttpClient.GetAsync(uriWithId);
         var fetchedArtist = await getResponse.Content.ReadFromJsonAsync<ArtistResponse>();
 
         Assert.Multiple(
@@ -177,7 +152,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
         var putUri = new Uri($"/api/artists/{Guid.NewGuid()}", UriKind.Relative);
     
         // Act
-        var response = await _httpClient.PutAsJsonAsync(putUri, updateRequest);
+        var response = await HttpClient.PutAsJsonAsync(putUri, updateRequest);
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -201,17 +176,17 @@ public class ArtistEndpointsTests : IAsyncLifetime
             Country: "USA",
             ImageUrl: null
         );
-        var postResponse = await _httpClient.PostAsJsonAsync("/api/artists", newArtist);
+        var postResponse = await HttpClient.PostAsJsonAsync("/api/artists", newArtist);
         var createdArtist = await postResponse.Content.ReadFromJsonAsync<ArtistResponse>();
         var uriWithId = new Uri($"/api/artists/{createdArtist!.Id}", UriKind.Relative);
     
         // Act
-        var deleteResponse = await _httpClient.DeleteAsync(uriWithId);
+        var deleteResponse = await HttpClient.DeleteAsync(uriWithId);
     
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
 
-        var getResponse = await _httpClient.GetAsync(uriWithId);
+        var getResponse = await HttpClient.GetAsync(uriWithId);
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
     }
     
@@ -222,7 +197,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
         var deleteUri = new Uri($"/api/artists/{Guid.NewGuid()}", UriKind.Relative);
     
         // Act
-        var response = await _httpClient.DeleteAsync(deleteUri);
+        var response = await HttpClient.DeleteAsync(deleteUri);
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -248,7 +223,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
         );
     
         // Act
-        var response = await _httpClient.PostAsJsonAsync("/api/artists", invalidArtist);
+        var response = await HttpClient.PostAsJsonAsync("/api/artists", invalidArtist);
     
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -289,7 +264,7 @@ public class ArtistEndpointsTests : IAsyncLifetime
         var putUri = new Uri($"/api/artists/{Guid.NewGuid()}", UriKind.Relative); 
     
         // Act
-        var response = await _httpClient.PutAsJsonAsync(putUri, invalidArtist);
+        var response = await HttpClient.PutAsJsonAsync(putUri, invalidArtist);
     
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

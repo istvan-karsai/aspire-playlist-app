@@ -14,6 +14,7 @@ using PlaylistApp.ApiService.Constants;
 
 namespace PlaylistApp.Tests.Integration;
 
+[Trait("Category", "Integration")]
 public class ExceptionHandlingTests(WebApplicationFactory<ApiMarker> factory) : IClassFixture<WebApplicationFactory<ApiMarker>>
 {
     private sealed class CrashingSongValidator : AbstractValidator<CreateSongRequest>

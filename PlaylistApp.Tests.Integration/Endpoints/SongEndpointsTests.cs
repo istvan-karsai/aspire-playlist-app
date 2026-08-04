@@ -1,8 +1,6 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
-using Aspire.Hosting;
-using Aspire.Hosting.Testing;
 using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.DTOs.Songs;
@@ -10,32 +8,8 @@ using PlaylistApp.ApiService.Entities;
 
 namespace PlaylistApp.Tests.Integration.Endpoints;
 
-[Trait("Category", "Integration")]
-public class SongEndpointsTests : IAsyncLifetime
+public class SongEndpointsTests : BaseIntegrationTest
 {
-    private DistributedApplication _app = null!;
-    private HttpClient _httpClient = null!;
-
-    public async Task InitializeAsync()
-    {
-        var appHost = await DistributedApplicationTestingBuilder
-            .CreateAsync<Projects.PlaylistApp_AppHost>();
-        
-        _app = await appHost.BuildAsync();
-        await _app.StartAsync();
-
-        _httpClient = _app.CreateHttpClient("apiservice");
-    }
-
-    public async Task DisposeAsync()
-    {
-        _httpClient.Dispose();
-        if (_app is not null)
-        {
-            await _app.DisposeAsync();
-        }
-    }
-
     [Fact]
     public async Task GetSongs_ReturnsOk_AndEmptyListInitially()
     {
@@ -43,7 +17,7 @@ public class SongEndpointsTests : IAsyncLifetime
         var getUri = new Uri("/api/songs", UriKind.Relative);
 
         // Act
-        var response = await _httpClient.GetAsync(getUri);
+        var response = await HttpClient.GetAsync(getUri);
         var songs = await response.Content.ReadFromJsonAsync<List<SongResponse>>();
 
         // Assert
@@ -59,7 +33,7 @@ public class SongEndpointsTests : IAsyncLifetime
         var newSong = new CreateSongRequest("Bohemian Rhapsody", TimeSpan.FromMinutes(5.91));
     
         // Act
-        var response = await _httpClient.PostAsJsonAsync("/api/songs", newSong);
+        var response = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
     
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -78,12 +52,12 @@ public class SongEndpointsTests : IAsyncLifetime
     {
         // Arrange
         var newSong = new CreateSongRequest("Stairway to Heaven", TimeSpan.FromMinutes(8.03));
-        var postResponse = await _httpClient.PostAsJsonAsync("/api/songs", newSong);
+        var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         var getByIdUri = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
     
         // Act
-        var getResponse = await _httpClient.GetAsync(getByIdUri);
+        var getResponse = await HttpClient.GetAsync(getByIdUri);
     
         // Assert
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
@@ -98,7 +72,7 @@ public class SongEndpointsTests : IAsyncLifetime
         var getByIdUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
 
         // Act
-        var response = await _httpClient.GetAsync(getByIdUri);
+        var response = await HttpClient.GetAsync(getByIdUri);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -116,19 +90,19 @@ public class SongEndpointsTests : IAsyncLifetime
     {
         // Arrange
         var initialSong = new CreateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.0));
-        var postResponse = await _httpClient.PostAsJsonAsync("/api/songs", initialSong);
+        var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", initialSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         
         var updateRequest = new UpdateSongRequest("Under Pressure", TimeSpan.FromMinutes(4.08));
         var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
     
         // Act
-        var putResponse = await _httpClient.PutAsJsonAsync(uriWithId, updateRequest);
+        var putResponse = await HttpClient.PutAsJsonAsync(uriWithId, updateRequest);
     
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, putResponse.StatusCode);
 
-        var getResponse = await _httpClient.GetAsync(uriWithId);
+        var getResponse = await HttpClient.GetAsync(uriWithId);
         var fetchedSong = await getResponse.Content.ReadFromJsonAsync<SongResponse>();
 
         Assert.Equal(TimeSpan.FromMinutes(4.08), fetchedSong!.Duration);
@@ -142,7 +116,7 @@ public class SongEndpointsTests : IAsyncLifetime
         var putUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
     
         // Act
-        var response = await _httpClient.PutAsJsonAsync(putUri, updateRequest);
+        var response = await HttpClient.PutAsJsonAsync(putUri, updateRequest);
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -161,17 +135,17 @@ public class SongEndpointsTests : IAsyncLifetime
     {
         // Arrange
         var newSong = new CreateSongRequest("Hotel California", TimeSpan.FromMinutes(6.5));
-        var postResponse = await _httpClient.PostAsJsonAsync("/api/songs", newSong);
+        var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
         var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
         var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
     
         // Act
-        var deleteResponse = await _httpClient.DeleteAsync(uriWithId);
+        var deleteResponse = await HttpClient.DeleteAsync(uriWithId);
     
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
 
-        var getResponse = await _httpClient.GetAsync(uriWithId);
+        var getResponse = await HttpClient.GetAsync(uriWithId);
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
     }
 
@@ -182,7 +156,7 @@ public class SongEndpointsTests : IAsyncLifetime
         var deleteUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
     
         // Act
-        var response = await _httpClient.DeleteAsync(deleteUri);
+        var response = await HttpClient.DeleteAsync(deleteUri);
     
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -206,7 +180,7 @@ public class SongEndpointsTests : IAsyncLifetime
         );
     
         // Act
-        var response = await _httpClient.PostAsJsonAsync("/api/songs", invalidSong);
+        var response = await HttpClient.PostAsJsonAsync("/api/songs", invalidSong);
     
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -232,7 +206,7 @@ public class SongEndpointsTests : IAsyncLifetime
         var uri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
     
         // Act
-        var response = await _httpClient.PutAsJsonAsync(uri, invalidSong);
+        var response = await HttpClient.PutAsJsonAsync(uri, invalidSong);
     
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
