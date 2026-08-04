@@ -16,5 +16,8 @@ public class UpdateSongRequestValidator : AbstractValidator<UpdateSongRequest>
         
         RuleFor(x => x.Duration)
             .GreaterThan(TimeSpan.Zero).WithMessage(ValidationMessages.DurationGreaterThanZero);
+
+        RuleFor(x => x.ArtistIds)
+            .NotNull().WithMessage(ValidationMessages.ArtistIdsRequired);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Data;
+using PlaylistApp.ApiService.DTOs.Artists;
 using PlaylistApp.ApiService.DTOs.Songs;
 using PlaylistApp.ApiService.Entities;
 using PlaylistApp.ApiService.Filters;
@@ -18,7 +19,12 @@ public static class SongEndpoints
         group.MapGet("/", async (AppDbContext db) =>
         {
             var songs = await db.Songs
-                                .Select(s => new SongResponse(s.Id, s.Title, s.Duration))
+                                .Select(s => new SongResponse(
+                                    s.Id, 
+                                    s.Title, 
+                                    s.Duration,
+                                    s.Artists.Select(a => new ArtistSummaryResponse(a.Id, a.Name)).ToList()
+                                ))
                                 .ToListAsync();
 
             return TypedResults.Ok(songs);       
@@ -26,17 +32,27 @@ public static class SongEndpoints
 
         group.MapPost("/", async (CreateSongRequest request, AppDbContext db) =>
         {
+            var artists = await db.Artists
+                                  .Where(a => request.ArtistIds.Contains(a.Id))
+                                  .ToListAsync();
+            
             var song = new Song
             {
                 Id = Guid.NewGuid(),
                 Title = request.Title,
-                Duration = request.Duration
+                Duration = request.Duration,
+                Artists = artists
             };
 
             db.Songs.Add(song);
             await db.SaveChangesAsync();
 
-            var response = new SongResponse(song.Id, song.Title, song.Duration);
+            var response = new SongResponse(
+                song.Id, 
+                song.Title, 
+                song.Duration,
+                song.Artists.Select(a => new ArtistSummaryResponse(a.Id, a.Name)).ToList()
+            );
 
             return TypedResults.Created($"/api/songs/{song.Id}", response);
         })
@@ -46,7 +62,12 @@ public static class SongEndpoints
         {
             var song = await db.Songs
                                .Where(s => s.Id == id)
-                               .Select(s => new SongResponse(s.Id, s.Title, s.Duration))
+                               .Select(s => new SongResponse(
+                                    s.Id, 
+                                    s.Title, 
+                                    s.Duration,
+                                    s.Artists.Select(a => new ArtistSummaryResponse(a.Id, a.Name)).ToList()
+                                ))
                                .FirstOrDefaultAsync();
             
             if (song is null)
@@ -64,7 +85,9 @@ public static class SongEndpoints
 
         group.MapPut("/{id:guid}", async Task<Results<NoContent, NotFound<ProblemDetails>>> (Guid id, UpdateSongRequest request, AppDbContext db) =>
         {
-            var song = await db.Songs.FindAsync(id);
+            var song = await db.Songs
+                               .Include(s => s.Artists)
+                               .FirstOrDefaultAsync(s => s.Id == id);
 
             if (song is null)
             {
@@ -75,8 +98,18 @@ public static class SongEndpoints
                 });
             }
 
+            var requestedArtists = await db.Artists
+                                           .Where(a => request.ArtistIds.Contains(a.Id))
+                                           .ToListAsync();
+
             song.Title = request.Title;
             song.Duration = request.Duration;
+
+            song.Artists.Clear();
+            foreach(var artist in requestedArtists)
+            {
+                song.Artists.Add(artist);
+            }
 
             await db.SaveChangesAsync();
 
