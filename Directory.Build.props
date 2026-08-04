@@ -8,6 +8,5 @@
     <AnalysisMode>All</AnalysisMode>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <NoWarn>$(NoWarn);CA1812;CA1515;CA1062;CA2007</NoWarn>
   </PropertyGroup>
 </Project>

@@ -1,13 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Playwright;
 
 namespace PlaylistApp.Tests.E2E;
 
-[SuppressMessage(
-    "Naming", 
-    "CA1711:Identifiers should not have incorrect suffix",
-    Justification = "xUnit requires the 'Collection' suffix for CollectionDefinition."
-)]
 [CollectionDefinition(nameof(AppHostCollection))]
 public class AppHostCollection : ICollectionFixture<AppHostFixture>
 {
