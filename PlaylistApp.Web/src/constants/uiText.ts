@@ -4,10 +4,13 @@ export const ApiMessages = {
     NotFound: "The requested resource could not be found. It may have already been deleted.",
     DeleteError: (message: string) => `Error deleting song: ${message}`,
     SaveErrorPrefix: "Failed to save song because of the following error(s):",
+    DeleteArtistError: (message: string) => `Error deleting artist: ${message}`,
+    SaveArtistErrorPrefix: "Failed to save artist because of the following error(s):",
 } as const;
 
 export const ValidationMessages = {
     InvalidDurationFormat: "Duration must be in hh:mm:ss format.",
+    InvalidYear: "Please enter a valid four-digit year.",
 } as const;
 
 export const UILabels = {
@@ -28,12 +31,32 @@ export const UILabels = {
     InputTitleLabel: "Title *",
     InputArtistLabel: "Artist *",
     InputDurationLabel: "Duration *",
+    AddArtistHeader: "Add a New Artist",
+    EditArtistHeader: "Edit Artist",
+    ArtistLibraryHeader: "Artist Library",
+    EmptyArtistLibrary: "Your artist library is currently empty. Add your first artist to get started!",
+    LoadingArtistLibrary: "Loading the artist library...",
+    ErrorLoadingArtistsHeader: "Error loading artists",
+    TableName: "Name",
+    TableBio: "Bio",
+    TableActiveFrom: "Active From",
+    TableCountry: "Country",
+    InputNameLabel: "Name *",
+    InputBioLabel: "Bio",
+    InputActiveFromLabel: "Active From (Year)",
+    InputCountryLabel: "Country",
+    InputImageLabel: "Image URL",
 } as const;
 
 export const UIPlaceholders = {
     Title: "e.g. Bohemian Rhapsody",
     Artist: "e.g Queen",
     Duration: "00:03:45",
+    Name: "e.g. Freddie Mercury",
+    Bio: "e.g. Lead vocalist of the rock band Queen...",
+    ActiveFrom: "1970",
+    Country: "e.g. United Kingdom",
+    ImageUrl: "https://example.com/image.jpg",
 } as const;
 
 export const UIHints = {

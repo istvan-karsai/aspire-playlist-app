@@ -1,4 +1,5 @@
 import { ApiMessages } from "../constants/uiText";
+import type { Artist } from "../types/artist";
 import type { Song } from "../types/song";
 
 export class ApiValidationError extends Error {
@@ -72,5 +73,39 @@ export const updateSong = async (id: string, song: Omit<Song, 'id'>): Promise<vo
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(song),
+    });
+};
+
+export const fetchArtists = async (): Promise<Artist[]> => {
+    const response = await apiFetch('/api/artists');
+    
+    return response.json();
+};
+
+export const createArtist = async (newArtist: Omit<Artist, 'id'>): Promise<Artist> => {
+    const response = await apiFetch('/api/artists', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newArtist),
+    });
+
+    return response.json();
+};
+
+export const deleteArtist = async (id: string): Promise<void> => {
+    await apiFetch(`/api/artists/${id}`, {
+        method: 'DELETE',
+    });
+};
+
+export const updateArtist = async (id: string, artist: Omit<Artist, 'id'>): Promise<void> => {
+    await apiFetch(`/api/artists/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(artist),
     });
 };
