@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { UIButtons, UILabels, UIPlaceholders, ValidationMessages } from "../constants/uiText";
+import { ValidationBounds } from "../constants/validation";
 
 export interface ArtistFormData {
     name: string;
@@ -42,7 +43,11 @@ export const SharedArtistForm = ({
             return;
         }
 
-        if (activeFromYear !== "" && (activeFromYear < 1800 || activeFromYear > new Date().getFullYear())) {
+        if (
+            activeFromYear !== "" 
+            && (activeFromYear < ValidationBounds.ArtistMinActiveYear 
+                || activeFromYear > ValidationBounds.ArtistMaxActiveYear)
+        ) {
             setClientError(ValidationMessages.InvalidYear);
             return;
         }
