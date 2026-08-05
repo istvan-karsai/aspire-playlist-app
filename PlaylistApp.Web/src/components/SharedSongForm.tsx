@@ -34,6 +34,10 @@ export const SharedSongForm = ({
         e.preventDefault();
         setClientError(null);
 
+        // TODO (QA): Song creation is currently blocked. Tracked in #67
+        // The backend API now requires an array of Artist identifiers, which this form does not yet collect.
+        // This will fail with a 400 Bad Request ("The Artist identifiers collection cannot be null")
+
         if (!title || !artist || !duration) return;
 
         if (!ValidationRegex.DurationFormat.test(duration)) {
