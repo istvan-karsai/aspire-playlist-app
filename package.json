@@ -1,0 +1,26 @@
+{
+  "name": "aspire-playlist-app",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A modern, decoupled web application for managing music playlists, users, and artists. This project serves as a showcase of a production-ready .NET architecture, demonstrating container orchestration, full-text search optimization, and robust API design.",
+  "main": "index.js",
+  "author": "István Karsai <istvan.karsai.lfgeb@gmail.com>",
+  "license": "ISC",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/istvan-karsai/aspire-playlist-app.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/istvan-karsai/aspire-playlist-app/issues"
+  },
+  "homepage": "https://github.com/istvan-karsai/aspire-playlist-app#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "husky": "^9.1.7"
+  }
+}

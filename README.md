@@ -59,3 +59,13 @@ Before running the E2E tests for the first time, you must install the Playwright
 
 Execute the tests using the standard .NET CLI:
 `dotnet test PlaylistApp.Tests.E2E`
+
+### Local Development Setup
+
+This repository uses [Husky](https://typicode.github.io/husky/) and [Commitlint](https://commitlint.js.org/) to enforce the [Conventional Commits](https://www.conventionalcommits.org/) standard.
+
+To enable the local Git hooks, run the following command from the root directory after cloning the repository:
+
+```bash
+npm install
+```
