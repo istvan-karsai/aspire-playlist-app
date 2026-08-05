@@ -35,15 +35,22 @@ export const SharedArtistForm = ({
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log("Step 1: Native form submit triggered. Name value:", name);
         setClientError(null);
 
-        if (!name) return;
+        if (!name.trim()) {
+            console.log("Step 2: Execution halted. Name is empty.");
+            setClientError("Artist Name is required.");
+            return;
+        }
 
         if (activeFromYear !== "" && (activeFromYear < 1800 || activeFromYear > new Date().getFullYear())) {
+            console.log("Step 2: Execution halted. Invalid year.");
             setClientError(ValidationMessages.InvalidYear);
             return;
         }
 
+        console.log("Step 3: Validation passed. Sending to parent.");
         onSubmit({ name, bio, activeFromYear, country, imageUrl });
     };
 
@@ -99,7 +106,7 @@ export const SharedArtistForm = ({
                 <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">{UILabels.InputImageLabel}</label>
                 <input 
                     id="imageUrl"
-                    type="url"
+                    type="text"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
                     className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
@@ -131,7 +138,7 @@ export const SharedArtistForm = ({
                 )}
 
                 <button 
-                    type="button"
+                    type="submit"
                     disabled={isPending}
                     className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors h-10 flex items-center justify-center"
                 >
