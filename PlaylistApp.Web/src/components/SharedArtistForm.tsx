@@ -35,22 +35,18 @@ export const SharedArtistForm = ({
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Step 1: Native form submit triggered. Name value:", name);
         setClientError(null);
 
         if (!name.trim()) {
-            console.log("Step 2: Execution halted. Name is empty.");
             setClientError("Artist Name is required.");
             return;
         }
 
         if (activeFromYear !== "" && (activeFromYear < 1800 || activeFromYear > new Date().getFullYear())) {
-            console.log("Step 2: Execution halted. Invalid year.");
             setClientError(ValidationMessages.InvalidYear);
             return;
         }
 
-        console.log("Step 3: Validation passed. Sending to parent.");
         onSubmit({ name, bio, activeFromYear, country, imageUrl });
     };
 

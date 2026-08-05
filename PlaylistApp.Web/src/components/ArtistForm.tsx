@@ -18,8 +18,6 @@ export const ArtistForm = () => {
     });
 
     const handleSubmit = (data: ArtistFormData) => {
-        console.log("Step 4: Received data in parent component:", data);
-
         const payload = {
             name: data.name,
             bio: data.bio || undefined,
@@ -28,7 +26,6 @@ export const ArtistForm = () => {
             imageUrl: data.imageUrl || undefined,
         };
 
-        console.log("Step 5: Firing TanStack Query mutation with payload:", payload);
         mutation.mutate(payload);
     };
 
