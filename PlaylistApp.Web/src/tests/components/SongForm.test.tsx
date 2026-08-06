@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { SongForm } from '../../components/SongForm';
 import { UIButtons, UILabels, ValidationMessages } from '../../constants/uiText';
 import { mockValidArtist } from '../mocks/mockData';
+import { MemoryRouter } from 'react-router-dom';
 
 const renderWithQueryClient = (ui: React.ReactElement) => {
     const queryClient = new QueryClient({
@@ -17,7 +18,9 @@ const renderWithQueryClient = (ui: React.ReactElement) => {
 
     return render(
         <QueryClientProvider client={queryClient}>
-            {ui}
+            <MemoryRouter>
+                {ui}
+            </MemoryRouter>
         </QueryClientProvider>
     );
 };
