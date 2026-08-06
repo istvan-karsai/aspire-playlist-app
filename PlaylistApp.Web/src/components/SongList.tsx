@@ -65,7 +65,7 @@ export const SongList = () => {
                     <thead className="bg-gray-50 border-b">
                         <tr>
                             <th className="h-12 px-4 text-left font-medium text-gray-500 w-5/12">{UILabels.TableTitle}</th>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-4/12">{UILabels.TableArtist}</th>
+                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-4/12">{UILabels.Artists}</th>
                             <th className="h-12 px-4 text-left font-medium text-gray-500 w-2/12">{UILabels.TableDuration}</th>
                             <th className="h-12 px-4 text-right font-medium text-gray-500 w-1/12">{UILabels.TableActions}</th>
                         </tr>
@@ -74,7 +74,11 @@ export const SongList = () => {
                         {songs.map((song) => (
                             <tr key={song.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="p-4 font-medium text-gray-900 truncate">{song.title}</td>
-                                <td className="p-4 text-gray-600 truncate">{song.artist}</td>
+                                <td className="p-4 text-gray-600 truncate">
+                                    {song.artists && song.artists.length > 0
+                                        ? song.artists.map((artist) => artist.name).join(", ")
+                                        : "-"}
+                                </td>
                                 <td className="p-4 text-gray-600">{song.duration}</td>
                                 <td className="p-4 text-right">
                                     <button

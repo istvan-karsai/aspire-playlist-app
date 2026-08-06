@@ -21,7 +21,11 @@ export const SongForm = () => {
     });
 
     const handleSubmit = (data: SongFormData) => {
-        mutation.mutate(data);
+        mutation.mutate({
+            title: data.title,
+            artistIds: data.artistIds,
+            duration: data.duration,
+        });
     };
 
     return (
@@ -29,6 +33,7 @@ export const SongForm = () => {
             <h2 className="text-lg font-semibold mb-4">{UILabels.AddSongHeader}</h2>
 
             <SharedSongForm 
+                initialValues={{ title: "", artistIds: [], duration: "" }}
                 key={formKey}
                 onSubmit={handleSubmit}
                 isPending={mutation.isPending}

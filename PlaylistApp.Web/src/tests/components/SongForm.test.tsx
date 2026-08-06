@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, expect, it } from 'vitest';
 import { SongForm } from '../../components/SongForm';
 import { UIButtons, UILabels, ValidationMessages } from '../../constants/uiText';
+import { mockValidArtist } from '../mocks/mockData';
 
 const renderWithQueryClient = (ui: React.ReactElement) => {
     const queryClient = new QueryClient({
@@ -26,12 +27,14 @@ const setupAndFillForm = async (durationValue: string) => {
     renderWithQueryClient(<SongForm />);
 
     const titleInput = screen.getByLabelText(UILabels.InputTitleLabel);
-    const artistInput = screen.getByLabelText(UILabels.InputArtistLabel);
+
+    const artistCheckBox = await screen.findByRole('checkbox', { name: mockValidArtist.name });
+    
     const durationInput = screen.getByLabelText(UILabels.InputDurationLabel);
     const submitButton = screen.getByRole('button', { name: UIButtons.Save });
 
     await user.type(titleInput, 'Bohemian Rhapsody');
-    await user.type(artistInput, 'Queen');
+    await user.click(artistCheckBox);
     await user.type(durationInput, durationValue);
 
     return { user, submitButton };
@@ -56,9 +59,12 @@ describe('SongForm Component', () => {
         await user.click(submitButton);
 
         // Assert: Re-query the DOM to ensure the form was completely remounted and cleared
-        await waitFor(() => {
+        await waitFor(async () => {
             expect(screen.getByLabelText(UILabels.InputTitleLabel)).toHaveValue('');
-            expect(screen.getByLabelText(UILabels.InputArtistLabel)).toHaveValue('');
+
+            const resetCheckbox = await screen.findByRole('checkbox', { name: mockValidArtist.name });
+            expect(resetCheckbox).not.toBeChecked();
+            
             expect(screen.getByLabelText(UILabels.InputDurationLabel)).toHaveValue('');
         });
     });

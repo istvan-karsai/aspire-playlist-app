@@ -11,6 +11,8 @@ export const ApiMessages = {
 export const ValidationMessages = {
     InvalidDurationFormat: "Duration must be in hh:mm:ss format.",
     InvalidYear: "Please enter a valid four-digit year.",
+    TitleRequired: "Title is required.",
+    ArtistRequired: "At least one Artist must be selected.",
 } as const;
 
 export const UILabels = {
@@ -25,11 +27,9 @@ export const UILabels = {
     LoadingLibrary: "Loading the song library...",
     ErrorLoadingHeader: "Error loading songs",
     TableTitle: "Title",
-    TableArtist: "Artist",
     TableDuration: "Duration",
     TableActions: "Actions",
     InputTitleLabel: "Title *",
-    InputArtistLabel: "Artist *",
     InputDurationLabel: "Duration *",
     AddArtistHeader: "Add a New Artist",
     EditArtistHeader: "Edit Artist",
@@ -46,6 +46,9 @@ export const UILabels = {
     InputActiveFromLabel: "Active From (Year)",
     InputCountryLabel: "Country",
     InputImageLabel: "Image URL",
+    Artists: "Artists",
+    LoadingStatus: "Loading...",
+    NoArtistsAvailable: "No artists available.",
 } as const;
 
 export const UIPlaceholders = {

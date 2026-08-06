@@ -1,6 +1,6 @@
 import { ApiMessages } from "../constants/uiText";
 import type { Artist } from "../types/artist";
-import type { Song } from "../types/song";
+import type { Song, SongPayload } from "../types/song";
 
 export class ApiValidationError extends Error {
     public messages: string[];
@@ -48,7 +48,7 @@ export const fetchSongs = async (): Promise<Song[]> => {
     return response.json();
 };
 
-export const createSong = async (newSong: Omit<Song, 'id'>): Promise<Song> => {
+export const createSong = async (newSong: SongPayload): Promise<Song> => {
     const response = await apiFetch('/api/songs', {
         method: 'POST',
         headers: {
@@ -66,7 +66,7 @@ export const deleteSong = async (id: string): Promise<void> => {
     });
 };
 
-export const updateSong = async (id: string, song: Omit<Song, 'id'>): Promise<void> => {
+export const updateSong = async (id: string, song: SongPayload): Promise<void> => {
     await apiFetch(`/api/songs/${id}`, {
         method: 'PUT',
         headers: {

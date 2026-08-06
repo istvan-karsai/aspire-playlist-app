@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Song } from "../types/song";
+import type { Song, SongPayload } from "../types/song";
 import { ApiValidationError, updateSong } from "../api/client";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
 import { UIButtons, UILabels } from "../constants/uiText";
@@ -13,7 +13,7 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
     const queryClient = useQueryClient();
 
     const updateMutation = useMutation({
-        mutationFn: (updatedSong: Omit<Song, 'id'>) => updateSong(song.id, updatedSong),
+        mutationFn: (updatedSong: SongPayload) => updateSong(song.id, updatedSong),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['songs'] });
             onClose();
@@ -21,7 +21,11 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
     });
 
     const handleSubmit = (data: SongFormData) => {
-        updateMutation.mutate(data);
+        updateMutation.mutate({
+            title: data.title,
+            artistIds: data.artistIds,
+            duration: data.duration
+        });
     };
 
     return (
@@ -46,7 +50,7 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
                 <SharedSongForm 
                     initialValues={{
                         title: song.title,
-                        artist: song.artist,
+                        artistIds: song.artists.map((artist) => artist.id),
                         duration: song.duration || ''
                     }}
                     onSubmit={handleSubmit}
