@@ -1,18 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Artist } from "../types/artist";
-import { deleteArtist, fetchArtists } from "../api/client";
+import { deleteArtist } from "../api/client";
 import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../constants/uiText";
 import { EditArtistModal } from "./EditArtistModal";
+import { useArtists } from "../hooks/useArtists";
+import { Link } from "react-router-dom";
 
 export const ArtistList = () => {
     const queryClient = useQueryClient();
     const [editingArtist, setEditingArtist] = useState<Artist | null>(null);
 
-    const { data: artists, isLoading, isError, error } = useQuery<Artist[]>({
-        queryKey: ['artists'],
-        queryFn: fetchArtists,
-    });
+    const { data: artists, isLoading, isError, error } = useArtists();
 
     const deleteMutation = useMutation({
         mutationFn: deleteArtist,
@@ -73,12 +72,21 @@ export const ArtistList = () => {
                         {artists.map((artist) => (
                             <tr key={artist.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="p-4 font-medium text-gray-900 truncate">
-                                    <div className="flex items-center gap-3">
+                                    <Link
+                                        to={`/artists/${artist.id}`}
+                                        className="flex items-center gap-3 group"
+                                    >
                                         {artist.imageUrl && (
-                                            <img src={artist.imageUrl} alt={artist.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+                                            <img 
+                                                src={artist.imageUrl} 
+                                                alt={artist.name} 
+                                                className="w-8 h-8 rounded-full object-cover shrink-0 group-hover:opacity-80 transition-opacity" 
+                                            />
                                         )}
-                                        <span className="truncate">{artist.name}</span>
-                                    </div>
+                                        <span className="truncate group-hover:text-blue-600 group-hover:underline transition-colors">
+                                            {artist.name}
+                                        </span>
+                                    </Link>
                                 </td>
                                 <td className="p-4 text-gray-600 truncate">{artist.bio || "-"}</td>
                                 <td className="p-4 text-gray-600">{artist.activeFromYear || "-"}</td>

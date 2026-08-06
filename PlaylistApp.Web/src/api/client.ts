@@ -42,8 +42,9 @@ async function apiFetch(endpoint: string, options?: RequestInit): Promise<Respon
     return response;
 }
 
-export const fetchSongs = async (): Promise<Song[]> => {
-    const response = await apiFetch('/api/songs');
+export const fetchSongs = async (artistId?: string): Promise<Song[]> => {
+    const url = artistId ? `/api/songs?artistId=${artistId}` : '/api/songs';
+    const response = await apiFetch(url);
 
     return response.json();
 };
@@ -79,6 +80,12 @@ export const updateSong = async (id: string, song: SongPayload): Promise<void> =
 export const fetchArtists = async (): Promise<Artist[]> => {
     const response = await apiFetch('/api/artists');
     
+    return response.json();
+};
+
+export const fetchArtistById = async (id: string): Promise<Artist> => {
+    const response = await apiFetch(`/api/artists/${id}`);
+
     return response.json();
 };
 

@@ -16,9 +16,16 @@ public static class SongEndpoints
     {
         var group = app.MapGroup("/api/songs").WithTags("Songs");
 
-        group.MapGet("/", async (AppDbContext db) =>
+        group.MapGet("/", async ([FromQuery] Guid? artistId, AppDbContext db) =>
         {
-            var songs = await db.Songs
+            var query = db.Songs.AsQueryable();
+
+            if (artistId.HasValue)
+            {
+                query = query.Where(s => s.Artists.Any(a => a.Id == artistId));
+            }
+            
+            var songs = await query
                                 .Select(s => new SongResponse(
                                     s.Id, 
                                     s.Title, 

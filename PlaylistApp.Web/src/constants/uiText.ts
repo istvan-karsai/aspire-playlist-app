@@ -49,6 +49,19 @@ export const UILabels = {
     Artists: "Artists",
     LoadingStatus: "Loading...",
     NoArtistsAvailable: "No artists available.",
+
+    // Artist Details Page
+    LoadingArtistDetails: "Loading artist details...",
+    ErrorLoadingArtistProfile: "Failed to load artist profile.",
+    ErrorLoadingDiscography: "Failed to load discography.",
+    BackToArtists: "Back to Artists",
+    ActiveSince: "Active since",
+    Biography: "Biography",
+    Discography: "Discography",
+    EmptyDiscography: "No songs found for this artist.",
+
+    // Shared Table Fallbacks
+    EmptyArtistsFallback: "-",
 } as const;
 
 export const UIPlaceholders = {
