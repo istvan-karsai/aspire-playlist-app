@@ -99,7 +99,7 @@ export const SharedSongForm = ({
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {UILabels.InputArtistsLabel} {isArtistsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{UILabels.LoadingStatus}</span>}
+                    {UILabels.Artists} {isArtistsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{UILabels.LoadingStatus}</span>}
                 </label>
                 <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2 bg-white space-y-2">
                     {artists?.map((artist) => (
