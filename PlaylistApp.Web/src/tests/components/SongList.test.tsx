@@ -48,7 +48,10 @@ describe('SongList Component', () => {
 
         // Act & Assert: Wait for the async API call to finish and populate the DOM
         expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
-        expect(screen.getByText(mockValidSong.artist)).toBeInTheDocument();
+
+        // Target the name of the first artist in the mock array
+        expect(screen.getByText(mockValidSong.artists[0].name)).toBeInTheDocument();
+        
         expect(screen.getByText(mockValidSong.duration)).toBeInTheDocument();
     });
 });

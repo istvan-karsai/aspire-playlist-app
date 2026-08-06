@@ -11,6 +11,8 @@ export const ApiMessages = {
 export const ValidationMessages = {
     InvalidDurationFormat: "Duration must be in hh:mm:ss format.",
     InvalidYear: "Please enter a valid four-digit year.",
+    TitleRequired: "Title is required.",
+    ArtistRequired: "At least one Artist must be selected.",
 } as const;
 
 export const UILabels = {
@@ -46,6 +48,9 @@ export const UILabels = {
     InputActiveFromLabel: "Active From (Year)",
     InputCountryLabel: "Country",
     InputImageLabel: "Image URL",
+    InputArtistsLabel: "Artists",
+    LoadingStatus: "Loading...",
+    NoArtistsAvailable: "No artists available.",
 } as const;
 
 export const UIPlaceholders = {

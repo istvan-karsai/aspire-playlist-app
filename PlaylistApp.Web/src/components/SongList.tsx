@@ -74,7 +74,11 @@ export const SongList = () => {
                         {songs.map((song) => (
                             <tr key={song.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="p-4 font-medium text-gray-900 truncate">{song.title}</td>
-                                <td className="p-4 text-gray-600 truncate">{song.artist}</td>
+                                <td className="p-4 text-gray-600 truncate">
+                                    {song.artists && song.artists.length > 0
+                                        ? song.artists.map((artist) => artist.name).join(", ")
+                                        : "-"}
+                                </td>
                                 <td className="p-4 text-gray-600">{song.duration}</td>
                                 <td className="p-4 text-right">
                                     <button

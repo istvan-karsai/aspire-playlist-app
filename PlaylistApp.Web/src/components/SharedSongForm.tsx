@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { UIButtons, UIHints, UILabels, UIPlaceholders, ValidationMessages } from "../constants/uiText";
 import { ValidationRegex } from "../constants/validation";
+import { useQuery } from "@tanstack/react-query";
+import type { Artist } from "../types/artist";
+import { fetchArtists } from "../api/client";
 
 export interface SongFormData {
     title: string;
-    artist: string;
+    artistIds: string[];
     duration: string;
 }
 
@@ -18,7 +21,7 @@ interface SharedSongFormProps {
 }
 
 export const SharedSongForm = ({
-    initialValues = { title: "", artist: "", duration: "" },
+    initialValues = { title: "", artistIds: [], duration: "" },
     onSubmit,
     isPending,
     submitButtonText,
@@ -26,9 +29,23 @@ export const SharedSongForm = ({
     onCancel,
 }: SharedSongFormProps) => {
     const [title, setTitle] = useState(initialValues.title);
-    const [artist, setArtist] = useState(initialValues.artist);
+    const [artistIds, setArtistIds] = useState<string[]>(initialValues.artistIds);
     const [duration, setDuration] = useState(initialValues.duration);
     const [clientError, setClientError] = useState<string | null>(null);
+
+    // Fetch artists for the multi-select dropdown
+    const { data: artists, isLoading: isArtistsLoading } = useQuery<Artist[]>({
+        queryKey: ['artists'],
+        queryFn: fetchArtists,
+    });
+
+    const handleArtistToggle = (artistId: string) => {
+        setArtistIds(prev =>
+            prev.includes(artistId)
+                ? prev.filter(id => id !== artistId)
+                : [...prev, artistId]
+        );
+    };
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -38,14 +55,22 @@ export const SharedSongForm = ({
         // The backend API now requires an array of Artist identifiers, which this form does not yet collect.
         // This will fail with a 400 Bad Request ("The Artist identifiers collection cannot be null")
 
-        if (!title || !artist || !duration) return;
+        if (!title.trim()) {
+            setClientError(ValidationMessages.TitleRequired);
+            return;
+        } 
+        
+        if (artistIds.length === 0) {
+            setClientError(ValidationMessages.ArtistRequired);
+            return;
+        }
 
         if (!ValidationRegex.DurationFormat.test(duration)) {
             setClientError(ValidationMessages.InvalidDurationFormat);
             return;
         }
 
-        onSubmit({ title, artist, duration });
+        onSubmit({ title, artistIds, duration });
     };
 
     const isHorizontal = layout === "horizontal";
@@ -73,16 +98,26 @@ export const SharedSongForm = ({
             </div>
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label htmlFor="artist" className="block text-sm font-medium text-gray-700 mb-1">{UILabels.InputArtistLabel}</label>
-                <input
-                    id="artist"
-                    type="text"
-                    required
-                    value={artist}
-                    onChange={(e) => setArtist(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
-                    placeholder={UIPlaceholders.Artist} 
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {UILabels.InputArtistsLabel} {isArtistsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{UILabels.LoadingStatus}</span>}
+                </label>
+                <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2 bg-white space-y-2">
+                    {artists?.map((artist) => (
+                        <label key={artist.id} className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                            <input 
+                                type="checkbox"
+                                value={artist.id}
+                                checked={artistIds.includes(artist.id)}
+                                onChange={() => handleArtistToggle(artist.id)}
+                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer" 
+                            />
+                            <span className="text-sm text-gray-700 select-none truncate">{artist.name}</span>
+                        </label>
+                    ))}
+                    {!isArtistsLoading && artists?.length === 0 && (
+                        <span className="text-sm text-gray-500 italic">{UILabels.NoArtistsAvailable}</span>
+                    )}
+                </div>
             </div>
 
             <div className={isHorizontal ? "w-32" : ""}>
