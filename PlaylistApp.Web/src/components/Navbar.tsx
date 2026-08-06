@@ -1,14 +1,10 @@
-import type { ViewState } from "../types/navigation";
+import { NavLink } from "react-router-dom";
 import { UILabels } from "../constants/uiText";
 
-interface NavbarProps {
-    currentView: ViewState;
-    onViewChange: (view: ViewState) => void;
-}
 
-export const Navbar = ({ currentView, onViewChange }: NavbarProps) => {
-    const getTabClass = (tabName: ViewState) => {
-        return currentView === tabName
+export const Navbar = () => {
+    const getTabClass = (isActive: boolean) => {
+        return isActive
             ? "border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
             : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors";
     };
@@ -24,18 +20,20 @@ export const Navbar = ({ currentView, onViewChange }: NavbarProps) => {
                             </span>
                         </div>
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <button 
-                                onClick={() => onViewChange('songs')}
-                                className={getTabClass('songs')}
+                            <NavLink 
+                                to="/songs"
+                                className={({ isActive }) => getTabClass(isActive)}
                             >
                                 {UILabels.NavSongs}
-                            </button>
-                            <button
-                                onClick={() => onViewChange('artists')}
-                                className={getTabClass('artists')}
+                            </NavLink>
+
+                            <NavLink
+                                to="/artists"
+                                className={({ isActive }) => getTabClass(isActive)}
                             >
                                 {UILabels.NavArtists}
-                            </button>
+                            </NavLink>
+
                             <span className="border-transparent text-gray-400 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium cursor-not-allowed">
                                 {UILabels.NavPlaylists}
                             </span>

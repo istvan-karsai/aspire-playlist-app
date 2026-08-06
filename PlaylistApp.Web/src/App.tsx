@@ -1,23 +1,23 @@
-import { useState } from 'react';
 import './App.css'
 import { Navbar } from './components/Navbar'
 import { SongsPage } from './pages/SongsPage'
 import { ArtistsPage } from './pages/ArtistsPage';
-import type { ViewState } from './types/navigation';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [currentView, setCurrentView] = useState<ViewState>('songs');
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar currentView={currentView} onViewChange={setCurrentView} />
+      <Navbar />
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {currentView === 'songs' && <SongsPage />}
-        {currentView === 'artists' && <ArtistsPage />}
+        <Routes>
+          <Route path="/" element={<Navigate to="/songs" replace />} />
+          <Route path="/songs" element={<SongsPage />} />
+          <Route path="/artists" element={<ArtistsPage />} />
+        </Routes>
         {/* TODO: Implement Playlists view */}
       </main>
     </div>
   )
 }
 
-export default App
+export default App;
