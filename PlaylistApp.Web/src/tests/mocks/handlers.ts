@@ -24,17 +24,9 @@ export const handlers = [
         return HttpResponse.json(newSong, { status: 201 });
     }),
 
-    http.put('/api/songs/:id', async ({ request, params }) => {
-        const payload = await request.json() as SongPayload;
-
-        const updatedSong = {
-            id: params.id as string,
-            title: payload.title,
-            duration: payload.duration,
-            artists: [mockValidArtist]
-        };
-
-        return HttpResponse.json(updatedSong, { status: 200 });
+    http.put('/api/songs/:id', async ({ request }) => {
+        await request.json();
+        return new HttpResponse(null, { status: 204 });
     }),
 
     http.delete('/api/songs/:id', () => {
@@ -53,9 +45,9 @@ export const handlers = [
         return HttpResponse.json({ id: mockValidArtist.id, ...newArtist }, { status: 201 });
     }),
 
-    http.put('/api/artists/:id', async ({ request, params }) => {
-        const updatedArtist = await request.json() as Omit<Artist, 'id'>;
-        return HttpResponse.json({ id: params.id as string, ...updatedArtist }, { status: 200 });
+    http.put('/api/artists/:id', async ({ request }) => {
+        await request.json();
+        return new HttpResponse(null, { status: 204 });
     }),
 
     http.delete('/api/artists/:id', () => {
