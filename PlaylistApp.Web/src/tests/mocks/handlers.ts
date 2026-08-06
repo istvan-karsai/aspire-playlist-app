@@ -7,8 +7,19 @@ export const handlers = [
     // ==========================================
     // SONGS
     // ==========================================
-    http.get('/api/songs', () => {
-        return HttpResponse.json(mockSongs);
+    http.get('/api/songs', ({ request }) => {
+        const url = new URL(request.url);
+        const artistId = url.searchParams.get('artistId');
+
+        let responseData = mockSongs;
+
+        if (artistId) {
+            responseData = mockSongs.filter((song) => 
+                song.artists.some((artist) => artist.id === artistId)
+            );
+        }
+
+        return HttpResponse.json(responseData);
     }),
 
     http.post('/api/songs', async ({ request }) => {
@@ -38,6 +49,16 @@ export const handlers = [
     // ==========================================
     http.get('/api/artists', () => {
         return HttpResponse.json([mockValidArtist]);
+    }),
+
+    http.get('/api/artists/:id', ({ params }) => {
+        const { id } = params;
+
+        if (id === mockValidArtist.id) {
+            return HttpResponse.json(mockValidArtist);
+        }
+
+        return new HttpResponse(null, { status: 404 });
     }),
 
     http.post('/api/artists', async ({ request }) => {

@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar'
 import { SongsPage } from './pages/SongsPage'
 import { ArtistsPage } from './pages/ArtistsPage';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { ArtistDetailsPage } from './pages/ArtistDetailsPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Navigate to="/songs" replace />} />
           <Route path="/songs" element={<SongsPage />} />
           <Route path="/artists" element={<ArtistsPage />} />
+          <Route path="/artists/:id" element={<ArtistDetailsPage />} />
         </Routes>
         {/* TODO: Implement Playlists view */}
       </main>

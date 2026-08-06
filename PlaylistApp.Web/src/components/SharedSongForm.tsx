@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { UIButtons, UIHints, UILabels, UIPlaceholders, ValidationMessages } from "../constants/uiText";
 import { ValidationRegex } from "../constants/validation";
-import { useQuery } from "@tanstack/react-query";
-import type { Artist } from "../types/artist";
-import { fetchArtists } from "../api/client";
+import { useArtists } from "../hooks/useArtists";
 
 export interface SongFormData {
     title: string;
@@ -34,10 +32,7 @@ export const SharedSongForm = ({
     const [clientError, setClientError] = useState<string | null>(null);
 
     // Fetch artists for the multi-select dropdown
-    const { data: artists, isLoading: isArtistsLoading } = useQuery<Artist[]>({
-        queryKey: ['artists'],
-        queryFn: fetchArtists,
-    });
+    const { data: artists, isLoading: isArtistsLoading } = useArtists();
 
     const handleArtistToggle = (artistId: string) => {
         setArtistIds(prev =>

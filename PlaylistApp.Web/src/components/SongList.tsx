@@ -1,19 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteSong, fetchSongs } from "../api/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteSong } from "../api/client";
 import type { Song } from "../types/song";
 import { useState } from "react";
 import { EditSongModal } from "./EditSongModal";
 import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../constants/uiText";
+import { useSongs } from "../hooks/useSongs";
+import { Link } from "react-router-dom";
 
 export const SongList = () => {
     const queryClient = useQueryClient();
 
     const [editingSong, setEditingSong] = useState<Song | null>(null);
     
-    const { data: songs, isLoading, isError, error } = useQuery<Song[]>({
-        queryKey: ['songs'],
-        queryFn: fetchSongs,
-    });
+    const { data: songs, isLoading, isError, error } = useSongs();
 
     const deleteMutation = useMutation({
         mutationFn: deleteSong,
@@ -75,9 +74,21 @@ export const SongList = () => {
                             <tr key={song.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="p-4 font-medium text-gray-900 truncate">{song.title}</td>
                                 <td className="p-4 text-gray-600 truncate">
-                                    {song.artists && song.artists.length > 0
-                                        ? song.artists.map((artist) => artist.name).join(", ")
-                                        : "-"}
+                                    {song.artists && song.artists.length > 0 ? (
+                                        song.artists.map((artist, index) => (
+                                            <span key={artist.id}>
+                                                <Link
+                                                    to={`/artists/${artist.id}`}
+                                                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                                                >
+                                                    {artist.name}
+                                                </Link>
+                                                {index < song.artists.length - 1 && ", "}
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="text-gray-400 italic">{UILabels.EmptyArtistsFallback}</span>
+                                    )}
                                 </td>
                                 <td className="p-4 text-gray-600">{song.duration}</td>
                                 <td className="p-4 text-right">
