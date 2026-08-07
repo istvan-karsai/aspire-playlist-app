@@ -49,6 +49,8 @@ export const UILabels = {
     Artists: "Artists",
     LoadingStatus: "Loading...",
     NoArtistsAvailable: "No artists available.",
+    FilterByArtist: "Filter by Artist",
+    AllArtists: "All Artists",
 
     // Artist Details Page
     LoadingArtistDetails: "Loading artist details...",

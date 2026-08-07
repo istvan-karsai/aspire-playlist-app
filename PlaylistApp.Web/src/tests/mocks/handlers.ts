@@ -11,15 +11,15 @@ export const handlers = [
         const url = new URL(request.url);
         const artistId = url.searchParams.get('artistId');
 
-        let responseData = mockSongs;
-
         if (artistId) {
-            responseData = mockSongs.filter((song) => 
+            const filteredSongs = mockSongs.filter((song) => 
                 song.artists.some((artist) => artist.id === artistId)
             );
+
+            return HttpResponse.json(filteredSongs);
         }
 
-        return HttpResponse.json(responseData);
+        return HttpResponse.json(mockSongs);
     }),
 
     http.post('/api/songs', async ({ request }) => {
