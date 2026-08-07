@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import type { SongPayload } from '../../types/song';
-import { mockSongs, mockValidArtist } from './mockData';
+import { mockArtists, mockSongs, mockValidArtist } from './mockData';
 import type { Artist } from '../../types/artist';
 
 export const handlers = [
@@ -29,7 +29,7 @@ export const handlers = [
             id: '123e4567-e89b-12d3-a456-843328278000',
             title: payload.title,
             duration: payload.duration,
-            artists: [mockValidArtist]
+            artists: mockArtists
         };
 
         return HttpResponse.json(newSong, { status: 201 });
@@ -48,7 +48,7 @@ export const handlers = [
     // ARTISTS
     // ==========================================
     http.get('/api/artists', () => {
-        return HttpResponse.json([mockValidArtist]);
+        return HttpResponse.json(mockArtists);
     }),
 
     http.get('/api/artists/:id', ({ params }) => {

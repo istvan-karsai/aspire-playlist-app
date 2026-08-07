@@ -16,3 +16,7 @@ export const mockValidSong: Song = {
 export const mockSongs: Song[] = [
     mockValidSong
 ];
+
+export const mockArtists: Artist[] = [
+    mockValidArtist
+];
