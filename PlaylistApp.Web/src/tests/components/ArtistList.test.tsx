@@ -4,7 +4,7 @@ import { ArtistList } from "../../components/ArtistList";
 import { UILabels } from "../../constants/uiText";
 import { server } from "../mocks/server";
 import { http, HttpResponse } from "msw";
-import { mockValidArtist } from "../mocks/mockData";
+import { mockArtists, mockValidArtist } from "../mocks/mockData";
 
 describe('ArtistList Component', () => {
     it('displays a loading indicator while fetching artists', () => {
@@ -30,10 +30,18 @@ describe('ArtistList Component', () => {
 
         expect(await screen.findByText(mockValidArtist.name)).toBeInTheDocument();
 
-        // Target the standard table fallback character for missing optional data (except image URL)
+        // Target the standard table fallback character for missing optional data
         const fallbackElements = screen.getAllByText(UILabels.EmptyArtistsFallback);
 
-        // We expect fallbacks for bio, country, and activeFromYear since our mock doesn't include them
-        expect(fallbackElements).toHaveLength(3);
+        // Define the optional properties where we expect the fallback character to be rendered if missing
+        const optionalTableColumns = ['bio', 'activeFromYear', 'country'] as const;
+
+        // Dynamically calculate expected fallback characters based on missing table data
+        const expectedFallbackCount = mockArtists.reduce((count, artist) => {
+            const missingInTable = optionalTableColumns.filter(prop => !artist[prop]).length;
+            return count + missingInTable;
+        }, 0);
+
+        expect(fallbackElements).toHaveLength(expectedFallbackCount);
     });
 });
