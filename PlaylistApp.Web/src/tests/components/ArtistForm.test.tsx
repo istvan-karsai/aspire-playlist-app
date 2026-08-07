@@ -1,32 +1,12 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
 import { ArtistForm } from "../../components/ArtistForm";
 import { UIButtons, UILabels, ValidationMessages } from "../../constants/uiText";
 import { describe, expect, it } from "vitest";
 
-const renderQueryWithClient = (ui: React.ReactElement) => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false
-            }
-        },
-    });
-
-    return render(
-        <QueryClientProvider client={queryClient}>
-            <MemoryRouter>
-                {ui}
-            </MemoryRouter>
-        </QueryClientProvider>
-    );
-};
-
 const setupAndFillForm = async (yearValue: string) => {
     const user = userEvent.setup();
-    renderQueryWithClient(<ArtistForm />);
+    render(<ArtistForm />);
 
     const nameInput = screen.getByLabelText(UILabels.InputNameLabel);
     const activeFromInput = screen.getByLabelText(UILabels.InputActiveFromLabel);

@@ -1,33 +1,14 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '../utils/test-utils';
 import userEvent from '@testing-library/user-event';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, expect, it } from 'vitest';
 import { SongForm } from '../../components/SongForm';
 import { UIButtons, UILabels, ValidationMessages } from '../../constants/uiText';
 import { mockValidArtist } from '../mocks/mockData';
-import { MemoryRouter } from 'react-router-dom';
 
-const renderWithQueryClient = (ui: React.ReactElement) => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false
-            }
-        },
-    });
-
-    return render(
-        <QueryClientProvider client={queryClient}>
-            <MemoryRouter>
-                {ui}
-            </MemoryRouter>
-        </QueryClientProvider>
-    );
-};
 
 const setupAndFillForm = async (durationValue: string) => {
     const user = userEvent.setup();
-    renderWithQueryClient(<SongForm />);
+    render(<SongForm />);
 
     const titleInput = screen.getByLabelText(UILabels.InputTitleLabel);
 
