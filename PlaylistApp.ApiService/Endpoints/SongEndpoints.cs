@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,11 @@ public static class SongEndpoints
             {
                 Id = Guid.NewGuid(),
                 Title = request.Title,
-                Duration = request.Duration,
+                Duration = TimeSpan.ParseExact(
+                    request.Duration, 
+                    FormatConstants.TimeSpanFormat, 
+                    CultureInfo.InvariantCulture
+                ),
                 Artists = artists
             };
 
@@ -110,7 +115,11 @@ public static class SongEndpoints
                                            .ToListAsync();
 
             song.Title = request.Title;
-            song.Duration = request.Duration;
+            song.Duration = TimeSpan.ParseExact(
+                request.Duration, 
+                FormatConstants.TimeSpanFormat, 
+                CultureInfo.InvariantCulture
+            );
 
             song.Artists.Clear();
             foreach(var artist in requestedArtists)

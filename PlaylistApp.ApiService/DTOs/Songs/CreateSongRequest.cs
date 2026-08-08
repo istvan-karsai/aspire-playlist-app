@@ -2,6 +2,6 @@ namespace PlaylistApp.ApiService.DTOs.Songs;
 
 public record CreateSongRequest(
     string Title,
-    TimeSpan Duration,
+    string Duration,
     IReadOnlyList<Guid> ArtistIds
 );

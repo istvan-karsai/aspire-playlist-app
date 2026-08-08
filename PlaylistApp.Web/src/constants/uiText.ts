@@ -9,10 +9,11 @@ export const ApiMessages = {
 } as const;
 
 export const ValidationMessages = {
-    InvalidDurationFormat: "Duration must be in hh:mm:ss format.",
+    InvalidDurationFormat: "Duration must be in hh:mm:ss format and cannot exceed 23:59:59.",
     InvalidYear: "Please enter a valid four-digit year.",
     TitleRequired: "Title is required.",
     ArtistRequired: "At least one Artist must be selected.",
+    DurationGreaterThanZero: "Duration must be greater than 0.",
 } as const;
 
 export const UILabels = {
@@ -78,7 +79,7 @@ export const UIPlaceholders = {
 } as const;
 
 export const UIHints = {
-    DurationFormat: "hh:mm:ss",
+    DurationFormat: "hh:mm:ss (max 23:59:59)",
 } as const;
 
 export const UIButtons = {
