@@ -25,21 +25,31 @@ const setupAndFillForm = async (durationValue: string) => {
 };
 
 describe('SongForm Component', () => {
-    it('shows a client-side validation error if the duration format is invalid', async () => {
-        // Arrange & Act: Fill and submit form with invalid duration
-        const { user, submitButton } = await setupAndFillForm('invalid-time');
-
+    it.each([
+        ['invalid-time', 'completely invalid format', ValidationMessages.InvalidDurationFormat],
+        ['24:00:00', 'out of bounds hours', ValidationMessages.InvalidDurationFormat],
+        ['00:60:00', 'out of bounds minutes', ValidationMessages.InvalidDurationFormat],
+        ['00:00:60', 'out of bounds seconds', ValidationMessages.InvalidDurationFormat],
+        ['00:00:00', 'exactly zero', ValidationMessages.DurationGreaterThanZero]
+    ])(
+        'shows a client-side validation error if the duration is %s (%s)', 
+        async (invalidDuration: string, _description: string, expectedErrorMessage: string) => {
+        // Arrange: Fill the form with invalid duration and disable HTML5 validation
+        const { user, submitButton } = await setupAndFillForm(invalidDuration);
         document.querySelector('form')?.setAttribute('novalidate', 'true');
+
+        // Act: Attempt to submit the form
         await user.click(submitButton);
 
-        // Assert: Verify custom React validation fires
-        expect(await screen.findByText(ValidationMessages.InvalidDurationFormat)).toBeInTheDocument();
+        // Assert: Verify the correct custom validation error fires based on the input
+        expect(await screen.findByText(expectedErrorMessage)).toBeInTheDocument();
     });
 
     it('successfully submits the form with valid data and clears inputs', async () => {
-        // Arrange & Act: Fill and submit form with valid duration
+        // Arrange: Fill the form with valid duration
         const { user, submitButton } = await setupAndFillForm('00:05:55');
 
+        // Act: Submit the form
         await user.click(submitButton);
 
         // Assert: Re-query the DOM to ensure the form was completely remounted and cleared

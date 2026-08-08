@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { UIButtons, UIHints, UILabels, UIPlaceholders, ValidationMessages } from "../constants/uiText";
-import { ValidationRegex } from "../constants/validation";
+import { FormatConstants, ValidationRegex } from "../constants/validation";
 import { useArtists } from "../hooks/useArtists";
 
 export interface SongFormData {
@@ -58,6 +58,11 @@ export const SharedSongForm = ({
 
         if (!ValidationRegex.DurationFormat.test(duration)) {
             setClientError(ValidationMessages.InvalidDurationFormat);
+            return;
+        }
+
+        if (duration === FormatConstants.ZeroDuration) {
+            setClientError(ValidationMessages.DurationGreaterThanZero);
             return;
         }
 

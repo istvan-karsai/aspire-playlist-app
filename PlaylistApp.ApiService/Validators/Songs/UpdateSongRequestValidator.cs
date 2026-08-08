@@ -15,7 +15,10 @@ public class UpdateSongRequestValidator : AbstractValidator<UpdateSongRequest>
             .WithMessage(ValidationMessages.SongTitleMaxLength);
         
         RuleFor(x => x.Duration)
-            .GreaterThan(TimeSpan.Zero).WithMessage(ValidationMessages.DurationGreaterThanZero);
+            .Matches(FormatConstants.DurationRegex)
+            .WithMessage(ValidationMessages.InvalidDurationFormat)
+            .NotEqual(FormatConstants.ZeroDuration)
+            .WithMessage(ValidationMessages.DurationGreaterThanZero);
 
         RuleFor(x => x.ArtistIds)
             .NotNull().WithMessage(ValidationMessages.ArtistIdsRequired);
