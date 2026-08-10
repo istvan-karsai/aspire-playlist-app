@@ -56,7 +56,8 @@ public static class ArtistEndpoints
 
             return TypedResults.Created($"/api/artists/{artist.Id}", response);
         })
-        .AddEndpointFilter<ValidationFilter<CreateArtistRequest>>();
+        .AddEndpointFilter<ValidationFilter<CreateArtistRequest>>()
+        .RequireRateLimiting(PolicyConstants.RateLimitingPolicy);
 
         group.MapGet("/{id:guid}", async Task<Results<Ok<ArtistResponse>, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
@@ -107,7 +108,8 @@ public static class ArtistEndpoints
 
             return TypedResults.NoContent();
         })
-        .AddEndpointFilter<ValidationFilter<UpdateArtistRequest>>();
+        .AddEndpointFilter<ValidationFilter<UpdateArtistRequest>>()
+        .RequireRateLimiting(PolicyConstants.RateLimitingPolicy);
 
         group.MapDelete("/{id:guid}", async Task<Results<NoContent, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
@@ -125,6 +127,7 @@ public static class ArtistEndpoints
             }
 
             return TypedResults.NoContent();
-        });
+        })
+        .RequireRateLimiting(PolicyConstants.RateLimitingPolicy);
     }
 }

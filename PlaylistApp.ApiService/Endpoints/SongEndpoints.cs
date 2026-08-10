@@ -68,7 +68,8 @@ public static class SongEndpoints
 
             return TypedResults.Created($"/api/songs/{song.Id}", response);
         })
-        .AddEndpointFilter<ValidationFilter<CreateSongRequest>>();
+        .AddEndpointFilter<ValidationFilter<CreateSongRequest>>()
+        .RequireRateLimiting(PolicyConstants.RateLimitingPolicy);
 
         group.MapGet("/{id:guid}", async Task<Results<Ok<SongResponse>, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
@@ -131,7 +132,8 @@ public static class SongEndpoints
 
             return TypedResults.NoContent();
         })
-        .AddEndpointFilter<ValidationFilter<UpdateSongRequest>>();
+        .AddEndpointFilter<ValidationFilter<UpdateSongRequest>>()
+        .RequireRateLimiting(PolicyConstants.RateLimitingPolicy);
 
         group.MapDelete("/{id:guid}", async Task<Results<NoContent, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
@@ -149,6 +151,7 @@ public static class SongEndpoints
             }
 
             return TypedResults.NoContent();
-        });
+        })
+        .RequireRateLimiting(PolicyConstants.RateLimitingPolicy);
     }
 }

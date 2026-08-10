@@ -26,6 +26,10 @@ async function apiFetch(endpoint: string, options?: RequestInit): Promise<Respon
             throw new Error(ApiMessages.NotFound);
         }
 
+        if (response.status === 429) {
+            throw new Error(ApiMessages.TooManyRequests);
+        }
+
         try {
             const errorData = await response.json();
 
