@@ -5,10 +5,32 @@ using FluentValidation;
 using PlaylistApp.ApiService.ExceptionHandlers;
 using Scalar.AspNetCore;
 using PlaylistApp.ApiService.Telemetry;
+using PlaylistApp.ApiService.Constants;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy(PolicyConstants.RateLimitingPolicy, httpContext =>
+    {
+        var clientIp = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown_client";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: clientIp,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = PolicyConstants.PermitLimit,  // Max 10 requests
+                Window = PolicyConstants.Window,            // Per 1-minute window
+                QueueLimit = PolicyConstants.QueueLimit     // Reject immediately when exceeded
+            }
+        );
+    });
+});
 
 builder.Services.AddSingleton<PlaylistMetrics>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -25,6 +47,8 @@ builder.Services.AddOpenTelemetry()
 builder.AddNpgsqlDbContext<AppDbContext>("playlistdb");
 
 var app = builder.Build();
+
+app.UseRateLimiter();
 
 using (var scope = app.Services.CreateScope())
 {

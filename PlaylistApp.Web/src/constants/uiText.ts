@@ -6,6 +6,7 @@ export const ApiMessages = {
     SaveErrorPrefix: "Failed to save song because of the following error(s):",
     DeleteArtistError: (message: string) => `Error deleting artist: ${message}`,
     SaveArtistErrorPrefix: "Failed to save artist because of the following error(s):",
+    TooManyRequests: "Too many requests. Please wait a few minutes and try again.",
 } as const;
 
 export const ValidationMessages = {
