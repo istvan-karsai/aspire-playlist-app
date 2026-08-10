@@ -3,8 +3,9 @@ using System.Net.Http.Json;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.DTOs.Songs;
 
-namespace PlaylistApp.Tests.Integration.Endpoints;
+namespace PlaylistApp.Tests.Integration.Security;
 
+[Trait("Category", "Security")]
 public class RateLimitingTests : BaseIntegrationTest
 {
     [Fact]
