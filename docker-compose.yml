@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: playlist-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      -postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  api:
+    build:
+      context: .
+      dockerfile: PlaylistApp.ApiService/Dockerfile
+    container_name: playlist-api
+    restart: always
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__playlistdb: ${ConnectionStrings__playlistdb}
+      AllowedOrigins__0: ${AllowedOrigins__0}
+    depends_on:
+      postgres:
+        condition: service_healty
+
+  frontend:
+    build:
+      context: .
+      dockerfile: PlaylistApp.Web/Dockerfile
+    container_name: playlist-frontend
+    restart: always
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: playlist-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+      - frontend
+  
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
