@@ -1,4 +1,4 @@
-:80 {
+playlist.istvankarsai.com {
     # Proxy API and Scalar documentation traffic to the C# Web API
     handle /api/* {
         reverse_proxy api:8080
