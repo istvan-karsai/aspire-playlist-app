@@ -6,6 +6,9 @@
   "main": "index.js",
   "author": "István Karsai <istvan.karsai.lfgeb@gmail.com>",
   "license": "ISC",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "prepare": "husky"
   },
