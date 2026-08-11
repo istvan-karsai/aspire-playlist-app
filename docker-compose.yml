@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      -postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -27,7 +27,7 @@ services:
       AllowedOrigins__0: ${AllowedOrigins__0}
     depends_on:
       postgres:
-        condition: service_healty
+        condition: service_healthy
 
   frontend:
     build:
