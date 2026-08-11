@@ -89,20 +89,22 @@ This repository utilizes centralized configurations to enforce consistency acros
 
 ## <a id="prerequisites"></a>Prerequisites
 
-To run this project locally, ensure you have the following installed:
+**Option A: Zero-Install Setup (Recommended)**  
+This repository is fully configured for [DevContainers](https://code.visualstudio.com/docs/devcontainers/containers). By opening this project in Visual Studio Code with a container runtime running on your host, the entire environment (.NET 10, Node.js v24, and all required extensions) will build itself automatically.
+
+- A Container Runtime (e.g., [Docker Desktop](https://www.docker.com/products/docker-desktop/))
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+**Option B: Manual Setup**  
+If you choose to run the project natively on your host machine without a DevContainer, ensure you have the following installed:
 
 1. [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 2. A Container Runtime (e.g., [Docker Desktop](https://www.docker.com/products/docker-desktop/), [Podman](https://podman.io/), or [Rancher Desktop](https://rancherdesktop.io/))
 3. [Node.js](https://nodejs.org/) (v24)
-4. [.NET Aspire](https://aspire.dev/get-started/prerequisites/?aspire-lang=csharp)
-   > Note: Install this via your terminal after installing the .NET SDK:
 
-   ```bash
-   dotnet workload install aspire
-   ```
-
-**Recommended Local Development Setup:**
-This project was developed using **Visual Studio Code**. For the best experience, the following extensions are recommended:
+**Recommended VS Code Extensions:**
+*(Note: If you are utilizing the DevContainer setup, all of the following extensions will be pre-installed automatically inside the container).*
 
 - [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) - For rich backend IntelliSense and testing.
 - [Aspire](https://marketplace.visualstudio.com/items?itemName=microsoft-aspire.aspire-vscode) - For managing Aspire orchestrations directly in the editor.
@@ -123,12 +125,14 @@ Because this project utilizes **.NET Aspire**, local orchestration is entirely a
    ```
 
 2. **Install Root Dependencies (Husky/Commitlint):**
+   *(Skip this step if using DevContainers, as it runs automatically).*
 
    ```bash
    npm install
    ```
 
 3. **Install Frontend Dependencies:**
+   *(Skip this step if using DevContainers, as it runs automatically).*
 
    ```bash
    cd PlaylistApp.Web
@@ -231,7 +235,6 @@ Project tracking, active issues, and the current sprint backlog are publicly vis
 
 **Upcoming Milestones:**
 
-- Add DevContainer configuration (`.devcontainer`) to provide a zero-install, fully containerized local development environment.
 - Implement a `Makefile` (or `.vscode/tasks.json`) to standardize and alias complex CLI commands for testing and deployment.
 - Implement debounced React search UI.
 - Build unified Search endpoint utilizing PostgreSQL `pg_trgm` (trigram) indexing.
@@ -239,6 +242,4 @@ Project tracking, active issues, and the current sprint backlog are publicly vis
 - Integrate ASP.NET Core Identity and JWTs for secure authentication and Role-Based Access Control (RBAC).
 - Overhaul frontend styling to comply with WCAG accessibility (a11y) standards.
 - Migrate React form validation to `react-hook-form` and `zod`.
-- Deploy containerized stack to Linux VPS via Caddy.
-- Automate the deployment pipeline (CD) using GitHub Actions.
 - Add .nvmrc and engines field in package.json to strictly enforce Node.js version parity across local and CI environments.
