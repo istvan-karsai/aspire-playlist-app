@@ -1,0 +1,36 @@
+{
+  "name": "István's Playlist Manager",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest",
+      "enableNonRootDocker": "true",
+      "moby": "true"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[csharp]": {
+          "editor.defaultFormatter": "ms-dotnettools.csharp"
+        }
+      },
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "microsoft-aspire.aspire-vscode",
+        "ms-azuretools.vscode-docker",
+        "ms-playwright.playwright",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  },
+  "postCreateCommand": "rm -rf node_modules && npm install && cd PlaylistApp.Web && rm -rf node_modules && npm install",
+  "remoteUser": "vscode"
+}
