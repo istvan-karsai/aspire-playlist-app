@@ -1,5 +1,10 @@
 # István's Playlist Manager
 
+[![CI Pipeline](https://github.com/istvan-karsai/aspire-playlist-app/actions/workflows/ci.yaml/badge.svg)](https://github.com/istvan-karsai/aspire-playlist-app/actions/workflows/ci.yaml)
+[![CD Pipeline](https://github.com/istvan-karsai/aspire-playlist-app/actions/workflows/cd.yaml/badge.svg)](https://github.com/istvan-karsai/aspire-playlist-app/actions/workflows/cd.yaml)
+
+**Live Application:** [playlist.istvankarsai.com](https://playlist.istvankarsai.com)
+
 A modern, decoupled web application for managing music playlists, users, and artists. This project serves as a showcase of a production-ready .NET architecture, demonstrating container orchestration, full-stack typed contracts, and rigorous quality assurance standards.
 
 ## Table of Contents
@@ -24,8 +29,20 @@ Playlist Manager is designed to handle relational music data efficiently. The ba
 - **Backend:** C# / ASP.NET Core Minimal APIs, Entity Framework Core
 - **Frontend:** React, TypeScript, Vite, TanStack Query
 - **Database:** PostgreSQL
-- **Orchestration:** .NET Aspire
+- **Orchestration:** .NET Aspire, Docker, Caddy
 - **Quality Assurance:** xUnit (Integration), Vitest & React Testing Library (Frontend), Playwright (E2E)
+
+### System Architecture
+
+The application is deployed via a containerized micro-architecture, utilizing Caddy as a reverse proxy to route external traffic to the decoupled frontend and backend services.
+
+```mermaid
+flowchart LR
+    Client([Client Browser]) -->|HTTPS| Caddy(Caddy Reverse Proxy)
+    Caddy -->|Routes /api/*| API[.NET 10 API]
+    Caddy -->|Routes /*| UI[React Frontend]
+    API -->|EF Core| DB[(PostgreSQL)]
+```
 
 ### API Documentation
 
@@ -242,4 +259,3 @@ Project tracking, active issues, and the current sprint backlog are publicly vis
 - Integrate ASP.NET Core Identity and JWTs for secure authentication and Role-Based Access Control (RBAC).
 - Overhaul frontend styling to comply with WCAG accessibility (a11y) standards.
 - Migrate React form validation to `react-hook-form` and `zod`.
-- Add .nvmrc and engines field in package.json to strictly enforce Node.js version parity across local and CI environments.
