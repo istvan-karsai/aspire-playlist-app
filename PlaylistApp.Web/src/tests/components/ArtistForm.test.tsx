@@ -8,6 +8,9 @@ const setupAndFillForm = async (yearValue: string) => {
     const user = userEvent.setup();
     render(<ArtistForm />);
 
+    const addArtistButton = screen.getByRole('button', { name: UIButtons.AddNewArtist });
+    await user.click(addArtistButton);
+
     const nameInput = screen.getByLabelText(UILabels.InputNameLabel);
     const activeFromInput = screen.getByLabelText(UILabels.InputActiveFromLabel);
     const countryInput = screen.getByLabelText(UILabels.InputCountryLabel);
@@ -31,17 +34,22 @@ describe('ArtistForm Component', () => {
     });
 
     it('successfully submits the form with valid data and clears inputs', async () => {
-        // Fill form with a valid year
+        // Arrange & Act: Fill form with a valid year
         const { user, submitButton } = await setupAndFillForm('2015');
-
         await user.click(submitButton);
 
-        await waitFor(async () => {
-            expect(screen.getByLabelText(UILabels.InputNameLabel)).toHaveValue('');
-            expect(screen.getByLabelText(UILabels.InputCountryLabel)).toHaveValue('');
+        // Wait for the form to automatically close upon success
+        const addArtistButton = await screen.findByRole('button', { name: UIButtons.AddNewArtist });
+        expect(addArtistButton).toBeInTheDocument();
 
-            // Asserting empty string for number input
-            expect(screen.getByLabelText(UILabels.InputActiveFromLabel)).toHaveValue(null);
-        });
+        // Re-open the form
+        await user.click(addArtistButton);
+
+        // Assert: Verify the inputs were completely remounted and cleared
+        expect(screen.getByLabelText(UILabels.InputNameLabel)).toHaveValue('');
+        expect(screen.getByLabelText(UILabels.InputCountryLabel)).toHaveValue('');
+        
+        // For number inputs in React Testing Library, an empty string is asserted like this:
+        expect(screen.getByLabelText(UILabels.InputActiveFromLabel)).toHaveValue(null);
     });
 });

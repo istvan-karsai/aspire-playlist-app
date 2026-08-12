@@ -91,6 +91,8 @@ export const UIButtons = {
     Edit: "Edit",
     Delete: "Delete",
     Deleting: "Deleting...",
+    AddNewSong: "Add New Song",
+    AddNewArtist: "Add New Artist",
 } as const;
 
 export const UIPrompts = {

@@ -10,6 +10,9 @@ const setupAndFillForm = async (durationValue: string) => {
     const user = userEvent.setup();
     render(<SongForm />);
 
+    const addSongButton = screen.getByRole('button', { name: UIButtons.AddNewSong });
+    await user.click(addSongButton);
+
     const titleInput = screen.getByLabelText(UILabels.InputTitleLabel);
 
     const artistCheckBox = await screen.findByRole('checkbox', { name: mockValidArtist.name });
@@ -34,32 +37,36 @@ describe('SongForm Component', () => {
     ])(
         'shows a client-side validation error if the duration is %s (%s)', 
         async (invalidDuration: string, _description: string, expectedErrorMessage: string) => {
-        // Arrange: Fill the form with invalid duration and disable HTML5 validation
-        const { user, submitButton } = await setupAndFillForm(invalidDuration);
-        document.querySelector('form')?.setAttribute('novalidate', 'true');
+            // Arrange: Fill the form with invalid duration and disable HTML5 validation
+            const { user, submitButton } = await setupAndFillForm(invalidDuration);
+            document.querySelector('form')?.setAttribute('novalidate', 'true');
 
-        // Act: Attempt to submit the form
-        await user.click(submitButton);
+            // Act: Attempt to submit the form
+            await user.click(submitButton);
 
-        // Assert: Verify the correct custom validation error fires based on the input
-        expect(await screen.findByText(expectedErrorMessage)).toBeInTheDocument();
-    });
+            // Assert: Verify the correct custom validation error fires based on the input
+            expect(await screen.findByText(expectedErrorMessage)).toBeInTheDocument();
+        }
+    );
 
     it('successfully submits the form with valid data and clears inputs', async () => {
-        // Arrange: Fill the form with valid duration
+        // Arrange & Act: Fill and submt the form with valid duration
         const { user, submitButton } = await setupAndFillForm('00:05:55');
-
-        // Act: Submit the form
         await user.click(submitButton);
 
-        // Assert: Re-query the DOM to ensure the form was completely remounted and cleared
-        await waitFor(async () => {
-            expect(screen.getByLabelText(UILabels.InputTitleLabel)).toHaveValue('');
+        // Wait for the form to automatically close upon success
+        const addSongButton = await screen.findByRole('button', { name: UIButtons.AddNewSong });
+        expect(addSongButton).toBeInTheDocument();
 
-            const resetCheckbox = await screen.findByRole('checkbox', { name: mockValidArtist.name });
-            expect(resetCheckbox).not.toBeChecked();
+        // Re-open the form
+        await user.click(addSongButton);
+
+        // Assert: Verify the inputs were completely remounted and cleared
+        expect(screen.getByLabelText(UILabels.InputTitleLabel)).toHaveValue('');
+
+        const resetCheckbox = await screen.findByRole('checkbox', { name: mockValidArtist.name });
+        expect(resetCheckbox).not.toBeChecked();
             
-            expect(screen.getByLabelText(UILabels.InputDurationLabel)).toHaveValue('');
-        });
+        expect(screen.getByLabelText(UILabels.InputDurationLabel)).toHaveValue('');
     });
 });
