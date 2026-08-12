@@ -8,6 +8,7 @@ public class AppHostCollection : ICollectionFixture<AppHostFixture>
     // This class has no code. It is used by xUnit to bind the fixture across multiple test classes.
 }
 
+[Trait("Category", "E2E")]
 [Collection(nameof(AppHostCollection))]
 public class SmokeTests(AppHostFixture fixture) : IAsyncLifetime
 {

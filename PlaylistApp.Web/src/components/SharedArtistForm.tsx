@@ -140,6 +140,7 @@ export const SharedArtistForm = ({
 
                 <button 
                     type="submit"
+                    data-testid="submit-button"
                     disabled={isPending}
                     className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors h-10 flex items-center justify-center"
                 >
