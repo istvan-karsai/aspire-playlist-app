@@ -37,6 +37,7 @@ export const Navbar = () => {
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                             <NavLink 
                                 to="/songs"
+                                data-testid="nav-songs-link"
                                 className={({ isActive }) => getTabClass(isActive)}
                             >
                                 {UILabels.NavSongs}
@@ -44,6 +45,7 @@ export const Navbar = () => {
 
                             <NavLink
                                 to="/artists"
+                                data-testid="nav-artists-link"
                                 className={({ isActive }) => getTabClass(isActive)}
                             >
                                 {UILabels.NavArtists}
