@@ -76,17 +76,17 @@ export const SongList = () => {
                     <table className="w-full min-w-full text-sm table-fixed">
                         <thead className="bg-gray-50 border-b">
                             <tr>
-                                <th className="h-12 px-4 text-left font-medium text-gray-500 w-5/12">{UILabels.TableTitle}</th>
-                                <th className="h-12 px-4 text-left font-medium text-gray-500 w-4/12">{UILabels.Artists}</th>
-                                <th className="h-12 px-4 text-left font-medium text-gray-500 w-2/12">{UILabels.TableDuration}</th>
-                                <th className="h-12 px-4 text-right font-medium text-gray-500 w-1/12">{UILabels.TableActions}</th>
+                                <th className="h-12 px-4 text-left font-medium text-gray-500 w-8/12 sm:w-6/12 md:w-5/12 lg:w-5/12">{UILabels.TableTitle}</th>
+                                <th className="hidden sm:table-cell h-12 px-4 text-left font-medium text-gray-500 sm:w-4/12 md:w-4/12 lg:w-4/12">{UILabels.Artists}</th>
+                                <th className="hidden md:table-cell h-12 px-4 text-right font-medium text-gray-500 md:w-2/12 lg:w-2/12">{UILabels.TableDuration}</th>
+                                <th className="h-12 px-4 text-right font-medium text-gray-500 w-4/12 sm:w-2/12 md:w-1/12 lg:w-1/12">{UILabels.TableActions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {songs.map((song) => (
                                 <tr key={song.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="p-4 font-medium text-gray-900 truncate">{song.title}</td>
-                                    <td className="p-4 text-gray-600 truncate">
+                                    <td className="hidden sm:table-cell p-4 text-gray-600 truncate">
                                         {song.artists && song.artists.length > 0 ? (
                                             song.artists.map((artist, index) => (
                                                 <span key={artist.id}>
@@ -103,7 +103,7 @@ export const SongList = () => {
                                             <span className="text-gray-400 italic">{UILabels.EmptyArtistsFallback}</span>
                                         )}
                                     </td>
-                                    <td className="p-4 text-gray-600">{song.duration}</td>
+                                    <td className="hidden md:table-cell p-4 text-gray-600 text-right">{song.duration}</td>
                                     <td className="p-4 text-right">
                                         <button
                                             onClick={() => setEditingSong(song)}
