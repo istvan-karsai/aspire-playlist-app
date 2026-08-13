@@ -61,11 +61,11 @@ export const ArtistList = () => {
                 <table className="w-full min-w-full text-sm table-fixed">
                     <thead className="bg-gray-50 border-b">
                         <tr>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-3/12">{UILabels.TableName}</th>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-4/12">{UILabels.TableBio}</th>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-2/12">{UILabels.TableActiveFrom}</th>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-2/12">{UILabels.TableCountry}</th>
-                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-1/12">{UILabels.TableActions}</th>
+                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-6/12 lg:w-3/12">{UILabels.TableName}</th>
+                            <th className="hidden lg:table-cell h-12 px-4 text-left font-medium text-gray-500 lg:w-4/12">{UILabels.TableBio}</th>
+                            <th className="hidden sm:table-cell h-12 px-4 text-left font-medium text-gray-500 sm:w-3/12">{UILabels.TableCountry}</th>
+                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-1/12">{UILabels.TableActiveFrom}</th>
+                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-2/12 lg:w-1/12">{UILabels.TableActions}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -88,9 +88,9 @@ export const ArtistList = () => {
                                         </span>
                                     </Link>
                                 </td>
-                                <td className="p-4 text-gray-600 truncate">{artist.bio || "-"}</td>
-                                <td className="p-4 text-gray-600">{artist.activeFromYear || "-"}</td>
-                                <td className="p-4 text-gray-600 truncate">{artist.country || "-"}</td>
+                                <td className="hidden lg:table-cell p-4 text-gray-600 truncate">{artist.bio || "-"}</td>
+                                <td className="hidden sm:table-cell p-4 text-gray-600 truncate">{artist.country || "-"}</td>
+                                <td className="p-4 text-gray-600 text-right">{artist.activeFromYear || "-"}</td>
                                 <td className="p-4 text-right">
                                     <button
                                         onClick={() => setEditingArtist(artist)}
