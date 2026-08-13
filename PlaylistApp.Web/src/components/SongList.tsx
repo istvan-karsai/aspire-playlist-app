@@ -5,14 +5,16 @@ import { useState } from "react";
 import { EditSongModal } from "./EditSongModal";
 import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../constants/uiText";
 import { useSongs } from "../hooks/useSongs";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useArtists } from "../hooks/useArtists";
 
 export const SongList = () => {
     const queryClient = useQueryClient();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [editingSong, setEditingSong] = useState<Song | null>(null);
-    const [selectedArtistId, setSelectedArtistId] = useState<string>("");
+
+    const selectedArtistId = searchParams.get('artistId') || "";
     
     const { data: songs, isLoading, isError, error } = useSongs(selectedArtistId || undefined);
 
@@ -34,6 +36,17 @@ export const SongList = () => {
         }
     };
 
+    const handleArtistFilterChange = (artistId: string) => {
+        setSearchParams((prevParams) => {
+            if (artistId) {
+                prevParams.set('artistId', artistId);
+            } else {
+                prevParams.delete('artistId');
+            }
+            return prevParams;
+        }, { replace: true });
+    };
+
     return (
         <div className="space-y-4 w-full">
             {/* Header & Filter Section - Always Visible */}
@@ -44,7 +57,7 @@ export const SongList = () => {
                     <select 
                         id="artist-filter"
                         value={selectedArtistId}
-                        onChange={(e) => setSelectedArtistId(e.target.value)}
+                        onChange={(e) => handleArtistFilterChange(e.target.value)}
                         className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white text-sm"                    
                     >
                         <option value="">{UILabels.AllArtists}</option>
