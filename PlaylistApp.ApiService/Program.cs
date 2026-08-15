@@ -1,12 +1,13 @@
 using PlaylistApp.ApiService.Data;
 using Microsoft.EntityFrameworkCore;
-using PlaylistApp.ApiService.Endpoints;
 using FluentValidation;
 using PlaylistApp.ApiService.ExceptionHandlers;
 using Scalar.AspNetCore;
 using PlaylistApp.ApiService.Telemetry;
 using PlaylistApp.ApiService.Constants;
 using System.Threading.RateLimiting;
+using PlaylistApp.ApiService.Features.Songs;
+using PlaylistApp.ApiService.Features.Artists;
 
 var builder = WebApplication.CreateBuilder(args);
 

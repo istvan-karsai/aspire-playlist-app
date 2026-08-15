@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Data;
-using PlaylistApp.ApiService.DTOs.Artists;
-using PlaylistApp.ApiService.Entities;
 using PlaylistApp.ApiService.Filters;
 
-namespace PlaylistApp.ApiService.Endpoints;
+namespace PlaylistApp.ApiService.Features.Artists;
 
 public static class ArtistEndpoints
 {

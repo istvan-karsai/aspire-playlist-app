@@ -1,9 +1,7 @@
 using FluentValidation;
 using PlaylistApp.ApiService.Constants;
-using PlaylistApp.ApiService.DTOs.Songs;
-using PlaylistApp.ApiService.Entities;
 
-namespace PlaylistApp.ApiService.Validators.Songs;
+namespace PlaylistApp.ApiService.Features.Songs;
 
 public class CreateSongRequestValidator : AbstractValidator<CreateSongRequest>
 {

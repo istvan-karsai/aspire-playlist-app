@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using PlaylistApp.ApiService.Constants;
-using PlaylistApp.ApiService.DTOs.Songs;
+using PlaylistApp.ApiService.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration.Security;
 

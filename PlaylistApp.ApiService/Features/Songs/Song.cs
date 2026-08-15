@@ -1,4 +1,6 @@
-namespace PlaylistApp.ApiService.Entities;
+using PlaylistApp.ApiService.Features.Artists;
+
+namespace PlaylistApp.ApiService.Features.Songs;
 
 internal sealed class Song
 {

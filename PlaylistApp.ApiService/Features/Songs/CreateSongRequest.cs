@@ -1,4 +1,4 @@
-namespace PlaylistApp.ApiService.DTOs.Songs;
+namespace PlaylistApp.ApiService.Features.Songs;
 
 public record CreateSongRequest(
     string Title,
