@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Features.Artists;
 
-namespace PlaylistApp.Tests.Integration.Endpoints;
+namespace PlaylistApp.Tests.Integration.Features.Artists;
 
 public class ArtistEndpointsTests : BaseIntegrationTest
 {

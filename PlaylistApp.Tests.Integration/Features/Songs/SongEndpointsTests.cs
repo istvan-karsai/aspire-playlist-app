@@ -6,7 +6,7 @@ using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Features.Artists;
 using PlaylistApp.ApiService.Features.Songs;
 
-namespace PlaylistApp.Tests.Integration.Endpoints;
+namespace PlaylistApp.Tests.Integration.Features.Songs;
 
 public class SongEndpointsTests : BaseIntegrationTest
 {
