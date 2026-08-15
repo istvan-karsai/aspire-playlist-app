@@ -1,4 +1,5 @@
 using PlaylistApp.ApiService.Features.Artists;
+using PlaylistApp.ApiService.Features.Playlists;
 
 namespace PlaylistApp.ApiService.Features.Songs;
 
@@ -12,4 +13,7 @@ internal sealed class Song
 
     public ICollection<SongArtist> SongArtists { get; set; } = [];
     public ICollection<Artist> Artists { get; set; } = []; // Skip Navigation
+
+    public ICollection<PlaylistSong> PlaylistSongs { get; set; } = [];
+    public ICollection<Playlist> Playlists { get; set; } = []; // Skip Navigation
 }

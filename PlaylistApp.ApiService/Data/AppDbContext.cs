@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PlaylistApp.ApiService.Features.Songs;
 using PlaylistApp.ApiService.Features.Artists;
+using PlaylistApp.ApiService.Features.Playlists;
 
 namespace PlaylistApp.ApiService.Data;
 
@@ -9,6 +10,8 @@ internal sealed class AppDbContext : DbContext
     public DbSet<Song> Songs => Set<Song>();
     public DbSet<Artist> Artists => Set<Artist>();
     public DbSet<SongArtist> SongArtists => Set<SongArtist>();
+    public DbSet<Playlist> Playlists => Set<Playlist>();
+    public DbSet<PlaylistSong> PlaylistSongs => Set<PlaylistSong>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
