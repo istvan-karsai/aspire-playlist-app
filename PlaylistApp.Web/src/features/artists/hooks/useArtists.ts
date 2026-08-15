@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchArtistById, fetchArtists } from "../api/client";
+import { fetchArtistById, fetchArtists } from "../api/artistsClient";
 
 export const useArtists = () => {
     return useQuery({

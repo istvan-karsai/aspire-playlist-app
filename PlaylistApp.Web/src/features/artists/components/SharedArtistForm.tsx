@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { UIButtons, UILabels, UIPlaceholders, ValidationMessages } from "../constants/uiText";
-import { ValidationBounds } from "../constants/validation";
+import { UIButtons, UILabels, UIPlaceholders, ValidationMessages } from "../../../constants/uiText";
+import { ValidationBounds } from "../../../constants/validation";
 
 export interface ArtistFormData {
     name: string;

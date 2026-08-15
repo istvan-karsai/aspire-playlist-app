@@ -1,9 +1,9 @@
-import { render, screen } from '../utils/test-utils';
+import { render, screen } from '../../../tests/utils/test-utils';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { SongForm } from '../../components/SongForm';
-import { UIButtons, UILabels, ValidationMessages } from '../../constants/uiText';
-import { mockValidArtist } from '../mocks/mockData';
+import { SongForm } from './SongForm';
+import { UIButtons, UILabels, ValidationMessages } from '../../../constants/uiText';
+import { mockValidArtist } from "../../artists/tests/artistMocks";
 
 
 const setupAndFillForm = async (durationValue: string) => {

@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import type { Artist } from "../types/artist";
-import { deleteArtist } from "../api/client";
-import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../constants/uiText";
+import type { Artist } from "../types";
+import { deleteArtist } from "../api/artistsClient";
+import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../../../constants/uiText";
 import { EditArtistModal } from "./EditArtistModal";
 import { useArtists } from "../hooks/useArtists";
 import { Link } from "react-router-dom";

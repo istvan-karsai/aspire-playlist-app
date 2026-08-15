@@ -1,12 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { ArtistDetailsPage } from "../../pages/ArtistDetailsPage";
 import { describe, expect, it } from "vitest";
-import { mockValidArtist, mockValidSong } from "../mocks/mockData";
-import { UILabels } from "../../constants/uiText";
-import { server } from "../mocks/server";
 import { http, HttpResponse } from "msw";
+import { ArtistDetailsPage } from "./ArtistDetailsPage";
+import { mockValidArtist } from "../tests/artistMocks";
+import { UILabels } from "../../../constants/uiText";
+import { server } from "../../../tests/mocks/server";
+import { mockValidSong } from "../../songs/tests/songMocks";
 
 const renderArtistDetailsPage = (artistId: string) => {
     const queryClient = new QueryClient({

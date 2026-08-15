@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Artist } from "../types/artist";
-import { ApiValidationError, updateArtist } from "../api/client";
+import type { Artist } from "../types";
+import { ApiValidationError } from "../../../api/core";
+import { updateArtist } from "../api/artistsClient";
 import { SharedArtistForm, type ArtistFormData } from "./SharedArtistForm";
-import { UIButtons, UILabels } from "../constants/uiText";
+import { UIButtons, UILabels } from "../../../constants/uiText";
 
 interface EditArtistModalProps {
     artist: Artist;

@@ -1,10 +1,10 @@
-import { render, screen } from "../utils/test-utils";
+import { render, screen } from "../../../tests/utils/test-utils";
 import { describe, expect, it } from "vitest";
-import { ArtistList } from "../../components/ArtistList";
-import { UILabels } from "../../constants/uiText";
-import { server } from "../mocks/server";
+import { ArtistList } from "./ArtistList";
+import { UILabels } from "../../../constants/uiText";
+import { server } from "../../../tests/mocks/server";
 import { http, HttpResponse } from "msw";
-import { mockArtists, mockValidArtist } from "../mocks/mockData";
+import { mockArtists, mockValidArtist } from "../tests/artistMocks";
 
 describe('ArtistList Component', () => {
     it('displays a loading indicator while fetching artists', () => {
