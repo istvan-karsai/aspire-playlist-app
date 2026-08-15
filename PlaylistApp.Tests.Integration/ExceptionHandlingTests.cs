@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using PlaylistApp.ApiService;
-using PlaylistApp.ApiService.DTOs.Songs;
 using PlaylistApp.ApiService.Data;
 using PlaylistApp.ApiService.Constants;
+using PlaylistApp.ApiService.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration;
 

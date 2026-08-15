@@ -1,5 +1,6 @@
-using PlaylistApp.ApiService.Entities;
 using Microsoft.EntityFrameworkCore;
+using PlaylistApp.ApiService.Features.Songs;
+using PlaylistApp.ApiService.Features.Artists;
 
 namespace PlaylistApp.ApiService.Data;
 

@@ -3,9 +3,8 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
-using PlaylistApp.ApiService.DTOs.Artists;
-using PlaylistApp.ApiService.DTOs.Songs;
-using PlaylistApp.ApiService.Entities;
+using PlaylistApp.ApiService.Features.Artists;
+using PlaylistApp.ApiService.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration.Endpoints;
 

@@ -1,4 +1,4 @@
-namespace PlaylistApp.ApiService.DTOs.Artists;
+namespace PlaylistApp.ApiService.Features.Artists;
 
 public record ArtistResponse(
     Guid Id,

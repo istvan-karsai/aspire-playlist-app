@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PlaylistApp.ApiService.Entities;
 
-namespace PlaylistApp.ApiService.Data.Configurations;
+namespace PlaylistApp.ApiService.Features.Artists;
 
 internal sealed class ArtistConfiguration : IEntityTypeConfiguration<Artist>
 {

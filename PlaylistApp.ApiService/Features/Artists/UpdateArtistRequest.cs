@@ -1,6 +1,6 @@
-namespace PlaylistApp.ApiService.DTOs.Artists;
+namespace PlaylistApp.ApiService.Features.Artists;
 
-public record CreateArtistRequest(
+public record UpdateArtistRequest(
     string Name,
     string? Bio,
     int? ActiveFromYear,

@@ -1,6 +1,6 @@
-using PlaylistApp.ApiService.DTOs.Artists;
+using PlaylistApp.ApiService.Features.Artists;
 
-namespace PlaylistApp.ApiService.DTOs.Songs;
+namespace PlaylistApp.ApiService.Features.Songs;
 
 public record SongResponse(
     Guid Id,

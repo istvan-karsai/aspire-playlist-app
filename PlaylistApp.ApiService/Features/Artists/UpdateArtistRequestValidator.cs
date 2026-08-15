@@ -1,13 +1,11 @@
 using FluentValidation;
 using PlaylistApp.ApiService.Constants;
-using PlaylistApp.ApiService.DTOs.Artists;
-using PlaylistApp.ApiService.Entities;
 
-namespace PlaylistApp.ApiService.Validators.Artists;
+namespace PlaylistApp.ApiService.Features.Artists;
 
-public class CreateArtistRequestValidator : AbstractValidator<CreateArtistRequest>
+public class UpdateArtistRequestValidator : AbstractValidator<UpdateArtistRequest>
 {
-    public CreateArtistRequestValidator()
+    public UpdateArtistRequestValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage(ValidationMessages.NameRequired)
