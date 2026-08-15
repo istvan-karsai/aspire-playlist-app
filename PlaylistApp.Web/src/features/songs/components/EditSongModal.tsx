@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Song, SongPayload } from "../types/song";
-import { ApiValidationError, updateSong } from "../api/client";
+import type { Song, SongPayload } from "../types";
+import { ApiValidationError } from "../../../api/core";
+import { updateSong } from "../api/songsClient";
+import { UIButtons, UILabels } from "../../../constants/uiText";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
-import { UIButtons, UILabels } from "../constants/uiText";
 
 interface EditSongModalProps {
     song: Song;

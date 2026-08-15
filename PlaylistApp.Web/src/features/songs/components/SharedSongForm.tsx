@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { UIButtons, UIHints, UILabels, UIPlaceholders, ValidationMessages } from "../constants/uiText";
-import { FormatConstants, ValidationRegex } from "../constants/validation";
-import { useArtists } from "../hooks/useArtists";
+import { UIButtons, UIHints, UILabels, UIPlaceholders, ValidationMessages } from "../../../constants/uiText";
+import { FormatConstants, ValidationRegex } from "../../../constants/validation";
+import { useArtists } from "../../artists/hooks/useArtists";
 
 export interface SongFormData {
     title: string;

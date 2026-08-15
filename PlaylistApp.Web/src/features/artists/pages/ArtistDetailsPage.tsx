@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useArtist } from "../hooks/useArtists";
-import { useSongs } from "../hooks/useSongs";
-import { UILabels } from "../constants/uiText";
+import { useSongs } from "../../songs/hooks/useSongs";
+import { UILabels } from "../../../constants/uiText";
 
 export const ArtistDetailsPage = () => {
     const { id } = useParams<{ id: string}>();

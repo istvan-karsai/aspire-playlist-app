@@ -1,11 +1,12 @@
-import { render, screen } from "../utils/test-utils";
 import { describe, expect, it } from "vitest";
-import { SongList } from "../../components/SongList";
-import { server } from "../mocks/server";
 import { http, HttpResponse } from "msw";
-import { UILabels } from "../../constants/uiText";
-import { mockArtistWithoutSong, mockValidArtist, mockValidSong, mockValidSong2 } from "../mocks/mockData";
 import userEvent from "@testing-library/user-event";
+import { render, screen } from "../../../tests/utils/test-utils";
+import { SongList } from "./SongList";
+import { UILabels } from "../../../constants/uiText";
+import { server } from "../../../tests/mocks/server";
+import { mockArtistWithoutSong, mockValidArtist } from "../../artists/tests/artistMocks";
+import { mockValidSong, mockValidSong2 } from "../tests/songMocks";
 
 describe('SongList Component', () => {
     it('displays a loading indicator while fetching songs', () => {

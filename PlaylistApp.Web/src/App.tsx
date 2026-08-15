@@ -1,9 +1,9 @@
 import './App.css'
 import { Navbar } from './components/Navbar'
-import { SongsPage } from './pages/SongsPage'
-import { ArtistsPage } from './pages/ArtistsPage';
+import { SongsPage } from './features/songs/pages/SongsPage'
+import { ArtistsPage } from './features/artists/pages/ArtistsPage';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { ArtistDetailsPage } from './pages/ArtistDetailsPage';
+import { ArtistDetailsPage } from './features/artists/pages/ArtistDetailsPage';
 
 function App() {
   return (

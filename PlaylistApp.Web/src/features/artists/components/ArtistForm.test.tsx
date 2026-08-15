@@ -1,7 +1,7 @@
-import { render, screen } from "../utils/test-utils";
+import { render, screen } from "../../../tests/utils/test-utils";
 import userEvent from "@testing-library/user-event";
-import { ArtistForm } from "../../components/ArtistForm";
-import { UIButtons, UILabels, ValidationMessages } from "../../constants/uiText";
+import { ArtistForm } from "./ArtistForm";
+import { UIButtons, UILabels, ValidationMessages } from "../../../constants/uiText";
 import { describe, expect, it } from "vitest";
 
 const setupAndFillForm = async (yearValue: string) => {

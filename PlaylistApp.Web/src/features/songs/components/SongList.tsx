@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSong } from "../api/client";
-import type { Song } from "../types/song";
+import { deleteSong } from "../api/songsClient";
+import type { Song } from "../types";
 import { useState } from "react";
 import { EditSongModal } from "./EditSongModal";
-import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../constants/uiText";
+import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../../../constants/uiText";
 import { useSongs } from "../hooks/useSongs";
 import { Link, useSearchParams } from "react-router-dom";
-import { useArtists } from "../hooks/useArtists";
+import { useArtists } from "../../artists/hooks/useArtists";
 
 export const SongList = () => {
     const queryClient = useQueryClient();
