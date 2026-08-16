@@ -8,6 +8,7 @@ using PlaylistApp.ApiService.Constants;
 using System.Threading.RateLimiting;
 using PlaylistApp.ApiService.Features.Songs;
 using PlaylistApp.ApiService.Features.Artists;
+using PlaylistApp.ApiService.Features.Playlists;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +94,7 @@ app.UseCors(PolicyConstants.CorsPolicy);
 app.MapDefaultEndpoints();
 app.MapSongEndpoints();
 app.MapArtistEndpoints();
+app.MapPlaylistEndpoints();
 app.Run();
 
 // This exists purely so WebApplicationFactory can locate this assembly without name collisions
