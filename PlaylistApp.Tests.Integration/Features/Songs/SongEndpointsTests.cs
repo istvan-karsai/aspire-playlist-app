@@ -8,7 +8,7 @@ using PlaylistApp.ApiService.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration.Features.Songs;
 
-public class SongEndpointsTests : BaseIntegrationTest
+public class SongEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
 {
     [Fact]
     public async Task GetSongs_ReturnsOk_AndEmptyListInitially()

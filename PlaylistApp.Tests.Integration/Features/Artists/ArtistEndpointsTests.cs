@@ -7,7 +7,7 @@ using PlaylistApp.ApiService.Features.Artists;
 
 namespace PlaylistApp.Tests.Integration.Features.Artists;
 
-public class ArtistEndpointsTests : BaseIntegrationTest
+public class ArtistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
 {
     [Fact]
     public async Task GetArtists_ReturnsOk_AndEmptyListInitially()
