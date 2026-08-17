@@ -16,6 +16,7 @@ public static class ArtistEndpoints
         group.MapGet("/", async (AppDbContext db) =>
         {
             var artists = await db.Artists
+                                  .AsNoTracking()
                                   .Select(a => new ArtistResponse(
                                     a.Id,
                                     a.Name,
@@ -60,6 +61,7 @@ public static class ArtistEndpoints
         group.MapGet("/{id:guid}", async Task<Results<Ok<ArtistResponse>, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
             var artist = await db.Artists
+                                 .AsNoTracking()
                                  .Where(a => a.Id == id)
                                  .Select(a => new ArtistResponse(
                                     a.Id,

@@ -18,6 +18,7 @@ public static class PlaylistEndpoints
         group.MapGet("/", async (AppDbContext db) =>
         {
             var playlists = await db.Playlists
+                                    .AsNoTracking()
                                     .AsSplitQuery()
                                     .Select(p => new PlaylistResponse(
                                         p.Id,
@@ -96,6 +97,7 @@ public static class PlaylistEndpoints
         group.MapGet("/{id:guid}", async Task<Results<Ok<PlaylistResponse>, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
             var playlist = await db.Playlists
+                                   .AsNoTracking()
                                    .AsSplitQuery()
                                    .Where(p => p.Id == id)
                                    .Select(p => new PlaylistResponse(

@@ -17,7 +17,9 @@ public static class SongEndpoints
 
         group.MapGet("/", async ([FromQuery] Guid? artistId, AppDbContext db) =>
         {
-            var query = db.Songs.AsQueryable();
+            var query = db.Songs
+                          .AsNoTracking()
+                          .AsQueryable();
 
             if (artistId.HasValue)
             {
@@ -72,6 +74,7 @@ public static class SongEndpoints
         group.MapGet("/{id:guid}", async Task<Results<Ok<SongResponse>, NotFound<ProblemDetails>>> (Guid id, AppDbContext db) =>
         {
             var song = await db.Songs
+                               .AsNoTracking()
                                .Where(s => s.Id == id)
                                .Select(s => new SongResponse(
                                     s.Id, 
