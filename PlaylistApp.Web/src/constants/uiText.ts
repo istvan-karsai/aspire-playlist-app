@@ -7,6 +7,7 @@ export const ApiMessages = {
     DeleteArtistError: (message: string) => `Error deleting artist: ${message}`,
     SaveArtistErrorPrefix: "Failed to save artist because of the following error(s):",
     TooManyRequests: "Too many requests. Please wait a few minutes and try again.",
+    SavePlaylistErrorPrefix: "Failed to save playlist because of the following error(s):",
 } as const;
 
 export const ValidationMessages = {
@@ -15,6 +16,7 @@ export const ValidationMessages = {
     TitleRequired: "Title is required.",
     ArtistRequired: "At least one Artist must be selected.",
     DurationGreaterThanZero: "Duration must be greater than 0.",
+    NameRequired: "Name is required.",
 } as const;
 
 export const UILabels = {
@@ -66,6 +68,15 @@ export const UILabels = {
 
     // Shared Table Fallbacks
     EmptyArtistsFallback: "-",
+    InputDescriptionLabel: "Description",
+    Songs: "Songs",
+    NoSongsAvailable: "No songs available.",
+    AddPlaylistHeader: "Add a New Playlist",
+    EditPlaylistHeader: "Edit Playlist",
+    PlaylistLibraryHeader: "Playlists",
+    EmptyPlaylistLibrary: "Your playlist library is currently empty. Create one to get started!",
+    LoadingPlaylistLibrary: "Loading the playlist library...",
+    ErrorLoadingPlaylistsHeader: "Error loading playlists",
 } as const;
 
 export const UIPlaceholders = {
@@ -77,6 +88,8 @@ export const UIPlaceholders = {
     ActiveFrom: "1970",
     Country: "e.g. United Kingdom",
     ImageUrl: "https://example.com/image.jpg",
+    PlaylistName: "e.g. Summer Vibes, Workout Mix...",
+    PlaylistDescription: "e.g. The ultimate playlist for running...",
 } as const;
 
 export const UIHints = {
@@ -93,6 +106,7 @@ export const UIButtons = {
     Deleting: "Deleting...",
     AddNewSong: "Add New Song",
     AddNewArtist: "Add New Artist",
+    AddNewPlaylist: "Add New Playlist",
 } as const;
 
 export const UIPrompts = {
