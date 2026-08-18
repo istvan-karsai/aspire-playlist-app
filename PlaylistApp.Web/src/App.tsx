@@ -4,6 +4,7 @@ import { SongsPage } from './features/songs/pages/SongsPage'
 import { ArtistsPage } from './features/artists/pages/ArtistsPage';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ArtistDetailsPage } from './features/artists/pages/ArtistDetailsPage';
+import { PlaylistsPage } from './features/playlists/pages/PlaylistsPage';
 
 function App() {
   return (
@@ -15,8 +16,8 @@ function App() {
           <Route path="/songs" element={<SongsPage />} />
           <Route path="/artists" element={<ArtistsPage />} />
           <Route path="/artists/:id" element={<ArtistDetailsPage />} />
+          <Route path="/playlists" element={<PlaylistsPage />} />
         </Routes>
-        {/* TODO: Implement Playlists view */}
       </main>
     </div>
   )

@@ -51,9 +51,13 @@ export const Navbar = () => {
                                 {UILabels.NavArtists}
                             </NavLink>
 
-                            <span className="border-transparent text-gray-400 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium cursor-not-allowed">
+                            <NavLink
+                                to="/playlists"
+                                data-testid="nav-playlists-link"
+                                className={({ isActive }) => getTabClass(isActive)}
+                            >
                                 {UILabels.NavPlaylists}
-                            </span>
+                            </NavLink>
                         </div>
                     </div>
 
@@ -114,9 +118,13 @@ export const Navbar = () => {
                         >
                             {UILabels.NavArtists}
                         </NavLink>
-                        <span className="border-transparent text-gray-400 block pl-3 pr-4 py-2 border-l-4 text-base font-medium cursor-not-allowed">
+                        <NavLink
+                            to="/playlists"
+                            onClick={closeMobileMenu}
+                            className={({ isActive }) => getMobileTabClass(isActive)}
+                        >
                             {UILabels.NavPlaylists}
-                        </span>
+                        </NavLink>
                     </div>
                 </div>
             )}
