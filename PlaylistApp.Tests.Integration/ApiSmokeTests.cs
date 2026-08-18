@@ -2,7 +2,7 @@ using System.Net;
 
 namespace PlaylistApp.Tests.Integration;
 
-public class ApiSmokeTests : BaseIntegrationTest
+public class ApiSmokeTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
 {
     [Fact]
     public async Task AppHost_StartsSuccessfully_AndApiIsHealthy()

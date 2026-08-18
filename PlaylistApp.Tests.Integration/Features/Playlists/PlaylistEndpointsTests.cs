@@ -9,7 +9,7 @@ using PlaylistApp.ApiService.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration.Features.Playlists;
 
-public class PlaylistEndpointsTests : BaseIntegrationTest
+public class PlaylistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
 {
     private async Task<Guid> CreateTestSongAsync()
     {

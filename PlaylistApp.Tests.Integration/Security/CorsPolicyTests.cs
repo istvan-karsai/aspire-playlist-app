@@ -3,7 +3,7 @@ using System.Net;
 namespace PlaylistApp.Tests.Integration.Security;
 
 [Trait("Category", "Security")]
-public class CorsPolicyTests : BaseIntegrationTest
+public class CorsPolicyTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
 {
     [Fact]
     public async Task CorsPolicy_WithAllowedOrigin_ReturnsAccessControlHeaders()

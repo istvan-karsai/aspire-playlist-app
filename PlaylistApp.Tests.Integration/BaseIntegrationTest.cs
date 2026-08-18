@@ -1,31 +1,21 @@
-using Aspire.Hosting;
-using Aspire.Hosting.Testing;
+using Npgsql;
 
 namespace PlaylistApp.Tests.Integration;
 
 [Trait("Category", "Integration")]
-public abstract class BaseIntegrationTest : IAsyncLifetime
+[Collection(nameof(AppHostCollection))]
+public abstract class BaseIntegrationTest(AppHostFixture fixture) : IAsyncLifetime
 {
-    private DistributedApplication _app = null!;
-    protected HttpClient HttpClient { get; private set; } = null!;
+    protected HttpClient HttpClient { get; } = fixture.HttpClient;
+    private readonly string _connectionString = fixture.ConnectionString;
 
     public async Task InitializeAsync()
     {
-        var appHost = await DistributedApplicationTestingBuilder
-            .CreateAsync<Projects.PlaylistApp_AppHost>();
-        
-        _app = await appHost.BuildAsync();
-        await _app.StartAsync();
+        await using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync();
 
-        HttpClient = _app.CreateHttpClient("apiservice");
+        await fixture.Respawner.ResetAsync(connection);
     }
 
-    public async Task DisposeAsync()
-    {
-        HttpClient.Dispose();
-        if (_app is not null)
-        {
-            await _app.DisposeAsync();
-        }
-    }
+    public Task DisposeAsync() => Task.CompletedTask;
 }
