@@ -23,7 +23,7 @@ export const Navbar = () => {
     const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
     return (
-        <nav className="bg-white border-b border-gray-200">
+        <nav className="sticky top-0 z-40 bg-white border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between w-full h-16">
                     <div className="flex">
