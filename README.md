@@ -5,6 +5,11 @@
 
 **Live Application:** [playlist.istvankarsai.com](https://playlist.istvankarsai.com)
 
+Project tracking, active issues, and the current sprint backlog are publicly visible:
+
+- [Kanban Board](https://github.com/users/istvan-karsai/projects/1)
+- [Issue Tracker](https://github.com/istvan-karsai/aspire-playlist-app/issues)
+
 A modern, decoupled web application for managing music playlists, users, and artists. This project serves as a showcase of a production-ready .NET architecture, demonstrating container orchestration, full-stack typed contracts, and rigorous quality assurance standards.
 
 ## Table of Contents
@@ -17,11 +22,11 @@ A modern, decoupled web application for managing music playlists, users, and art
 - [Setup & Execution](#setup-execution)
 - [Testing Strategy](#testing-strategy)
 - [DevOps & Workflow](#devops-workflow)
-- [Project Management & Roadmap](#project-management-roadmap)
+- [Project Roadmap](#project-roadmap)
 
 ## <a id="project-overview"></a>Project Overview
 
-**Current Status: Active Development**  
+**Current Milestone: MVP (v0.1.0)**  
 Playlist Manager is designed to handle relational music data efficiently. The backend is built to ensure strict validation, safe data parsing, and seamless database migrations, while the frontend consumes these APIs via a responsive, component-driven React interface.
 
 ## <a id="architecture-tech-stack"></a>Architecture & Tech Stack
@@ -82,12 +87,29 @@ erDiagram
         uuid SongId PK,FK
         uuid ArtistId PK,FK
     }
+
+    Playlist ||--o{ PlaylistSong : "contains"
+    Song ||--o{ PlaylistSong : "included in"
+
+    Playlist {
+        uuid Id PK
+        varchar(100) Name "required"
+        varchar(500) Description "nullable"
+    }
+
+    PlaylistSong {
+        uuid PlaylistId PK,FK
+        uuid SongId PK,FK
+    }
 ```
 
 ## <a id="repository-structure"></a>Repository Structure
 
 ```text
 aspire-playlist-app/
+├── .devcontainer/                  # Automated VS Code container environments
+├── .github/workflows/              # CI/CD pipelines (Build, Test, Deploy)
+├── .husky/                         # Local Git hooks (Commitlint)
 ├── PlaylistApp.AppHost/            # .NET Aspire orchestrator
 ├── PlaylistApp.ServiceDefaults/    # Shared telemetry, health checks, and DI
 ├── PlaylistApp.ApiService/         # C# ASP.NET Core minimal API & data access layer
@@ -243,19 +265,15 @@ This repository strictly enforces an enterprise-grade SDLC (Software Development
 - **Linear History:** Merges are restricted to **Squash and Merge** only, ensuring a clean, readable commit history.
 - **Conventional Commits:** `Husky` and `commitlint` are configured locally to reject commits that do not adhere to the Conventional Commits specification (e.g., `feat:`, `fix:`, `docs:`).
 
-## <a id="project-management-roadmap"></a>Project Management & Roadmap
-
-Project tracking, active issues, and the current sprint backlog are publicly visible:
-
-- [Kanban Board](https://github.com/users/istvan-karsai/projects/1)
-- [Issue Tracker](https://github.com/istvan-karsai/aspire-playlist-app/issues)
+## <a id="project-roadmap"></a>Project Roadmap
 
 **Upcoming Milestones:**
 
+- Track active refactoring and infrastructure upgrades via the [Tech Debt Backlog](https://github.com/istvan-karsai/aspire-playlist-app/issues?q=is%3Aissue%20state%3Aopen%20label%3Atech-debt%2Cinfrastructure).
 - Implement a `Makefile` (or `.vscode/tasks.json`) to standardize and alias complex CLI commands for testing and deployment.
 - Implement debounced React search UI.
 - Build unified Search endpoint utilizing PostgreSQL `pg_trgm` (trigram) indexing.
-- Expand schema and endpoints to support `Playlists` and `Users`.
+- Expand schema and endpoints to support `Users`.
 - Integrate ASP.NET Core Identity and JWTs for secure authentication and Role-Based Access Control (RBAC).
 - Overhaul frontend styling to comply with WCAG accessibility (a11y) standards.
 - Migrate React form validation to `react-hook-form` and `zod`.
