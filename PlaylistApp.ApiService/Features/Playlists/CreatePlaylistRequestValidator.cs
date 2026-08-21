@@ -1,5 +1,6 @@
 using FluentValidation;
 using PlaylistApp.ApiService.Constants;
+using PlaylistApp.ApiService.Features.Playlists.Constants;
 
 namespace PlaylistApp.ApiService.Features.Playlists;
 
@@ -8,15 +9,15 @@ public class CreatePlaylistRequestValidator : AbstractValidator<CreatePlaylistRe
     public CreatePlaylistRequestValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage(ValidationMessages.PlaylistNameRequired)
+            .NotEmpty().WithMessage(PlaylistValidationMessages.PlaylistNameRequired)
             .MaximumLength(Playlist.MaxNameLength)
-            .WithMessage(ValidationMessages.PlaylistNameMaxLength);
+            .WithMessage(PlaylistValidationMessages.PlaylistNameMaxLength);
 
         RuleFor(x => x.Description)
             .MaximumLength(Playlist.MaxDescriptionLength)
-            .WithMessage(ValidationMessages.PlaylistDescriptionMaxLength);
+            .WithMessage(PlaylistValidationMessages.PlaylistDescriptionMaxLength);
 
         RuleFor(x => x.SongIds)
-            .NotNull().WithMessage(ValidationMessages.SongIdsRequired);
+            .NotNull().WithMessage(PlaylistValidationMessages.SongIdsRequired);
     }
 }

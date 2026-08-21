@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Features.Artists;
 using PlaylistApp.ApiService.Features.Songs;
+using PlaylistApp.ApiService.Features.Songs.Constants;
 
 namespace PlaylistApp.Tests.Integration.Features.Songs;
 
@@ -121,7 +122,7 @@ public class SongEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fi
         Assert.Multiple(
             () => Assert.NotNull(problemDetails),
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails?.Title),
-            () => Assert.Equal(ErrorMessages.SongNotFound, problemDetails?.Detail)
+            () => Assert.Equal(SongErrorMessages.SongNotFound, problemDetails?.Detail)
         );
     }
 
@@ -172,7 +173,7 @@ public class SongEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fi
         Assert.Multiple(
             () => Assert.NotNull(problemDetails),
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails?.Title),
-            () => Assert.Equal(ErrorMessages.SongNotFound, problemDetails?.Detail)
+            () => Assert.Equal(SongErrorMessages.SongNotFound, problemDetails?.Detail)
         );
     }
 
@@ -212,7 +213,7 @@ public class SongEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fi
         Assert.Multiple(
             () => Assert.NotNull(problemDetails),
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails?.Title),
-            () => Assert.Equal(ErrorMessages.SongNotFound, problemDetails?.Detail)
+            () => Assert.Equal(SongErrorMessages.SongNotFound, problemDetails?.Detail)
         );
     }
 
@@ -237,9 +238,9 @@ public class SongEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fi
         Assert.NotNull(problemDetails);
 
         Assert.Multiple(
-            () => Assert.Contains(ValidationMessages.SongTitleRequired, problemDetails.Errors["Title"]),
-            () => Assert.Contains(ValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"]),
-            () => Assert.Contains(ValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
+            () => Assert.Contains(SongValidationMessages.SongTitleRequired, problemDetails.Errors["Title"]),
+            () => Assert.Contains(SongValidationMessages.DurationGreaterThanZero, problemDetails.Errors["Duration"]),
+            () => Assert.Contains(SongValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
         );
     }
 
@@ -264,7 +265,7 @@ public class SongEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fi
 
         Assert.NotNull(problemDetails);
         
-        var expectedTitleError = ValidationMessages.SongTitleMaxLength
+        var expectedTitleError = SongValidationMessages.SongTitleMaxLength
             .Replace("{MaxLength}",
                 Song.MaxTitleLength.ToString(CultureInfo.InvariantCulture),
                 StringComparison.Ordinal
@@ -272,8 +273,8 @@ public class SongEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(fi
 
         Assert.Multiple(
             () => Assert.Contains(expectedTitleError, problemDetails.Errors["Title"]),
-            () => Assert.Contains(ValidationMessages.InvalidDurationFormat, problemDetails.Errors["Duration"]),
-            () => Assert.Contains(ValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
+            () => Assert.Contains(SongValidationMessages.InvalidDurationFormat, problemDetails.Errors["Duration"]),
+            () => Assert.Contains(SongValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
         );
     }
 }

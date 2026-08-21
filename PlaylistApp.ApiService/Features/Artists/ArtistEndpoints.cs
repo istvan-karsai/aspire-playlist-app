@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Data;
+using PlaylistApp.ApiService.Features.Artists.Constants;
 using PlaylistApp.ApiService.Filters;
 
 namespace PlaylistApp.ApiService.Features.Artists;
@@ -77,7 +78,7 @@ public static class ArtistEndpoints
                 return TypedResults.NotFound(new ProblemDetails
                 {
                     Title = ErrorTitles.NotFound,
-                    Detail = ErrorMessages.ArtistNotFound
+                    Detail = ArtistErrorMessages.ArtistNotFound
                 });
             }
 
@@ -94,7 +95,7 @@ public static class ArtistEndpoints
                 return TypedResults.NotFound(new ProblemDetails
                 {
                     Title = ErrorTitles.NotFound,
-                    Detail = ErrorMessages.ArtistNotFound
+                    Detail = ArtistErrorMessages.ArtistNotFound
                 });
             }
 
@@ -122,7 +123,7 @@ public static class ArtistEndpoints
                 return TypedResults.NotFound(new ProblemDetails
                 {
                     Title = ErrorTitles.NotFound,
-                    Detail = ErrorMessages.ArtistNotFound
+                    Detail = ArtistErrorMessages.ArtistNotFound
                 });
             }
 

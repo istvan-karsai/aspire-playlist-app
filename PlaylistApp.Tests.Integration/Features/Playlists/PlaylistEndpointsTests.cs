@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Features.Artists;
 using PlaylistApp.ApiService.Features.Playlists;
+using PlaylistApp.ApiService.Features.Playlists.Constants;
 using PlaylistApp.ApiService.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration.Features.Playlists;
@@ -105,7 +106,7 @@ public class PlaylistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTes
         Assert.NotNull(problemDetails);
         Assert.Multiple(
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails.Title),
-            () => Assert.Equal(ErrorMessages.PlaylistNotFound, problemDetails.Detail)
+            () => Assert.Equal(PlaylistErrorMessages.PlaylistNotFound, problemDetails.Detail)
         );
     }
 
@@ -158,7 +159,7 @@ public class PlaylistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTes
         Assert.NotNull(problemDetails);
         Assert.Multiple(
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails.Title),
-            () => Assert.Equal(ErrorMessages.PlaylistNotFound, problemDetails.Detail)
+            () => Assert.Equal(PlaylistErrorMessages.PlaylistNotFound, problemDetails.Detail)
         );
     }
 
@@ -198,7 +199,7 @@ public class PlaylistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTes
         Assert.NotNull(problemDetails);
         Assert.Multiple(
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails.Title),
-            () => Assert.Equal(ErrorMessages.PlaylistNotFound, problemDetails.Detail)
+            () => Assert.Equal(PlaylistErrorMessages.PlaylistNotFound, problemDetails.Detail)
         );
     }
 
@@ -219,8 +220,8 @@ public class PlaylistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTes
         Assert.NotNull(problemDetails);
 
         Assert.Multiple(
-            () => Assert.Contains(ValidationMessages.PlaylistNameRequired, problemDetails.Errors["Name"]),
-            () => Assert.Contains(ValidationMessages.SongIdsRequired, problemDetails.Errors["SongIds"])
+            () => Assert.Contains(PlaylistValidationMessages.PlaylistNameRequired, problemDetails.Errors["Name"]),
+            () => Assert.Contains(PlaylistValidationMessages.SongIdsRequired, problemDetails.Errors["SongIds"])
         );
     }
 
@@ -245,14 +246,14 @@ public class PlaylistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTes
 
         Assert.NotNull(problemDetails);
 
-        var expectedNameError = ValidationMessages.PlaylistNameMaxLength
+        var expectedNameError = PlaylistValidationMessages.PlaylistNameMaxLength
             .Replace(
                 "{MaxLength}",
                 Playlist.MaxNameLength.ToString(CultureInfo.InvariantCulture),
                 StringComparison.Ordinal
             );
         
-        var expectedDescriptionError = ValidationMessages.PlaylistDescriptionMaxLength
+        var expectedDescriptionError = PlaylistValidationMessages.PlaylistDescriptionMaxLength
             .Replace(
                 "{MaxLength}",
                 Playlist.MaxDescriptionLength.ToString(CultureInfo.InvariantCulture),
