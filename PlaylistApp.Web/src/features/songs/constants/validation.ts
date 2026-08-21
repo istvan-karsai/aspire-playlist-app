@@ -5,8 +5,3 @@ export const ValidationRegex = {
 export const FormatConstants = {
     ZeroDuration: "00:00:00"
 } as const;
-
-export const ValidationBounds = {
-    ArtistMinActiveYear: 1800,
-    ArtistMaxActiveYear: new Date().getFullYear(),
-};

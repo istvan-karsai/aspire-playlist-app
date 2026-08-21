@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useSongs } from "../../songs/hooks/useSongs";
-import { UIButtons, UILabels, UIPlaceholders, ValidationMessages } from "../../../constants/uiText";
 import type { PlaylistFormData } from "../types";
+import { PlaylistUILabels, PlaylistUIPlaceholders, PlaylistValidationMessages } from "../constants/uiText";
+import { CoreUIButtons, CoreUILabels } from "../../../core/constants/uiText";
 
 interface SharedPlaylistFormProps {
     initialValues?: PlaylistFormData;
@@ -41,7 +42,7 @@ export const SharedPlaylistForm = ({
         setClientError(null);
 
         if (!name.trim()) {
-            setClientError(ValidationMessages.NameRequired);
+            setClientError(PlaylistValidationMessages.NameRequired);
             return;
         }
 
@@ -59,7 +60,7 @@ export const SharedPlaylistForm = ({
             )}
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">{UILabels.InputNameLabel}</label>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">{PlaylistUILabels.InputNameLabel}</label>
                 <input
                     id="name" 
                     type="text"
@@ -67,13 +68,13 @@ export const SharedPlaylistForm = ({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
-                    placeholder={UIPlaceholders.PlaylistName}
+                    placeholder={PlaylistUIPlaceholders.PlaylistName}
                 />
             </div>
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {UILabels.Songs} {isSongsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{UILabels.LoadingStatus}</span>}
+                    {PlaylistUILabels.Songs} {isSongsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{CoreUILabels.LoadingStatus}</span>}
                 </label>
                 <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2 bg-white space-y-2">
                     {songs?.map((song) => (
@@ -92,20 +93,20 @@ export const SharedPlaylistForm = ({
                         </label>
                     ))}
                     {!isSongsLoading && songs?.length === 0 && (
-                        <span className="text-sm text-gray-500 italic">{UILabels.NoSongsAvailable}</span>
+                        <span className="text-sm text-gray-500 italic">{PlaylistUILabels.NoSongsAvailable}</span>
                     )}
                 </div>
             </div>
 
             <div className={`w-full ${isHorizontal ? "min-w-full mt-2" : ""}`}>
-                <label htmlFor="description" className="">{UILabels.InputDescriptionLabel}</label>
+                <label htmlFor="description" className="">{PlaylistUILabels.InputDescriptionLabel}</label>
                 <textarea 
                     id="description"
                     rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white resize-y"
-                    placeholder={UIPlaceholders.PlaylistDescription}
+                    placeholder={PlaylistUIPlaceholders.PlaylistDescription}
                 />
             </div>
 
@@ -116,7 +117,7 @@ export const SharedPlaylistForm = ({
                         onClick={onCancel}
                         className="px-4 py-2 mr-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md h-10 flex items-center justify-center"
                     >
-                        {UIButtons.Cancel}
+                        {CoreUIButtons.Cancel}
                     </button>
                 )}
 
@@ -126,7 +127,7 @@ export const SharedPlaylistForm = ({
                     disabled={isPending}
                     className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors h-10 flex items-center justify-center"
                 >
-                    {isPending ? UIButtons.Saving : submitButtonText}
+                    {isPending ? CoreUIButtons.Saving : submitButtonText}
                 </button>
             </div>
         </form>

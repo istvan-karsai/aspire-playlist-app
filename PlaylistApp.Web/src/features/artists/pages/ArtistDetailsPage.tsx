@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useArtist } from "../hooks/useArtists";
 import { useSongs } from "../../songs/hooks/useSongs";
-import { UILabels } from "../../../constants/uiText";
+import { ArtistUILabels } from "../constants/uiText";
 
 export const ArtistDetailsPage = () => {
     const { id } = useParams<{ id: string}>();
@@ -11,15 +11,15 @@ export const ArtistDetailsPage = () => {
     const { data: songs, isLoading: isSongsLoading, isError: isSongsError } = useSongs(id);
 
     if (isArtistsLoading || isSongsLoading) {
-        return <div className="text-gray-500 py-8">{UILabels.LoadingArtistDetails}</div>
+        return <div className="text-gray-500 py-8">{ArtistUILabels.LoadingArtistDetails}</div>
     }
 
     if (isArtistError || !artist) {
-        return <div className="text-red-500 py-8">{UILabels.ErrorLoadingArtistProfile}</div>
+        return <div className="text-red-500 py-8">{ArtistUILabels.ErrorLoadingArtistProfile}</div>
     }
 
     if (isSongsError) {
-        return <div className="text-red-500 py-8">{UILabels.ErrorLoadingDiscography}</div>
+        return <div className="text-red-500 py-8">{ArtistUILabels.ErrorLoadingDiscography}</div>
     }
 
     return (
@@ -29,7 +29,7 @@ export const ArtistDetailsPage = () => {
                     to="/artists"
                     className="text-sm text-blue-600 hover:text-blue-800 hover:underline mb-4 inline-block"
                 >
-                    &larr; {UILabels.BackToArtists}
+                    &larr; {ArtistUILabels.BackToArtists}
                 </Link>
 
                 <h3 className="text-2xl leading-6 font-bold text-gray-900">
@@ -38,7 +38,7 @@ export const ArtistDetailsPage = () => {
 
                 {artist.country && (
                     <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                        {artist.country} • {UILabels.ActiveSince} {artist.activeFromYear}
+                        {artist.country} • {ArtistUILabels.ActiveSince} {artist.activeFromYear}
                     </p>
                 )}
             </div>
@@ -47,7 +47,7 @@ export const ArtistDetailsPage = () => {
                 <dl className="sm:divide-y sm:divide-gray-200">
                     {artist.bio && (
                         <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">{UILabels.Biography}</dt>
+                            <dt className="text-sm font-medium text-gray-500">{ArtistUILabels.Biography}</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {artist.bio}
                             </dd>
@@ -55,7 +55,7 @@ export const ArtistDetailsPage = () => {
                     )}
 
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">{UILabels.Discography} ({songs?.length || 0})</dt>
+                        <dt className="text-sm font-medium text-gray-500">{ArtistUILabels.Discography} ({songs?.length || 0})</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             {songs && songs.length > 0 ? (
                                 <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
@@ -70,7 +70,7 @@ export const ArtistDetailsPage = () => {
                                     ))}
                                 </ul>
                             ) : (
-                                <span className="text-gray-500 italic">{UILabels.EmptyDiscography}</span>
+                                <span className="text-gray-500 italic">{ArtistUILabels.EmptyDiscography}</span>
                             )}
                         </dd>
                     </div>

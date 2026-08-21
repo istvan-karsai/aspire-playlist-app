@@ -2,10 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Artist } from "../types";
 import { deleteArtist } from "../api/artistsClient";
-import { ApiMessages, UIButtons, UILabels, UIPrompts } from "../../../constants/uiText";
 import { EditArtistModal } from "./EditArtistModal";
 import { useArtists } from "../hooks/useArtists";
 import { Link } from "react-router-dom";
+import { ArtistApiMessages, ArtistUILabels } from "../constants/uiText";
+import { CoreUIButtons, CoreUILabels, CoreUIPrompts } from "../../../core/constants/uiText";
 
 export const ArtistList = () => {
     const queryClient = useQueryClient();
@@ -19,12 +20,12 @@ export const ArtistList = () => {
             await queryClient.invalidateQueries({ queryKey: ['artists'] });
         },
         onError: (err) => {
-            alert(ApiMessages.DeleteArtistError(err.message));
+            alert(ArtistApiMessages.DeleteArtistError(err.message));
         },
     });
 
     const handleDelete = (id: string, name: string) => {
-        if (window.confirm(UIPrompts.ConfirmDelete(name))) {
+        if (window.confirm(CoreUIPrompts.ConfirmDelete(name))) {
             deleteMutation.mutate(id);
         }
     };
@@ -32,7 +33,7 @@ export const ArtistList = () => {
     if (isLoading) {
         return (
             <div className="text-center p-10 text-gray-500 w-full">
-                <span className="animate-pulse">{UILabels.LoadingArtistLibrary}</span>
+                <span className="animate-pulse">{ArtistUILabels.LoadingArtistLibrary}</span>
             </div>
         )
     }
@@ -40,7 +41,7 @@ export const ArtistList = () => {
     if (isError) {
         return (
             <div className="bg-red-500 text-red-700 p-4 rounded-lg border border-red-200 w-full">
-                <h3 className="font-bold">{UILabels.ErrorLoadingArtistsHeader}</h3>
+                <h3 className="font-bold">{ArtistUILabels.ErrorLoadingArtistsHeader}</h3>
                 <p className="text-sm">{(error as Error).message}</p>
             </div>
         )
@@ -49,23 +50,23 @@ export const ArtistList = () => {
     if (!artists || artists.length === 0) {
         return (
             <div className="text-center p-10 bg-gray-50 rounded-lg border border-dashed text-gray-500 w-full">
-                {UILabels.EmptyArtistLibrary}
+                {ArtistUILabels.EmptyArtistLibrary}
             </div>
         )
     }
     
     return (
         <div className="space-y-4 w-full">
-            <h2 className="text-2xl font-semibold tracking-tight">{UILabels.ArtistLibraryHeader}</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">{ArtistUILabels.ArtistLibraryHeader}</h2>
             <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
                 <table className="w-full min-w-full text-sm table-fixed">
                     <thead className="bg-gray-50 border-b">
                         <tr>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-6/12 lg:w-3/12">{UILabels.TableName}</th>
-                            <th className="hidden lg:table-cell h-12 px-4 text-left font-medium text-gray-500 lg:w-4/12">{UILabels.TableBio}</th>
-                            <th className="hidden sm:table-cell h-12 px-4 text-left font-medium text-gray-500 sm:w-3/12">{UILabels.TableCountry}</th>
-                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-1/12">{UILabels.TableActiveFrom}</th>
-                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-2/12 lg:w-1/12">{UILabels.TableActions}</th>
+                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-6/12 lg:w-3/12">{ArtistUILabels.TableName}</th>
+                            <th className="hidden lg:table-cell h-12 px-4 text-left font-medium text-gray-500 lg:w-4/12">{ArtistUILabels.TableBio}</th>
+                            <th className="hidden sm:table-cell h-12 px-4 text-left font-medium text-gray-500 sm:w-3/12">{ArtistUILabels.TableCountry}</th>
+                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-1/12">{ArtistUILabels.TableActiveFrom}</th>
+                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-2/12 lg:w-1/12">{CoreUILabels.TableActions}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -96,7 +97,7 @@ export const ArtistList = () => {
                                         onClick={() => setEditingArtist(artist)}
                                         className="text-indigo-600 hover:text-indigo-900 mr-4"
                                     >
-                                        {UIButtons.Edit}
+                                        {CoreUIButtons.Edit}
                                     </button>
                                     <button
                                         type="button"
@@ -104,7 +105,7 @@ export const ArtistList = () => {
                                         disabled={deleteMutation.isPending}
                                         className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors disabled:opacity-50"
                                     >
-                                        {deleteMutation.isPending && deleteMutation.variables === artist.id ? UIButtons.Deleting : UIButtons.Delete}
+                                        {deleteMutation.isPending && deleteMutation.variables === artist.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
                                     </button>
                                 </td>
                             </tr>

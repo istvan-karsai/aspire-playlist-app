@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { UILabels } from "../constants/uiText";
 import { useState } from "react";
+import { CoreUILabels } from "../core/constants/uiText";
 
 
 export const Navbar = () => {
@@ -29,7 +29,7 @@ export const Navbar = () => {
                     <div className="flex">
                         <div className="shrink-0 flex items-center">
                             <span className="text-xl font-bold text-blue-600">
-                                {UILabels.AppTitle}
+                                {CoreUILabels.AppTitle}
                             </span>
                         </div>
 
@@ -40,7 +40,7 @@ export const Navbar = () => {
                                 data-testid="nav-songs-link"
                                 className={({ isActive }) => getTabClass(isActive)}
                             >
-                                {UILabels.NavSongs}
+                                {CoreUILabels.NavSongs}
                             </NavLink>
 
                             <NavLink
@@ -48,7 +48,7 @@ export const Navbar = () => {
                                 data-testid="nav-artists-link"
                                 className={({ isActive }) => getTabClass(isActive)}
                             >
-                                {UILabels.NavArtists}
+                                {CoreUILabels.NavArtists}
                             </NavLink>
 
                             <NavLink
@@ -56,7 +56,7 @@ export const Navbar = () => {
                                 data-testid="nav-playlists-link"
                                 className={({ isActive }) => getTabClass(isActive)}
                             >
-                                {UILabels.NavPlaylists}
+                                {CoreUILabels.NavPlaylists}
                             </NavLink>
                         </div>
                     </div>
@@ -109,21 +109,21 @@ export const Navbar = () => {
                             onClick={closeMobileMenu}
                             className={({ isActive }) => getMobileTabClass(isActive)}
                         >
-                            {UILabels.NavSongs}
+                            {CoreUILabels.NavSongs}
                         </NavLink>
                         <NavLink
                             to="/artists"
                             onClick={closeMobileMenu}
                             className={({ isActive }) => getMobileTabClass(isActive)}
                         >
-                            {UILabels.NavArtists}
+                            {CoreUILabels.NavArtists}
                         </NavLink>
                         <NavLink
                             to="/playlists"
                             onClick={closeMobileMenu}
                             className={({ isActive }) => getMobileTabClass(isActive)}
                         >
-                            {UILabels.NavPlaylists}
+                            {CoreUILabels.NavPlaylists}
                         </NavLink>
                     </div>
                 </div>

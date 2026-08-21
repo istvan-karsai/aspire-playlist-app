@@ -5,9 +5,9 @@ import { describe, expect, it } from "vitest";
 import { http, HttpResponse } from "msw";
 import { ArtistDetailsPage } from "./ArtistDetailsPage";
 import { mockValidArtist } from "../tests/artistMocks";
-import { UILabels } from "../../../constants/uiText";
 import { server } from "../../../tests/mocks/server";
 import { mockValidSong } from "../../songs/tests/songMocks";
+import { ArtistUILabels } from "../constants/uiText";
 
 const renderArtistDetailsPage = (artistId: string) => {
     const queryClient = new QueryClient({
@@ -34,7 +34,7 @@ describe('ArtistDetailsPage Component', () => {
     it('displays a loading indicator while fetching data', () => {
         renderArtistDetailsPage(mockValidArtist.id);
 
-        expect(screen.getByText(UILabels.LoadingArtistDetails)).toBeInTheDocument();
+        expect(screen.getByText(ArtistUILabels.LoadingArtistDetails)).toBeInTheDocument();
     });
 
     it('displays an error message if the artist fetch fails', async () => {
@@ -46,7 +46,7 @@ describe('ArtistDetailsPage Component', () => {
 
         renderArtistDetailsPage(mockValidArtist.id);
 
-        expect(await screen.findByText(UILabels.ErrorLoadingArtistProfile)).toBeInTheDocument();
+        expect(await screen.findByText(ArtistUILabels.ErrorLoadingArtistProfile)).toBeInTheDocument();
     });
 
     it('displays the artist profile and discography on successful fetch', async () => {
@@ -54,7 +54,7 @@ describe('ArtistDetailsPage Component', () => {
 
         expect(await screen.findByText(mockValidArtist.name)).toBeInTheDocument();
         expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: new RegExp(UILabels.BackToArtists, 'i') })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: new RegExp(ArtistUILabels.BackToArtists, 'i') })).toBeInTheDocument();
     });
 
     it('displays an empty discography message if the artist has no songs', async () => {
@@ -67,6 +67,6 @@ describe('ArtistDetailsPage Component', () => {
         renderArtistDetailsPage(mockValidArtist.id);
 
         expect(await screen.findByText(mockValidArtist.name)).toBeInTheDocument();
-        expect(screen.getByText(UILabels.EmptyDiscography)).toBeInTheDocument();
+        expect(screen.getByText(ArtistUILabels.EmptyDiscography)).toBeInTheDocument();
     });
 });

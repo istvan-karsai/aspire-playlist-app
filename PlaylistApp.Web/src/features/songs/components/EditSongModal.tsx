@@ -2,8 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Song, SongPayload } from "../types";
 import { ApiValidationError } from "../../../api/core";
 import { updateSong } from "../api/songsClient";
-import { UIButtons, UILabels } from "../../../constants/uiText";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
+import { SongUILabels } from "../constants/uiText";
+import { CoreUIButtons } from "../../../core/constants/uiText";
 
 interface EditSongModalProps {
     song: Song;
@@ -32,7 +33,7 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                <h2 className="text-xl font-bold mb-4">{UILabels.EditSongHeader}</h2>
+                <h2 className="text-xl font-bold mb-4">{SongUILabels.EditSongHeader}</h2>
                 
                 {updateMutation.isError && (
                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
@@ -56,7 +57,7 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
                     }}
                     onSubmit={handleSubmit}
                     isPending={updateMutation.isPending}
-                    submitButtonText={UIButtons.SaveChanges}
+                    submitButtonText={CoreUIButtons.SaveChanges}
                     layout="vertical"
                     onCancel={onClose}
                 />
