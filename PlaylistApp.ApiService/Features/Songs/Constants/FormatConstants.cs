@@ -1,4 +1,4 @@
-namespace PlaylistApp.ApiService.Constants;
+namespace PlaylistApp.ApiService.Features.Songs.Constants;
 
 public static class FormatConstants
 {

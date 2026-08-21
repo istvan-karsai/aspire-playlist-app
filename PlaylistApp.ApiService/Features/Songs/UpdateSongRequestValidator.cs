@@ -1,5 +1,5 @@
 using FluentValidation;
-using PlaylistApp.ApiService.Constants;
+using PlaylistApp.ApiService.Features.Songs.Constants;
 
 namespace PlaylistApp.ApiService.Features.Songs;
 
@@ -8,17 +8,17 @@ public class UpdateSongRequestValidator : AbstractValidator<UpdateSongRequest>
     public UpdateSongRequestValidator()
     {
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage(ValidationMessages.SongTitleRequired)
+            .NotEmpty().WithMessage(SongValidationMessages.SongTitleRequired)
             .MaximumLength(Song.MaxTitleLength)
-            .WithMessage(ValidationMessages.SongTitleMaxLength);
+            .WithMessage(SongValidationMessages.SongTitleMaxLength);
         
         RuleFor(x => x.Duration)
             .Matches(FormatConstants.DurationRegex)
-            .WithMessage(ValidationMessages.InvalidDurationFormat)
+            .WithMessage(SongValidationMessages.InvalidDurationFormat)
             .NotEqual(FormatConstants.ZeroDuration)
-            .WithMessage(ValidationMessages.DurationGreaterThanZero);
+            .WithMessage(SongValidationMessages.DurationGreaterThanZero);
 
         RuleFor(x => x.ArtistIds)
-            .NotNull().WithMessage(ValidationMessages.ArtistIdsRequired);
+            .NotNull().WithMessage(SongValidationMessages.ArtistIdsRequired);
     }
 }

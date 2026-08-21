@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Features.Artists;
+using PlaylistApp.ApiService.Features.Artists.Constants;
 
 namespace PlaylistApp.Tests.Integration.Features.Artists;
 
@@ -95,7 +96,7 @@ public class ArtistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(
         Assert.NotNull(problemDetails);
         Assert.Multiple(
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails.Title),
-            () => Assert.Equal(ErrorMessages.ArtistNotFound, problemDetails.Detail)
+            () => Assert.Equal(ArtistErrorMessages.ArtistNotFound, problemDetails.Detail)
         );
     }
     
@@ -160,7 +161,7 @@ public class ArtistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(
         Assert.NotNull(problemDetails);
         Assert.Multiple(
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails.Title),
-            () => Assert.Equal(ErrorMessages.ArtistNotFound, problemDetails.Detail)
+            () => Assert.Equal(ArtistErrorMessages.ArtistNotFound, problemDetails.Detail)
         );
     }
     
@@ -205,7 +206,7 @@ public class ArtistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(
         Assert.NotNull(problemDetails);
         Assert.Multiple(
             () => Assert.Equal(ErrorTitles.NotFound, problemDetails.Title),
-            () => Assert.Equal(ErrorMessages.ArtistNotFound, problemDetails.Detail)
+            () => Assert.Equal(ArtistErrorMessages.ArtistNotFound, problemDetails.Detail)
         );
     }
     
@@ -231,7 +232,7 @@ public class ArtistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(
 
         Assert.NotNull(problemDetails);
 
-        var expectedYearError = ValidationMessages.InvalidYear
+        var expectedYearError = ArtistValidationMessages.InvalidYear
             .Replace(
                 "{From}", 
                 Artist.MinActiveFromYear.ToString(CultureInfo.InvariantCulture), 
@@ -244,7 +245,7 @@ public class ArtistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(
             );
 
         Assert.Multiple(
-            () => Assert.Contains(ValidationMessages.NameRequired, problemDetails.Errors["Name"]),
+            () => Assert.Contains(ArtistValidationMessages.NameRequired, problemDetails.Errors["Name"]),
             () => Assert.Contains(expectedYearError, problemDetails.Errors["ActiveFromYear"])
         );
     }
@@ -272,7 +273,7 @@ public class ArtistEndpointsTests(AppHostFixture fixture) : BaseIntegrationTest(
 
         Assert.NotNull(problemDetails);
 
-        var expectedNameError = ValidationMessages.NameMaxLength
+        var expectedNameError = ArtistValidationMessages.NameMaxLength
             .Replace(
                 "{MaxLength}",
                 Artist.MaxNameLength.ToString(CultureInfo.InvariantCulture),

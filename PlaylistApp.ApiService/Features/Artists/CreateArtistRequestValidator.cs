@@ -1,5 +1,5 @@
 using FluentValidation;
-using PlaylistApp.ApiService.Constants;
+using PlaylistApp.ApiService.Features.Artists.Constants;
 
 namespace PlaylistApp.ApiService.Features.Artists;
 
@@ -8,25 +8,25 @@ public class CreateArtistRequestValidator : AbstractValidator<CreateArtistReques
     public CreateArtistRequestValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage(ValidationMessages.NameRequired)
+            .NotEmpty().WithMessage(ArtistValidationMessages.NameRequired)
             .MaximumLength(Artist.MaxNameLength)
-            .WithMessage(ValidationMessages.NameMaxLength);
+            .WithMessage(ArtistValidationMessages.NameMaxLength);
 
         RuleFor(x => x.Bio)
             .MaximumLength(Artist.MaxBioLength)
-            .WithMessage(ValidationMessages.BioMaxLength);
+            .WithMessage(ArtistValidationMessages.BioMaxLength);
 
         RuleFor(x => x.Country)
             .MaximumLength(Artist.MaxCountryLength)
-            .WithMessage(ValidationMessages.CountryMaxLength);
+            .WithMessage(ArtistValidationMessages.CountryMaxLength);
 
         RuleFor(x => x.ImageUrl)
             .MaximumLength(Artist.MaxImageUrlLength)
-            .WithMessage(ValidationMessages.ImageUrlMaxLength);
+            .WithMessage(ArtistValidationMessages.ImageUrlMaxLength);
 
         RuleFor(x => x.ActiveFromYear)
             .InclusiveBetween(Artist.MinActiveFromYear, DateTime.UtcNow.Year)
-            .WithMessage(ValidationMessages.InvalidYear)
+            .WithMessage(ArtistValidationMessages.InvalidYear)
             .When(x => x.ActiveFromYear.HasValue);
     }
 }
