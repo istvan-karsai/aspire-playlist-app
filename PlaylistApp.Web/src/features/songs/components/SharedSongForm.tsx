@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { UIButtons, UIHints, UILabels, UIPlaceholders, ValidationMessages } from "../../../constants/uiText";
-import { FormatConstants, ValidationRegex } from "../../../constants/validation";
+import { FormatConstants, ValidationRegex } from "../constants/validation";
 import { useArtists } from "../../artists/hooks/useArtists";
+import { SongUIHints, SongUILabels, SongUIPlaceholders, SongValidationMessages } from "../constants/uiText";
+import { CoreUIButtons, CoreUILabels } from "../../../core/constants/uiText";
 
 export interface SongFormData {
     title: string;
@@ -47,22 +48,22 @@ export const SharedSongForm = ({
         setClientError(null);
 
         if (!title.trim()) {
-            setClientError(ValidationMessages.TitleRequired);
+            setClientError(SongValidationMessages.TitleRequired);
             return;
         } 
         
         if (artistIds.length === 0) {
-            setClientError(ValidationMessages.ArtistRequired);
+            setClientError(SongValidationMessages.ArtistRequired);
             return;
         }
 
         if (!ValidationRegex.DurationFormat.test(duration)) {
-            setClientError(ValidationMessages.InvalidDurationFormat);
+            setClientError(SongValidationMessages.InvalidDurationFormat);
             return;
         }
 
         if (duration === FormatConstants.ZeroDuration) {
-            setClientError(ValidationMessages.DurationGreaterThanZero);
+            setClientError(SongValidationMessages.DurationGreaterThanZero);
             return;
         }
 
@@ -81,7 +82,7 @@ export const SharedSongForm = ({
             )}
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">{UILabels.InputTitleLabel}</label>
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">{SongUILabels.InputTitleLabel}</label>
                 <input
                     id="title"
                     type="text"
@@ -89,13 +90,13 @@ export const SharedSongForm = ({
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
-                    placeholder={UIPlaceholders.Title} 
+                    placeholder={SongUIPlaceholders.Title} 
                 />
             </div>
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {UILabels.Artists} {isArtistsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{UILabels.LoadingStatus}</span>}
+                    {SongUILabels.Artists} {isArtistsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{CoreUILabels.LoadingStatus}</span>}
                 </label>
                 <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2 bg-white space-y-2">
                     {artists?.map((artist) => (
@@ -111,13 +112,13 @@ export const SharedSongForm = ({
                         </label>
                     ))}
                     {!isArtistsLoading && artists?.length === 0 && (
-                        <span className="text-sm text-gray-500 italic">{UILabels.NoArtistsAvailable}</span>
+                        <span className="text-sm text-gray-500 italic">{SongUILabels.NoArtistsAvailable}</span>
                     )}
                 </div>
             </div>
 
             <div className={isHorizontal ? "w-32" : ""}>
-                <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-1">{UILabels.InputDurationLabel}</label>
+                <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-1">{SongUILabels.InputDurationLabel}</label>
                 <input
                     id="duration"
                     type="text"
@@ -125,9 +126,9 @@ export const SharedSongForm = ({
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
                     className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
-                    placeholder={UIPlaceholders.Duration}
+                    placeholder={SongUIPlaceholders.Duration}
                     pattern={ValidationRegex.DurationFormat.source}
-                    title={UIHints.DurationFormat} 
+                    title={SongUIHints.DurationFormat} 
                 />
             </div>
 
@@ -138,7 +139,7 @@ export const SharedSongForm = ({
                         onClick={onCancel}
                         className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md h-10 flex items-center justify-center"
                     >
-                        {UIButtons.Cancel}
+                        {CoreUIButtons.Cancel}
                     </button>
                 )}
 
@@ -148,7 +149,7 @@ export const SharedSongForm = ({
                     disabled={isPending}
                     className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors h-10 flex items-center justify-center"
                 >
-                    {isPending ? UIButtons.Saving : submitButtonText}
+                    {isPending ? CoreUIButtons.Saving : submitButtonText}
                 </button>
             </div>
         </form>

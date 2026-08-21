@@ -3,7 +3,8 @@ import type { Artist } from "../types";
 import { ApiValidationError } from "../../../api/core";
 import { updateArtist } from "../api/artistsClient";
 import { SharedArtistForm, type ArtistFormData } from "./SharedArtistForm";
-import { UIButtons, UILabels } from "../../../constants/uiText";
+import { CoreUIButtons } from "../../../core/constants/uiText";
+import { ArtistUILabels } from "../constants/uiText";
 
 interface EditArtistModalProps {
     artist: Artist;
@@ -36,7 +37,7 @@ export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg my-8">
-                <h2 className="text-xl font-bold mb-4">{UILabels.EditArtistHeader}</h2>
+                <h2 className="text-xl font-bold mb-4">{ArtistUILabels.EditArtistHeader}</h2>
 
                 {updateMutation.isError && (
                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
@@ -62,7 +63,7 @@ export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
                     }}
                     onSubmit={handleSubmit}
                     isPending={updateMutation.isPending}
-                    submitButtonText={UIButtons.SaveChanges}
+                    submitButtonText={CoreUIButtons.SaveChanges}
                     layout="vertical"
                     onCancel={onClose}
                 />

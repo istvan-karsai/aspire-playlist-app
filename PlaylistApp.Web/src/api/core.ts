@@ -1,10 +1,10 @@
-import { ApiMessages } from "../constants/uiText";
+import { CoreApiMessages } from "../core/constants/uiText";
 
 export class ApiValidationError extends Error {
     public messages: string[];
 
     constructor(messages: string[]) {
-        super(ApiMessages.ValidationFailed);
+        super(CoreApiMessages.ValidationFailed);
         this.messages = messages;
         this.name = "ApiValidationError";
     }
@@ -16,16 +16,16 @@ export async function apiFetch(endpoint: string, options?: RequestInit): Promise
     try {
         response = await fetch(endpoint, options);
     } catch (error) {
-        throw new Error(ApiMessages.NetworkError, { cause: error });
+        throw new Error(CoreApiMessages.NetworkError, { cause: error });
     }
 
     if (!response.ok) {
         if (response.status === 404) {
-            throw new Error(ApiMessages.NotFound);
+            throw new Error(CoreApiMessages.NotFound);
         }
 
         if (response.status === 429) {
-            throw new Error(ApiMessages.TooManyRequests);
+            throw new Error(CoreApiMessages.TooManyRequests);
         }
 
         try {

@@ -1,20 +1,21 @@
 import { render, screen } from "../../../tests/utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { ArtistForm } from "./ArtistForm";
-import { UIButtons, UILabels, ValidationMessages } from "../../../constants/uiText";
 import { describe, expect, it } from "vitest";
+import { ArtistUIButtons, ArtistUILabels, ArtistValidationMessages } from "../constants/uiText";
+import { CoreUIButtons } from "../../../core/constants/uiText";
 
 const setupAndFillForm = async (yearValue: string) => {
     const user = userEvent.setup();
     render(<ArtistForm />);
 
-    const addArtistButton = screen.getByRole('button', { name: UIButtons.AddNewArtist });
+    const addArtistButton = screen.getByRole('button', { name: ArtistUIButtons.AddNewArtist });
     await user.click(addArtistButton);
 
-    const nameInput = screen.getByLabelText(UILabels.InputNameLabel);
-    const activeFromInput = screen.getByLabelText(UILabels.InputActiveFromLabel);
-    const countryInput = screen.getByLabelText(UILabels.InputCountryLabel);
-    const submitButton = screen.getByRole('button', { name: UIButtons.Save });
+    const nameInput = screen.getByLabelText(ArtistUILabels.InputNameLabel);
+    const activeFromInput = screen.getByLabelText(ArtistUILabels.InputActiveFromLabel);
+    const countryInput = screen.getByLabelText(ArtistUILabels.InputCountryLabel);
+    const submitButton = screen.getByRole('button', { name: CoreUIButtons.Save });
 
     await user.type(nameInput, 'Test Artist Name');
     await user.type(countryInput, 'Hungary');
@@ -30,7 +31,7 @@ describe('ArtistForm Component', () => {
 
         await user.click(submitButton);
 
-        expect(await screen.findByText(ValidationMessages.InvalidYear)).toBeInTheDocument();
+        expect(await screen.findByText(ArtistValidationMessages.InvalidYear)).toBeInTheDocument();
     });
 
     it('successfully submits the form with valid data and clears inputs', async () => {
@@ -39,17 +40,17 @@ describe('ArtistForm Component', () => {
         await user.click(submitButton);
 
         // Wait for the form to automatically close upon success
-        const addArtistButton = await screen.findByRole('button', { name: UIButtons.AddNewArtist });
+        const addArtistButton = await screen.findByRole('button', { name: ArtistUIButtons.AddNewArtist });
         expect(addArtistButton).toBeInTheDocument();
 
         // Re-open the form
         await user.click(addArtistButton);
 
         // Assert: Verify the inputs were completely remounted and cleared
-        expect(screen.getByLabelText(UILabels.InputNameLabel)).toHaveValue('');
-        expect(screen.getByLabelText(UILabels.InputCountryLabel)).toHaveValue('');
+        expect(screen.getByLabelText(ArtistUILabels.InputNameLabel)).toHaveValue('');
+        expect(screen.getByLabelText(ArtistUILabels.InputCountryLabel)).toHaveValue('');
         
         // For number inputs in React Testing Library, an empty string is asserted like this:
-        expect(screen.getByLabelText(UILabels.InputActiveFromLabel)).toHaveValue(null);
+        expect(screen.getByLabelText(ArtistUILabels.InputActiveFromLabel)).toHaveValue(null);
     });
 });

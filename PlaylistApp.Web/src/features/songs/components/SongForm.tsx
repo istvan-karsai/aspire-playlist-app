@@ -3,7 +3,8 @@ import { ApiValidationError } from "../../../api/core";
 import { createSong } from "../api/songsClient";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
 import { useState } from "react";
-import { ApiMessages, UIButtons, UILabels } from "../../../constants/uiText";
+import { SongApiMessages, SongUIButtons, SongUILabels } from "../constants/uiText";
+import { CoreUIButtons } from "../../../core/constants/uiText";
 
 export const SongForm = () => {
     const queryClient = useQueryClient();
@@ -35,25 +36,25 @@ export const SongForm = () => {
                     onClick={() => setIsFormOpen(true)}
                     className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
                 >
-                    {UIButtons.AddNewSong}
+                    {SongUIButtons.AddNewSong}
                 </button>
             ) : (
                 <div className="bg-gray-50 p-6 rounded-lg border w-full animate-in fade-in slide-in-from-top-2 duration-200">
-                    <h2 className="text-lg font-semibold mb-4">{UILabels.AddSongHeader}</h2>
+                    <h2 className="text-lg font-semibold mb-4">{SongUILabels.AddSongHeader}</h2>
 
                     <SharedSongForm 
                         initialValues={{ title: "", artistIds: [], duration: "" }}
                         key={formKey}
                         onSubmit={handleSubmit}
                         isPending={mutation.isPending}
-                        submitButtonText={UIButtons.Save}
+                        submitButtonText={CoreUIButtons.Save}
                         layout="horizontal"
                         onCancel={() => setIsFormOpen(false)}
                     />
 
                     {mutation.isError && (
                         <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm w-full">
-                            <strong className="font-semibold block mb-2">{ApiMessages.SaveErrorPrefix}</strong>
+                            <strong className="font-semibold block mb-2">{SongApiMessages.SaveErrorPrefix}</strong>
                             <ul className="list-disc pl-5 space-y-1">
                                 {mutation.error instanceof ApiValidationError ? (
                                     mutation.error.messages.map((message, index) => (

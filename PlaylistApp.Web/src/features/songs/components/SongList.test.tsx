@@ -3,16 +3,17 @@ import { http, HttpResponse } from "msw";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../../tests/utils/test-utils";
 import { SongList } from "./SongList";
-import { UILabels } from "../../../constants/uiText";
 import { server } from "../../../tests/mocks/server";
 import { mockArtistWithoutSong, mockValidArtist } from "../../artists/tests/artistMocks";
 import { mockValidSong, mockValidSong2 } from "../tests/songMocks";
+import { SongUILabels } from "../constants/uiText";
+import { ArtistUILabels } from "../../artists/constants/uiText";
 
 describe('SongList Component', () => {
     it('displays a loading indicator while fetching songs', () => {
         render(<SongList />);
 
-        expect(screen.getByText(UILabels.LoadingLibrary)).toBeInTheDocument();
+        expect(screen.getByText(SongUILabels.LoadingLibrary)).toBeInTheDocument();
     });
 
     it('displays an empty state message when no songs are returned', async () => {
@@ -24,7 +25,7 @@ describe('SongList Component', () => {
 
         render(<SongList />);
 
-        expect(await screen.findByText(UILabels.EmptyLibrary)).toBeInTheDocument();
+        expect(await screen.findByText(SongUILabels.EmptyLibrary)).toBeInTheDocument();
     });
 
     it('renders a list of songs when data is successfully fetched', async () => {
@@ -46,10 +47,10 @@ describe('SongList Component', () => {
 
         expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
 
-        const filterSelect = screen.getByLabelText(UILabels.FilterByArtist);
+        const filterSelect = screen.getByLabelText(SongUILabels.FilterByArtist);
         await user.selectOptions(filterSelect, mockArtistWithoutSong.id);
 
-        expect(await screen.findByText(UILabels.EmptyDiscography)).toBeInTheDocument();
+        expect(await screen.findByText(ArtistUILabels.EmptyDiscography)).toBeInTheDocument();
         expect(screen.queryByText(mockValidSong.title)).not.toBeInTheDocument();
     });
 
@@ -60,7 +61,7 @@ describe('SongList Component', () => {
         expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
         expect(screen.getByText(mockValidSong2.title)).toBeInTheDocument();
 
-        const filterSelect = screen.getByLabelText(UILabels.FilterByArtist);
+        const filterSelect = screen.getByLabelText(SongUILabels.FilterByArtist);
         await user.selectOptions(filterSelect, mockValidArtist.id);
 
         expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
