@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiValidationError } from "../../../api/core";
+import { ApiValidationError } from "../../../core/api/client";
 import { createSong } from "../api/songsClient";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
 import { useState } from "react";

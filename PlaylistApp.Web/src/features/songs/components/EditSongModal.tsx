@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Song, SongPayload } from "../types";
-import { ApiValidationError } from "../../../api/core";
+import { ApiValidationError } from "../../../core/api/client";
 import { updateSong } from "../api/songsClient";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
 import { SongUILabels } from "../constants/uiText";

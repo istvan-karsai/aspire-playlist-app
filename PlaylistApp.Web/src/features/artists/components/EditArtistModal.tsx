@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Artist } from "../types";
-import { ApiValidationError } from "../../../api/core";
+import { ApiValidationError } from "../../../core/api/client";
 import { updateArtist } from "../api/artistsClient";
 import { SharedArtistForm, type ArtistFormData } from "./SharedArtistForm";
 import { CoreUIButtons } from "../../../core/constants/uiText";
