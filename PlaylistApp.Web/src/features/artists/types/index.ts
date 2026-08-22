@@ -6,3 +6,5 @@ export interface Artist {
     country?: string;
     imageUrl?: string;
 }
+
+export type ArtistPayload = Omit<Artist, 'id'>;

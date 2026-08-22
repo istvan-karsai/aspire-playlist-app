@@ -3,7 +3,7 @@ import type { Playlist, PlaylistPayload } from "../types";
 import { updatePlaylist } from "../api/playlistsClient";
 import { SharedPlaylistForm } from "./SharedPlaylistForm";
 import { type PlaylistFormData } from "../types";
-import { ApiValidationError } from "../../../api/core";
+import { ApiValidationError } from "../../../core/api/client";
 import { PlaylistApiMessages, PlaylistUILabels } from "../constants/uiText";
 import { CoreUIButtons } from "../../../core/constants/uiText";
 
