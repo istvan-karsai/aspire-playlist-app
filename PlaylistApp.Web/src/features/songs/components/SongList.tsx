@@ -1,17 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSong } from "../api/songsClient";
 import type { Song } from "../types";
 import { useState } from "react";
 import { EditSongModal } from "./EditSongModal";
-import { useSongs } from "../hooks/useSongs";
+import { useDeleteSong, useSongs } from "../hooks/useSongs";
 import { Link, useSearchParams } from "react-router-dom";
 import { useArtists } from "../../artists/hooks/useArtists";
-import { SongApiMessages, SongUILabels } from "../constants/uiText";
+import { SongUILabels } from "../constants/uiText";
 import { CoreUIButtons, CoreUILabels, CoreUIPrompts } from "../../../core/constants/uiText";
 import { ArtistUILabels } from "../../artists/constants/uiText";
 
 export const SongList = () => {
-    const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [editingSong, setEditingSong] = useState<Song | null>(null);
@@ -19,22 +16,12 @@ export const SongList = () => {
     const selectedArtistId = searchParams.get('artistId') || "";
     
     const { data: songs, isLoading, isError, error } = useSongs(selectedArtistId || undefined);
-
     const { data: artists } = useArtists();
-
-    const deleteMutation = useMutation({
-        mutationFn: deleteSong,
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['songs'] });
-        },
-        onError: (err) => {
-            alert(SongApiMessages.DeleteError(err.message));
-        }
-    });
+    const { mutate: deleteSong, isPending, variables } = useDeleteSong();
 
     const handleDelete = (id: string, title: string) => {
         if (window.confirm(CoreUIPrompts.ConfirmDelete(title))) {
-            deleteMutation.mutate(id);
+            deleteSong(id);
         }
     };
 
@@ -129,10 +116,10 @@ export const SongList = () => {
                                         <button
                                             type="button"
                                             onClick={() => handleDelete(song.id, song.title)}
-                                            disabled={deleteMutation.isPending}
+                                            disabled={isPending}
                                             className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors disabled:opacity-50"
                                         >
-                                            {deleteMutation.isPending && deleteMutation.variables === song.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
+                                            {isPending && variables === song.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
                                         </button>
                                     </td>
                                 </tr>

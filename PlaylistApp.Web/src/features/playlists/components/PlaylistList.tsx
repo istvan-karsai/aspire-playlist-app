@@ -1,31 +1,19 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { usePlaylists } from "../hooks/usePlaylists";
+import { useDeletePlaylist, usePlaylists } from "../hooks/usePlaylists";
 import { EditPlaylistModal } from "./EditPlaylistModal";
 import type { Playlist } from "../types";
-import { deletePlaylist } from "../api/playlistsClient";
 import { CoreUIButtons, CoreUILabels, CoreUIPrompts } from "../../../core/constants/uiText";
 import { PlaylistUILabels } from "../constants/uiText";
 
 export const PlaylistList = () => {
-    const queryClient = useQueryClient();
     const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
 
     const { data: playlists, isLoading, isError, error } = usePlaylists();
-
-    const deleteMutation = useMutation({
-        mutationFn: deletePlaylist,
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['playlists'] });
-        },
-        onError: (err) => {
-            alert(`Error deleting playlist: ${err.message}`);
-        }
-    });
+    const { mutate: deletePlaylist, isPending, variables } = useDeletePlaylist();
 
     const handleDelete = (id: string, name: string) => {
         if (window.confirm(CoreUIPrompts.ConfirmDelete(name))) {
-            deleteMutation.mutate(id);
+            deletePlaylist(id);
         }
     };
 
@@ -89,10 +77,10 @@ export const PlaylistList = () => {
                                     <button
                                         type="button"
                                         onClick={() => handleDelete(playlist.id, playlist.name)}
-                                        disabled={deleteMutation.isPending && deleteMutation.variables === playlist.id}
+                                        disabled={isPending && variables === playlist.id}
                                         className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors disabled:opacity-50"
                                     >
-                                        {deleteMutation.isPending && deleteMutation.variables === playlist.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
+                                        {isPending && variables === playlist.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
                                     </button>
                                 </td>
                             </tr>

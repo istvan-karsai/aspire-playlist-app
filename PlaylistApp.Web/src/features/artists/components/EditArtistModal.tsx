@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Artist } from "../types";
 import { ApiValidationError } from "../../../core/api/client";
-import { updateArtist } from "../api/artistsClient";
 import { SharedArtistForm, type ArtistFormData } from "./SharedArtistForm";
 import { CoreUIButtons } from "../../../core/constants/uiText";
 import { ArtistUILabels } from "../constants/uiText";
+import { useUpdateArtist } from "../hooks/useArtists";
 
 interface EditArtistModalProps {
     artist: Artist;
@@ -12,15 +11,7 @@ interface EditArtistModalProps {
 }
 
 export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
-    const queryClient = useQueryClient();
-
-    const updateMutation = useMutation({
-        mutationFn: (updatedArtist: Omit<Artist, 'id'>) => updateArtist(artist.id, updatedArtist),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['artists'] });
-            onClose();
-        },
-    });
+    const { mutate: updateArtist, isPending, isError, error } = useUpdateArtist();
 
     const handleSubmit = (data: ArtistFormData) => {
         const payload = {
@@ -31,7 +22,15 @@ export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
             imageUrl: data.imageUrl || undefined,
         };
 
-        updateMutation.mutate(payload);
+        updateArtist(
+            {
+                id: artist.id,
+                payload
+            },
+            {
+                onSuccess: () => onClose()
+            }
+        );
     };
 
     return (
@@ -39,15 +38,15 @@ export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg my-8">
                 <h2 className="text-xl font-bold mb-4">{ArtistUILabels.EditArtistHeader}</h2>
 
-                {updateMutation.isError && (
+                {isError && (
                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
                         <ul className="list-disc pl-5">
-                            {updateMutation.error instanceof ApiValidationError ? (
-                                updateMutation.error.messages.map((message, index) => (
+                            {error instanceof ApiValidationError ? (
+                                error.messages.map((message, index) => (
                                     <li key={index}>{message}</li>
                                 ))
                             ) : (
-                                <li>{(updateMutation.error as Error).message}</li>
+                                <li>{(error as Error).message}</li>
                             )}
                         </ul>
                     </div>
@@ -62,7 +61,7 @@ export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
                         imageUrl: artist.imageUrl || ""
                     }}
                     onSubmit={handleSubmit}
-                    isPending={updateMutation.isPending}
+                    isPending={isPending}
                     submitButtonText={CoreUIButtons.SaveChanges}
                     layout="vertical"
                     onCancel={onClose}
