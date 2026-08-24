@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Song, SongPayload } from "../types";
+import type { Song } from "../types";
 import { ApiValidationError } from "../../../core/api/client";
-import { updateSong } from "../api/songsClient";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
 import { SongUILabels } from "../constants/uiText";
 import { CoreUIButtons } from "../../../core/constants/uiText";
+import { useUpdateSong } from "../hooks/useSongs";
 
 interface EditSongModalProps {
     song: Song;
@@ -12,22 +11,25 @@ interface EditSongModalProps {
 }
 
 export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
-    const queryClient = useQueryClient();
-
-    const updateMutation = useMutation({
-        mutationFn: (updatedSong: SongPayload) => updateSong(song.id, updatedSong),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['songs'] });
-            onClose();
-        },
-    });
-
+    const { mutate: updateSong, isPending, isError, error } = useUpdateSong();
+    
     const handleSubmit = (data: SongFormData) => {
-        updateMutation.mutate({
+        const payload = {
             title: data.title,
             artistIds: data.artistIds,
             duration: data.duration
-        });
+        };
+
+        updateSong(
+            {
+                id: song.id,
+                payload
+            },
+            {
+                onSuccess: () => onClose()
+            }
+
+        );
     };
 
     return (
@@ -35,15 +37,15 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                 <h2 className="text-xl font-bold mb-4">{SongUILabels.EditSongHeader}</h2>
                 
-                {updateMutation.isError && (
+                {isError && (
                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
                         <ul className="list-disc pl-5">
-                            {updateMutation.error instanceof ApiValidationError ? (
-                                updateMutation.error.messages.map((msg, i) => 
+                            {error instanceof ApiValidationError ? (
+                                error.messages.map((msg, i) => 
                                     <li key={i}>{msg}</li>
                                 )
                             ) : (
-                                <li>{(updateMutation.error as Error).message}</li>
+                                <li>{(error as Error).message}</li>
                             )}
                         </ul>
                     </div>
@@ -56,7 +58,7 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
                         duration: song.duration || ''
                     }}
                     onSubmit={handleSubmit}
-                    isPending={updateMutation.isPending}
+                    isPending={isPending}
                     submitButtonText={CoreUIButtons.SaveChanges}
                     layout="vertical"
                     onCancel={onClose}

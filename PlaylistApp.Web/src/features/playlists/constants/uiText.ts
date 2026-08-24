@@ -1,5 +1,6 @@
 export const PlaylistApiMessages = {
     SavePlaylistErrorPrefix: "Failed to save playlist because of the following error(s):",
+    DeletePlaylistError: (message: string) => `Error deleting playlist: ${message}`,
 } as const;
 
 export const PlaylistValidationMessages = {
