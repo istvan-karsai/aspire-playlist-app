@@ -48,7 +48,7 @@ public class AppHostFixture : IAsyncLifetime
 
         if (healthCheckAttempts >= maxHealthCheckAttempts)
         {
-            throw new TimeoutException("The API failed te report healthy within 30 seconds. Database or AppHost failed to boot.");
+            throw new TimeoutException("The API failed te report healthy within 100 seconds. Database or AppHost failed to boot.");
         }
 
         // Create the Respawner ONCE after tables are guaranteed to exist
