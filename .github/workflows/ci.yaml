@@ -22,7 +22,8 @@ jobs:
 
       - run: dotnet build PlaylistApp.slnx -c Release
       - working-directory: ./PlaylistApp.Tests.Integration
-        run: dotnet test -c Release --no-build --no-restore
+        # Added the logger flag to expose background crash traces
+        run: dotnet test -c Release --no-build --no-restore --logger "console;verbosity=normal"
   
   frontend:
     name: React Frontend
