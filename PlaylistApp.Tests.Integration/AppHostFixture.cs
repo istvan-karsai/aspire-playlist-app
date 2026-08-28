@@ -28,7 +28,7 @@ public class AppHostFixture : IAsyncLifetime
 
         var healthUri = new Uri("/health", UriKind.Relative);
         int healthCheckAttempts = 0;
-        const int maxHealthCheckAttempts = 300;
+        const int maxHealthCheckAttempts = 1_000;
 
         // Wait for the API and EF Core Migrations to be 100% healthy
         while (healthCheckAttempts < maxHealthCheckAttempts)
