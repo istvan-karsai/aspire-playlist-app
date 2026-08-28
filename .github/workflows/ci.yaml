@@ -15,7 +15,19 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+      
+      # Prevents Kestrel from crashing on HTTPS bindings
+      - name: Generate .NET dev cert
+        run: |
+          dotnet dev-certs https
+          sudo mkdir -p /usr/local/share/ca-certificates/aspnet
+          sudo -E dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
+          sudo update-ca-certificates
+
       - run: dotnet build PlaylistApp.slnx -c Release
+      - working-directory: ./PlaylistApp.Tests.Integration
+        # Added the logger flag to expose background crash traces
+        run: dotnet test -c Release --no-build --no-restore --logger "console;verbosity=normal"
   
   frontend:
     name: React Frontend
