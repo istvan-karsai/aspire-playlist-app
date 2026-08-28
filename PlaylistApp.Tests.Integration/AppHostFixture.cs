@@ -28,7 +28,7 @@ public class AppHostFixture : IAsyncLifetime
 
         var healthUri = new Uri("/health", UriKind.Relative);
         int healthCheckAttempts = 0;
-        const int maxHealthCheckAttempts = 3_000;
+        const int maxHealthCheckAttempts = 1_000;
 
         // Wait for the API and EF Core Migrations to be 100% healthy
         while (healthCheckAttempts < maxHealthCheckAttempts)
@@ -48,7 +48,7 @@ public class AppHostFixture : IAsyncLifetime
 
         if (healthCheckAttempts >= maxHealthCheckAttempts)
         {
-            throw new TimeoutException("The API failed te report healthy within 300 seconds. Database or AppHost failed to boot.");
+            throw new TimeoutException("The API failed te report healthy within 100 seconds. Database or AppHost failed to boot.");
         }
 
         // Create the Respawner ONCE after tables are guaranteed to exist

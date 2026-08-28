@@ -18,7 +18,11 @@ jobs:
       
       # Prevents Kestrel from crashing on HTTPS bindings
       - name: Generate .NET dev cert
-        run: dotnet dev-certs https
+        run: |
+          dotnet dev-certs https
+          sudo mkdir -p /usr/local/share/ca-certificates/aspnet
+          sudo -E dotnet dev-certs https -ep /usr/local/share/ca-certificates/aspnet/https.crt --format PEM
+          sudo update-ca-certificates
 
       - run: dotnet build PlaylistApp.slnx -c Release
       - working-directory: ./PlaylistApp.Tests.Integration
