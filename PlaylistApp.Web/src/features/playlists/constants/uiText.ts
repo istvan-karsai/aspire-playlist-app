@@ -20,6 +20,14 @@ export const PlaylistUILabels = {
     EmptyPlaylistLibrary: "Your playlist library is currently empty. Create one to get started!",
     LoadingPlaylistLibrary: "Loading the playlist library...",
     ErrorLoadingPlaylistsHeader: "Error loading playlists",
+    // Playlist Details Page
+    LoadingPlaylistDetails: "Loading playlist details...",
+    ErrorLoadingPlaylistProfile: "Failed to load playlist profile.",
+    ErrorLoadingTracks: "Failed to load tracks.",
+    BackToPlaylists: "Back to Playlists",
+    Description: "Description",
+    Tracks: "Tracks",
+    EmptyTracks: "No songs found in this playlist.",
 } as const;
 
 export const PlaylistUIPlaceholders = {

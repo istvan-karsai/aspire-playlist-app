@@ -4,6 +4,7 @@ import { EditPlaylistModal } from "./EditPlaylistModal";
 import type { Playlist } from "../types";
 import { CoreUIButtons, CoreUILabels, CoreUIPrompts } from "../../../core/constants/uiText";
 import { PlaylistUILabels } from "../constants/uiText";
+import { Link } from "react-router-dom";
 
 export const PlaylistList = () => {
     const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
@@ -59,7 +60,12 @@ export const PlaylistList = () => {
                         {playlists.map((playlist) => (
                             <tr key={playlist.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="p-4 font-medium text-gray-900 truncate">
-                                    {playlist.name}
+                                    <Link
+                                        to={`/playlists/${playlist.id}`}
+                                        className="text-blue-600 hover:text-blue-800 hover:underline font-semibold"
+                                    >
+                                        {playlist.name}
+                                    </Link>
                                 </td>
                                 <td className="hidden sm:table-cell p-4 text-gray-600 truncate" title={playlist.description || ""}>
                                     {playlist.description || "-"}

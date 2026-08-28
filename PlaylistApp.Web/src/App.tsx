@@ -6,6 +6,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { ArtistDetailsPage } from './features/artists/pages/ArtistDetailsPage';
 import { PlaylistsPage } from './features/playlists/pages/PlaylistsPage';
 import { Footer } from './components/Footer';
+import { PlaylistDetailsPage } from './features/playlists/pages/PlaylistDetailsPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/artists" element={<ArtistsPage />} />
           <Route path="/artists/:id" element={<ArtistDetailsPage />} />
           <Route path="/playlists" element={<PlaylistsPage />} />
+          <Route path="/playlists/:id" element={<PlaylistDetailsPage />} />
         </Routes>
       </main>
       <Footer />
