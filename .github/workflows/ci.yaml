@@ -11,8 +11,8 @@ jobs:
     name: .NET Backend
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       
@@ -33,10 +33,12 @@ jobs:
     name: React Frontend
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: 'PlaylistApp.Web/package-lock.json'
       - working-directory: ./PlaylistApp.Web
         run: npm ci
       - working-directory: ./PlaylistApp.Web
