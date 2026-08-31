@@ -6,6 +6,7 @@ using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Features.Artists;
 using PlaylistApp.ApiService.Features.Songs;
 using PlaylistApp.ApiService.Features.Songs.Constants;
+using PlaylistApp.Tests.Integration.Features.Artists;
 
 namespace PlaylistApp.Tests.Integration.Features.Songs;
 
@@ -33,7 +34,7 @@ public static class SongEndpointsTests
         public async Task GetById_WhenSongExists_ReturnsOkAndSong()
         {
             // Arrange
-            var newSong = new CreateSongRequest("Stairway to Heaven", "00:08:01", []);
+            var newSong = SongFaker.Create().Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
             var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
             var getByIdUri = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
@@ -74,7 +75,7 @@ public static class SongEndpointsTests
         public async Task PostSong_CreatesRecord_AndReturns201Created()
         {
             // Arrange
-            var newSong = new CreateSongRequest("Bohemian Rhapsody", "00:05:54", []);
+            var newSong = SongFaker.Create().Generate();
         
             // Act
             var response = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
@@ -103,17 +104,11 @@ public static class SongEndpointsTests
         public async Task PostSong_WithArtistIds_CreatesRecordAndLinksArtists()
         {
             // Arrange
-            var createArtistRequest = new CreateArtistRequest(
-                Name: "Queen", 
-                Bio: null, 
-                ActiveFromYear: null, 
-                Country: null, 
-                ImageUrl: null
-            );
+            var createArtistRequest = ArtistFaker.Create().Generate();
             var artistPostResponse = await HttpClient.PostAsJsonAsync("/api/artists", createArtistRequest);
             var createdArtist = await artistPostResponse.Content.ReadFromJsonAsync<ArtistResponse>();
 
-            var newSong = new CreateSongRequest("Under Pressure", "00:04:04", [createdArtist!.Id]);
+            var newSong = SongFaker.Create([createdArtist!.Id]).Generate();
         
             // Act
             var response = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
@@ -165,11 +160,11 @@ public static class SongEndpointsTests
         public async Task PutSong_WhenSongExists_UpdatesRecordAndReturnsNoContent()
         {
             // Arrange
-            var initialSong = new CreateSongRequest("Under Pressure", "00:04:00", []);
+            var initialSong = SongFaker.Create().Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", initialSong);
             var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
             
-            var updateRequest = new UpdateSongRequest("Under Pressure", "00:04:04", []);
+            var updateRequest = SongFaker.Update().Generate();
             var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
         
             // Act
@@ -194,7 +189,7 @@ public static class SongEndpointsTests
         public async Task PutSong_WhenSongDoesNotExist_ReturnsNotFound()
         {
             // Arrange
-            var updateRequest = new UpdateSongRequest("Ghost Song", "00:03:00", []);
+            var updateRequest = SongFaker.Update().Generate();
             var putUri = new Uri($"/api/songs/{Guid.NewGuid()}", UriKind.Relative);
         
             // Act
@@ -253,7 +248,7 @@ public static class SongEndpointsTests
         public async Task DeleteSong_WhenSongExists_RemovesRecordAndReturns204NoContent()
         {
             // Arrange
-            var newSong = new CreateSongRequest("Hotel California", "00:06:30", []);
+            var newSong = SongFaker.Create().Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/songs", newSong);
             var createdSong = await postResponse.Content.ReadFromJsonAsync<SongResponse>();
             var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);

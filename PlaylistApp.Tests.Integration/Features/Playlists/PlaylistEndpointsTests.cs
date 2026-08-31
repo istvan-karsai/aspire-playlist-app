@@ -7,6 +7,8 @@ using PlaylistApp.ApiService.Features.Artists;
 using PlaylistApp.ApiService.Features.Playlists;
 using PlaylistApp.ApiService.Features.Playlists.Constants;
 using PlaylistApp.ApiService.Features.Songs;
+using PlaylistApp.Tests.Integration.Features.Artists;
+using PlaylistApp.Tests.Integration.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration.Features.Playlists;
 
@@ -14,11 +16,11 @@ public static class PlaylistEndpointsTests
 {
     private static async Task<Guid> CreateTestSongAsync(HttpClient httpClient)
     {
-        var artistRequest = new CreateArtistRequest("Test Artist", null, null, null, null);
+        var artistRequest = ArtistFaker.Create().Generate();
         var artistResponse = await httpClient.PostAsJsonAsync("/api/artists", artistRequest);
         var artist = await artistResponse.Content.ReadFromJsonAsync<ArtistResponse>();
 
-        var songRequest = new CreateSongRequest("Test Song", "00:03:00", [artist!.Id]);
+        var songRequest = SongFaker.Create([artist!.Id]).Generate();
         var songResponse = await httpClient.PostAsJsonAsync("/api/songs", songRequest);
         var song = await songResponse.Content.ReadFromJsonAsync<SongResponse>();
 
@@ -48,7 +50,7 @@ public static class PlaylistEndpointsTests
         {
             // Arrange
             var songId = await CreateTestSongAsync(HttpClient);
-            var newPlaylist = new CreatePlaylistRequest("Workout Mix", null, [songId]);
+            var newPlaylist = PlaylistFaker.Create([songId]).Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/playlists", newPlaylist);
             var createdPlaylist = await postResponse.Content.ReadFromJsonAsync<PlaylistResponse>();
             var uriWithId = new Uri($"/api/playlists/{createdPlaylist!.Id}", UriKind.Relative);
@@ -62,7 +64,7 @@ public static class PlaylistEndpointsTests
             var fetchedPlaylist = await getResponse.Content.ReadFromJsonAsync<PlaylistResponse>();
             Assert.NotNull(fetchedPlaylist);
             Assert.Multiple(
-                () => Assert.Equal("Workout Mix", fetchedPlaylist.Name),
+                () => Assert.Equal(newPlaylist.Name, fetchedPlaylist.Name),
                 () => Assert.Single(fetchedPlaylist.Songs)
             );
         }
@@ -96,7 +98,7 @@ public static class PlaylistEndpointsTests
         {
             // Arrange
             var songId = await CreateTestSongAsync(HttpClient);
-            var newPlaylist = new CreatePlaylistRequest("My Favorites", "Best tracks", [songId]);
+            var newPlaylist = PlaylistFaker.Create([songId]).Generate();
         
             // Act
             var response = await HttpClient.PostAsJsonAsync("/api/playlists", newPlaylist);
@@ -147,11 +149,11 @@ public static class PlaylistEndpointsTests
             var songId1 = await CreateTestSongAsync(HttpClient);
             var songId2 = await CreateTestSongAsync(HttpClient);
 
-            var initialPlaylist = new CreatePlaylistRequest("Relaxed", null, [songId1]);
+            var initialPlaylist = PlaylistFaker.Create([songId1]).Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/playlists", initialPlaylist);
             var createdPlaylist = await postResponse.Content.ReadFromJsonAsync<PlaylistResponse>();
 
-            var updateRequest = new UpdatePlaylistRequest("Super Relaxed", "Updated description", [songId2]);
+            var updateRequest = PlaylistFaker.Update([songId2]).Generate();
             var uriWithId = new Uri($"/api/playlists/{createdPlaylist!.Id}", UriKind.Relative);
         
             // Act
@@ -164,8 +166,8 @@ public static class PlaylistEndpointsTests
             var fetchedPlaylist = await getResponse.Content.ReadFromJsonAsync<PlaylistResponse>();
             Assert.NotNull(fetchedPlaylist);
             Assert.Multiple(
-                () => Assert.Equal("Super Relaxed", fetchedPlaylist.Name),
-                () => Assert.Equal("Updated description", fetchedPlaylist.Description),
+                () => Assert.Equal(updateRequest.Name, fetchedPlaylist.Name),
+                () => Assert.Equal(updateRequest.Description, fetchedPlaylist.Description),
                 () => Assert.Single(fetchedPlaylist.Songs),
                 () => Assert.Equal(songId2, fetchedPlaylist.Songs[0].Id)
             );
@@ -175,7 +177,7 @@ public static class PlaylistEndpointsTests
         public async Task PutPlaylist_WhenPlaylistDoesNotExist_ReturnsNotFound()
         {
             // Arrange
-            var updateRequest = new UpdatePlaylistRequest("Ghost Playlist", null, []);
+            var updateRequest = PlaylistFaker.Update().Generate();
             var putUri = new Uri($"/api/playlists/{Guid.NewGuid()}", UriKind.Relative);
         
             // Act
@@ -241,7 +243,7 @@ public static class PlaylistEndpointsTests
         public async Task DeletePlaylist_WhenPlaylistExists_RemovesRecordAndReturnsNoContent()
         {
             // Arrange
-            var newPlaylist = new CreatePlaylistRequest("To Be Deleted", null, []);
+            var newPlaylist = PlaylistFaker.Create().Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/playlists", newPlaylist);
             var createdPlaylist = await postResponse.Content.ReadFromJsonAsync<PlaylistResponse>();
             var uriWithId = new Uri($"/api/playlists/{createdPlaylist!.Id}", UriKind.Relative);
