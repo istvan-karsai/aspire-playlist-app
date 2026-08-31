@@ -32,13 +32,7 @@ public static class ArtistEndpointsTests
         public async Task GetById_WhenArtistExists_ReturnsOkAndArtist()
         {
             // Arrange
-            var newArtist = new CreateArtistRequest(
-                Name: "Led Zeppelin",
-                Bio: null,
-                ActiveFromYear: 1968,
-                Country: "UK",
-                ImageUrl: null
-            );
+            var newArtist = ArtistFaker.Create().Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/artists", newArtist);
             var createdArtist = await postResponse.Content.ReadFromJsonAsync<ArtistResponse>();
             var getByIdUri = new Uri($"/api/artists/{createdArtist!.Id}", UriKind.Relative);
@@ -80,13 +74,7 @@ public static class ArtistEndpointsTests
         public async Task PostArtist_CreatesRecord_AndReturns201Created()
         {
             // Arrange
-            var newArtist = new CreateArtistRequest(
-                Name: "Queen", 
-                Bio: "British Rock Band", 
-                ActiveFromYear: 1970, 
-                Country: "UK", 
-                ImageUrl: null
-            );
+            var newArtist = ArtistFaker.Create().Generate();
         
             // Act
             var response = await HttpClient.PostAsJsonAsync("/api/artists", newArtist);
@@ -152,23 +140,11 @@ public static class ArtistEndpointsTests
         public async Task PutArtist_WhenArtistExists_UpdatesRecordAndReturnsNoContent()
         {
             // Arrange
-            var initialArtist = new CreateArtistRequest(
-                Name: "David Bowie",
-                Bio: null,
-                ActiveFromYear: null,
-                Country: null,
-                ImageUrl: null
-            );
+            var initialArtist = ArtistFaker.Create().Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/artists", initialArtist);
             var createdArtist = await postResponse.Content.ReadFromJsonAsync<ArtistResponse>();
 
-            var updateRequest = new UpdateArtistRequest(
-                Name: "David Bowie",
-                Bio: "Legendary artist",
-                ActiveFromYear: 1962,
-                Country: "UK",
-                ImageUrl: "https://example.com/bowie.jpg"
-            );
+            var updateRequest = ArtistFaker.Update().Generate();
             var uriWithId = new Uri($"/api/artists/{createdArtist!.Id}", UriKind.Relative);
         
             // Act
@@ -180,9 +156,10 @@ public static class ArtistEndpointsTests
             var getResponse = await HttpClient.GetAsync(uriWithId);
             var fetchedArtist = await getResponse.Content.ReadFromJsonAsync<ArtistResponse>();
 
+            Assert.NotNull(fetchedArtist);
             Assert.Multiple(
-                () => Assert.Equal("Legendary artist", fetchedArtist!.Bio),
-                () => Assert.Equal(1962, fetchedArtist!.ActiveFromYear)
+                () => Assert.Equal(updateRequest.Bio, fetchedArtist.Bio),
+                () => Assert.Equal(updateRequest.ActiveFromYear, fetchedArtist.ActiveFromYear)
             );
         }
 
@@ -190,13 +167,7 @@ public static class ArtistEndpointsTests
         public async Task PutArtist_WhenArtistDoesNotExist_ReturnsNotFound()
         {
             // Arrange
-            var updateRequest = new UpdateArtistRequest(
-                Name: "Ghost Artist",
-                Bio: null,
-                ActiveFromYear: null,
-                Country: null,
-                ImageUrl: null
-            );
+            var updateRequest = ArtistFaker.Update().Generate();
             var putUri = new Uri($"/api/artists/{Guid.NewGuid()}", UriKind.Relative);
         
             // Act
@@ -253,13 +224,7 @@ public static class ArtistEndpointsTests
         public async Task DeleteArtist_WhenArtistExists_RemovesRecordAndReturns204NoContent()
         {
             // Arrange
-            var newArtist = new CreateArtistRequest(
-                Name: "The Eagles",
-                Bio: null,
-                ActiveFromYear: 1971,
-                Country: "USA",
-                ImageUrl: null
-            );
+            var newArtist = ArtistFaker.Create().Generate();
             var postResponse = await HttpClient.PostAsJsonAsync("/api/artists", newArtist);
             var createdArtist = await postResponse.Content.ReadFromJsonAsync<ArtistResponse>();
             var uriWithId = new Uri($"/api/artists/{createdArtist!.Id}", UriKind.Relative);
