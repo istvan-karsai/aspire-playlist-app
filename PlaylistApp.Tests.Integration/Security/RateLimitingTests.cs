@@ -1,12 +1,14 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Mvc.Testing;
+using PlaylistApp.ApiService;
 using PlaylistApp.ApiService.Constants;
 using PlaylistApp.ApiService.Features.Songs;
 
 namespace PlaylistApp.Tests.Integration.Security;
 
 [Trait("Category", "Security")]
-public class RateLimitingTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
+public class RateLimitingTests(WebApplicationFactory<ApiMarker> factory) : BaseSecurityTest(factory)
 {
     [Fact]
     public async Task MutationEndpoint_ExceedingRateLimit_Returns429TooManyRequests()

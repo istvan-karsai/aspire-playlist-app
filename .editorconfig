@@ -22,6 +22,8 @@ dotnet_diagnostic.CA1056.severity = none
 dotnet_diagnostic.CA1707.severity = none
 # CA1711: Identifiers should not have incorrect suffix
 dotnet_diagnostic.CA1711.severity = none
+# CA1034: Nested types should not be visible
+dotnet_diagnostic.CA1034.severity = none
 
 # Matches test files directly in the project root
 [PlaylistApp.Tests.*/*.cs]

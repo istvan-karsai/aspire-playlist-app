@@ -1,9 +1,11 @@
 using System.Net;
+using Microsoft.AspNetCore.Mvc.Testing;
+using PlaylistApp.ApiService;
 
 namespace PlaylistApp.Tests.Integration.Security;
 
 [Trait("Category", "Security")]
-public class CorsPolicyTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
+public class CorsPolicyTests(WebApplicationFactory<ApiMarker> factory) : BaseSecurityTest(factory)
 {
     [Fact]
     public async Task CorsPolicy_WithAllowedOrigin_ReturnsAccessControlHeaders()
