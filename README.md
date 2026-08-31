@@ -39,13 +39,14 @@ Playlist Manager is designed to handle relational music data efficiently. The ba
 
 ### System Architecture
 
-The application is deployed via a containerized micro-architecture, utilizing Caddy as a reverse proxy to route external traffic to the decoupled frontend and backend services.
+The application is deployed via a containerized micro-architecture. Caddy acts as a secure reverse proxy at the edge, routing external traffic to the isolated backend API and the Nginx web server, which hosts the static React Single Page Application (SPA).
 
 ```mermaid
 flowchart LR
     Client([Client Browser]) -->|HTTPS| Caddy(Caddy Reverse Proxy)
     Caddy -->|Routes /api/*| API[.NET 10 API]
-    Caddy -->|Routes /*| UI[React Frontend]
+    Caddy -->|Routes /*| Nginx[Nginx Web Server]
+    Nginx -->|Serves| UI([React Frontend])
     API -->|EF Core| DB[(PostgreSQL)]
 ```
 
