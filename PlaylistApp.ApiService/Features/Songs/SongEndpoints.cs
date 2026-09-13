@@ -48,7 +48,7 @@ public static class SongEndpoints
             var song = new Song
             {
                 Id = Guid.NewGuid(),
-                Title = request.Title,
+                Title = request.Title.Trim(),
                 Duration = TimeSpan.ParseExact(
                     request.Duration, 
                     FormatConstants.TimeSpanFormat, 
@@ -117,7 +117,7 @@ public static class SongEndpoints
                                            .Where(a => request.ArtistIds.Contains(a.Id))
                                            .ToListAsync();
 
-            song.Title = request.Title;
+            song.Title = request.Title.Trim();
             song.Duration = TimeSpan.ParseExact(
                 request.Duration, 
                 FormatConstants.TimeSpanFormat, 
