@@ -21,6 +21,7 @@ public static class PlaylistEndpoints
             var playlists = await db.Playlists
                                     .AsNoTracking()
                                     .AsSplitQuery()
+                                    .OrderBy(p => p.Name)
                                     .Select(p => new PlaylistResponse(
                                         p.Id,
                                         p.Name,

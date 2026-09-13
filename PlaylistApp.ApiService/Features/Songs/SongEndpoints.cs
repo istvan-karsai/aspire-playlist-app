@@ -28,6 +28,7 @@ public static class SongEndpoints
             }
             
             var songs = await query
+                                .OrderBy(s => s.Title)
                                 .Select(s => new SongResponse(
                                     s.Id, 
                                     s.Title, 
