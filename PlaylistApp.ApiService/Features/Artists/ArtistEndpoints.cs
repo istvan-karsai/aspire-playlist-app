@@ -18,6 +18,7 @@ public static class ArtistEndpoints
         {
             var artists = await db.Artists
                                   .AsNoTracking()
+                                  .OrderBy(a => a.Name)
                                   .Select(a => new ArtistResponse(
                                     a.Id,
                                     a.Name,
