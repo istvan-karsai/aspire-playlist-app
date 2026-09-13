@@ -29,6 +29,7 @@ public static class SongEndpoints
             
             var songs = await query
                                 .OrderBy(s => s.Title)
+                                .Take(ApiConstants.MaxPayloadLimit)
                                 .Select(s => new SongResponse(
                                     s.Id, 
                                     s.Title, 
