@@ -22,6 +22,7 @@ public static class PlaylistEndpoints
                                     .AsNoTracking()
                                     .AsSplitQuery()
                                     .OrderBy(p => p.Name)
+                                    .Take(ApiConstants.MaxPayloadLimit)
                                     .Select(p => new PlaylistResponse(
                                         p.Id,
                                         p.Name,

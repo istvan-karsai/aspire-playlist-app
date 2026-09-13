@@ -19,6 +19,7 @@ public static class ArtistEndpoints
             var artists = await db.Artists
                                   .AsNoTracking()
                                   .OrderBy(a => a.Name)
+                                  .Take(ApiConstants.MaxPayloadLimit)
                                   .Select(a => new ArtistResponse(
                                     a.Id,
                                     a.Name,
