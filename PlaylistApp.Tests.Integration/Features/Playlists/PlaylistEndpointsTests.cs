@@ -138,6 +138,33 @@ public static class PlaylistEndpointsTests
                 () => Assert.Contains(PlaylistValidationMessages.SongIdsRequired, problemDetails.Errors["SongIds"])
             );
         }
+
+        [Fact]
+        public async Task PostPlaylist_WithPaddedStrings_TrimsNameOnly()
+        {
+            // Arrange
+            var expectedName = "Summer Vibes";
+            var expectedDescription = "   A chill playlist   ";
+            
+            var request = new CreatePlaylistRequest(
+                Name: "   Summer Vibes   ",
+                Description: expectedDescription,
+                SongIds: []
+            );
+
+            // Act
+            var response = await HttpClient.PostAsJsonAsync("/api/playlists", request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var createdPlaylist = await response.Content.ReadFromJsonAsync<PlaylistResponse>();
+            
+            Assert.NotNull(createdPlaylist);
+            Assert.Multiple(
+                () => Assert.Equal(expectedName, createdPlaylist.Name),
+                () => Assert.Equal(expectedDescription, createdPlaylist.Description) // Deliberately untrimmed
+            );
+        }
     }
 
     public class PutTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
@@ -234,6 +261,40 @@ public static class PlaylistEndpointsTests
                 () => Assert.Contains(expectedNameError, problemDetails.Errors["Name"]),
                 () => Assert.Contains(expectedDescriptionError, problemDetails.Errors["Description"])
             );       
+        }
+
+        [Fact]
+        public async Task PutPlaylist_WithPaddedStrings_TrimsNameOnly()
+        {
+            // Arrange
+            var expectedUpdatedName = "Winter Vibes";
+            var expectedUpdatedDescription = "   Cold playlist   ";
+
+            var createPlaylistRequest = PlaylistFaker.Create().Generate();
+            var postResponse = await HttpClient.PostAsJsonAsync("/api/playlists", createPlaylistRequest);
+            var createdPlaylist = await postResponse.Content.ReadFromJsonAsync<PlaylistResponse>();
+
+            var updatePlaylistRequest = new UpdatePlaylistRequest(
+                Name: "   Winter Vibes   ",
+                Description: expectedUpdatedDescription,
+                SongIds: []
+            );
+
+            var uriWithId = new Uri($"/api/playlists/{createdPlaylist!.Id}", UriKind.Relative);
+
+            // Act
+            var putResponse = await HttpClient.PutAsJsonAsync(uriWithId, updatePlaylistRequest);
+            var getResponse = await HttpClient.GetAsync(uriWithId);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NoContent, putResponse.StatusCode);
+            
+            var updatedPlaylist = await getResponse.Content.ReadFromJsonAsync<PlaylistResponse>();
+            Assert.NotNull(updatedPlaylist);
+            Assert.Multiple(
+                () => Assert.Equal(expectedUpdatedName, updatedPlaylist.Name),
+                () => Assert.Equal(expectedUpdatedDescription, updatedPlaylist.Description)
+            );
         }
     }
 

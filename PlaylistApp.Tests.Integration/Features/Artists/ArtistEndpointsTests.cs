@@ -132,6 +132,39 @@ public static class ArtistEndpointsTests
                 () => Assert.Contains(expectedYearError, problemDetails.Errors["ActiveFromYear"])
             );
         }
+
+        [Fact]
+        public async Task PostArtist_WithPaddedStrings_TrimsStrings()
+        {
+            // Arrange
+            var expectedName = "The Sanitize Band";
+            var expectedBio = "Example bio text";
+            var expectedCountry = "Hungary";
+            var expectedImageUrl = "https://example.com/image.jpg";
+
+            var request = new CreateArtistRequest(
+                Name: "   The Sanitize Band   ",
+                Bio: "   Example bio text   ",
+                ActiveFromYear: 2010,
+                Country: "   Hungary   ",
+                ImageUrl: "   https://example.com/image.jpg   "
+            );
+
+            // Act
+            var response = await HttpClient.PostAsJsonAsync("/api/artists", request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var createdArtist = await response.Content.ReadFromJsonAsync<ArtistResponse>();
+            
+            Assert.NotNull(createdArtist);
+            Assert.Multiple(
+                () => Assert.Equal(expectedName, createdArtist.Name),
+                () => Assert.Equal(expectedBio, createdArtist.Bio),
+                () => Assert.Equal(expectedCountry, createdArtist.Country),
+                () => Assert.Equal(expectedImageUrl, createdArtist.ImageUrl)
+            );
+        }
     }
 
     public class PutTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
@@ -215,6 +248,46 @@ public static class ArtistEndpointsTests
                 );
 
             Assert.Contains(expectedNameError, problemDetails.Errors["Name"]);
+        }
+
+        [Fact]
+        public async Task PutArtist_WithPaddedStrings_TrimsStrings()
+        {
+            // Arrange
+            var createArtistRequest = ArtistFaker.Create().Generate();
+            var postResponse = await HttpClient.PostAsJsonAsync("/api/artists", createArtistRequest);
+            var createdArtist = await postResponse.Content.ReadFromJsonAsync<ArtistResponse>();
+
+            var expectedUpdatedName = "Updated Sanitize Band";
+            var expectedUpdatedBio = "Trimmed Updated Bio";
+            var expectedUpdatedCountry = "UK";
+            var expectedUpdatedImageUrl = "https://example.com/new.jpg";
+
+            var request = new UpdateArtistRequest(
+                Name: "   Updated Sanitize Band   ",
+                Bio: "   Trimmed Updated Bio   ",
+                ActiveFromYear: 2012,
+                Country: "   UK   ",
+                ImageUrl: "   https://example.com/new.jpg   "
+            );
+
+            var uriWithId = new Uri($"/api/artists/{createdArtist!.Id}", UriKind.Relative);
+
+            // Act
+            var putResponse = await HttpClient.PutAsJsonAsync(uriWithId, request);
+            var getResponse = await HttpClient.GetAsync(uriWithId);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NoContent, putResponse.StatusCode);
+            
+            var updatedArtist = await getResponse.Content.ReadFromJsonAsync<ArtistResponse>();
+            Assert.NotNull(updatedArtist);
+            Assert.Multiple(
+                () => Assert.Equal(expectedUpdatedName, updatedArtist.Name),
+                () => Assert.Equal(expectedUpdatedBio, updatedArtist.Bio),
+                () => Assert.Equal(expectedUpdatedCountry, updatedArtist.Country),
+                () => Assert.Equal(expectedUpdatedImageUrl, updatedArtist.ImageUrl)
+            );
         }
     }
 

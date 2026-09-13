@@ -35,11 +35,11 @@ public static class ArtistEndpoints
             var artist = new Artist
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name,
-                Bio = request.Bio,
+                Name = request.Name.Trim(),
+                Bio = request.Bio?.Trim(),
                 ActiveFromYear = request.ActiveFromYear,
-                Country = request.Country,
-                ImageUrl = request.ImageUrl
+                Country = request.Country?.Trim(),
+                ImageUrl = request.ImageUrl?.Trim()
             };
 
             db.Artists.Add(artist);
@@ -99,11 +99,11 @@ public static class ArtistEndpoints
                 });
             }
 
-            artist.Name = request.Name;
-            artist.Bio = request.Bio;
+            artist.Name = request.Name.Trim();
+            artist.Bio = request.Bio?.Trim();
             artist.ActiveFromYear = request.ActiveFromYear;
-            artist.Country = request.Country;
-            artist.ImageUrl = request.ImageUrl;
+            artist.Country = request.Country?.Trim();
+            artist.ImageUrl = request.ImageUrl?.Trim();
 
             await db.SaveChangesAsync();
 

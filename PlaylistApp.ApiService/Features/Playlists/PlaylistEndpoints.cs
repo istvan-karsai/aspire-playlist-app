@@ -45,7 +45,7 @@ public static class PlaylistEndpoints
             var playlist = new Playlist
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name,
+                Name = request.Name.Trim(),
                 Description = request.Description  
             };
 
@@ -144,7 +144,7 @@ public static class PlaylistEndpoints
                 });
             }
 
-            playlist.Name = request.Name;
+            playlist.Name = request.Name.Trim();
             playlist.Description = request.Description;
 
             playlist.PlaylistSongs.Clear();

@@ -152,6 +152,33 @@ public static class SongEndpointsTests
                 () => Assert.Contains(SongValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
             );
         }
+
+        [Fact]
+        public async Task PostSong_WithPaddedStrings_TrimsTitle()
+        {
+            // Arrange
+            var createArtistRequest = ArtistFaker.Create().Generate();
+            var artistPostResponse = await HttpClient.PostAsJsonAsync("/api/artists", createArtistRequest);
+            var createdArtist = await artistPostResponse.Content.ReadFromJsonAsync<ArtistResponse>();
+
+            var request = new CreateSongRequest(
+                Title: "   Bohemian Rhapsody   ",
+                Duration: "00:05:55",
+                ArtistIds: [createdArtist!.Id]
+            );
+
+            var expectedTitle = "Bohemian Rhapsody";
+
+            // Act
+            var response = await HttpClient.PostAsJsonAsync("/api/songs", request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var createdSong = await response.Content.ReadFromJsonAsync<SongResponse>();
+            
+            Assert.NotNull(createdSong);
+            Assert.Equal(expectedTitle, createdSong.Title);
+        }
     }
 
     public class PutTests(AppHostFixture fixture) : BaseIntegrationTest(fixture)
@@ -239,6 +266,38 @@ public static class SongEndpointsTests
                 () => Assert.Contains(SongValidationMessages.InvalidDurationFormat, problemDetails.Errors["Duration"]),
                 () => Assert.Contains(SongValidationMessages.ArtistIdsRequired, problemDetails.Errors["ArtistIds"])
             );
+        }
+
+        [Fact]
+        public async Task PutSong_WithPaddedStrings_TrimsTitle()
+        {
+            // Arrange
+            var createArtistRequest = ArtistFaker.Create().Generate();
+            var artistPostResponse = await HttpClient.PostAsJsonAsync("/api/artists", createArtistRequest);
+            var createdArtist = await artistPostResponse.Content.ReadFromJsonAsync<ArtistResponse>();
+
+            var createSongRequest = SongFaker.Create([createdArtist!.Id]).Generate();
+            var songPostResponse = await HttpClient.PostAsJsonAsync("/api/songs", createSongRequest);
+            var createdSong = await songPostResponse.Content.ReadFromJsonAsync<SongResponse>();
+
+            var request = new UpdateSongRequest(
+                Title: "   Under Pressure   ",
+                Duration: "00:04:08",
+                ArtistIds: [createdArtist!.Id]
+            );
+            var uriWithId = new Uri($"/api/songs/{createdSong!.Id}", UriKind.Relative);
+            var expectedUpdatedTitle = "Under Pressure";
+
+            // Act
+            var putResponse = await HttpClient.PutAsJsonAsync(uriWithId, request);
+            var getResponse = await HttpClient.GetAsync(uriWithId);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NoContent, putResponse.StatusCode);
+            
+            var updatedSong = await getResponse.Content.ReadFromJsonAsync<SongResponse>();
+            Assert.NotNull(updatedSong);
+            Assert.Equal(expectedUpdatedTitle, updatedSong.Title);
         }
     }
 
