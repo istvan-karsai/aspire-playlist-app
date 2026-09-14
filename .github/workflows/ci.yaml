@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# Required permission for test reporters to create workflow summaries
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
   backend:
     name: .NET Backend
@@ -25,9 +31,19 @@ jobs:
           sudo update-ca-certificates
 
       - run: dotnet build PlaylistApp.slnx -c Release
-      - working-directory: ./PlaylistApp.Tests.Integration
-        # Added the logger flag to expose background crash traces
-        run: dotnet test -c Release --no-build --no-restore --logger "console;verbosity=normal"
+
+      - name: Run .NET Integration Tests
+        working-directory: ./PlaylistApp.Tests.Integration
+        # Appended the trx logger. Outputs to ./TestResults/test-results.trx by default
+        run: dotnet test -c Release --no-build --no-restore --logger "console;verbosity=normal" --logger "trx;LogFileName=test-results.trx"
+      
+      - name: Publish .NET Test Report
+        uses: dorny/test-reporter@v3
+        if: success() || failure()
+        with:
+          name: .NET Backend Test Summary
+          path: ./PlaylistApp.Tests.Integration/TestResults/test-results.trx
+          reporter: dotnet-trx
   
   frontend:
     name: React Frontend
