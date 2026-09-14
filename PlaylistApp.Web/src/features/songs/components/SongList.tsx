@@ -87,7 +87,14 @@ export const SongList = () => {
                         <tbody className="divide-y divide-gray-200">
                             {songs.map((song) => (
                                 <tr key={song.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="p-4 font-medium text-gray-900 truncate">{song.title}</td>
+                                    <td className="p-4 font-medium text-gray-900 truncate">
+                                        <Link
+                                            to={`/songs/${song.id}`}
+                                            className="hover:text-blue-600 hover:underline transition-colors"
+                                        >
+                                            {song.title}
+                                        </Link>
+                                    </td>
                                     <td className="hidden sm:table-cell p-4 text-gray-600 truncate">
                                         {song.artists && song.artists.length > 0 ? (
                                             song.artists.map((artist, index) => (
