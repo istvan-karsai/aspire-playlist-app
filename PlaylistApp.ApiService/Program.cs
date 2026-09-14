@@ -62,7 +62,7 @@ builder.AddNpgsqlDbContext<AppDbContext>("playlistdb");
 
 var app = builder.Build();
 
-app.UseRateLimiter();
+app.UseExceptionHandler();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -75,8 +75,6 @@ using (var scope = app.Services.CreateScope())
         dbContext.Database.Migrate();
     }
 }
-
-app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -91,6 +89,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(PolicyConstants.CorsPolicy);
+app.UseRateLimiter();
 app.MapDefaultEndpoints();
 app.MapSongEndpoints();
 app.MapArtistEndpoints();
