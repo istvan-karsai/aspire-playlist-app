@@ -3,6 +3,8 @@ export const CoreApiMessages = {
     NetworkError: "Network error: Could not connect to the server. Please check your connection or try again later.",
     NotFound: "The requested resource could not be found. It may have already been deleted.",
     TooManyRequests: "Too many requests. Please wait a few minutes and try again.",
+    ServiceUnavailable: "The service is currently unavailable. Please try again later.",
+    UnexpectedFormat: "Received an unexpected response format from the server.",
 } as const;
 
 export const CoreUILabels = {

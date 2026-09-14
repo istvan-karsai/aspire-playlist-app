@@ -20,34 +20,43 @@ async function apiFetch<T = void>(endpoint: string, options?: RequestInit): Prom
         throw new Error(CoreApiMessages.NetworkError, { cause: error });
     }
 
-    if (!response.ok) {
-        if (response.status === 404) {
-            throw new Error(CoreApiMessages.NotFound);
-        }
+    const contentType = response.headers.get('content-type');
+    const isContentJson = contentType && (
+        contentType.includes('application/json') ||
+        contentType.includes('application/problem+json')
+    );
 
-        if (response.status === 429) {
-            throw new Error(CoreApiMessages.TooManyRequests);
-        }
+    if (!response.ok) {
+        if (response.status === 404) throw new Error(CoreApiMessages.NotFound);
+        if (response.status === 429) throw new Error(CoreApiMessages.TooManyRequests);
+        if (response.status >= 500 && !isContentJson) throw new Error(CoreApiMessages.ServiceUnavailable);
+
+        // If the error response isn't JSON, stop here and throw the generic status
+        if (!isContentJson) throw new Error(`HTTP error! status: ${response.status}`);
 
         try {
             const errorData = await response.json();
-
-            if (errorData.errors) {
+            if (errorData?.errors) {
                 const allMessages = Object.values(errorData.errors).flat() as string[];
                 throw new ApiValidationError(allMessages);
             }
         } catch (e) {
+            // Only rethrow our custom validation error; swallow standard parsing errors to hit the fallback
             if (e instanceof ApiValidationError) throw e;
-            if (e instanceof Error && e.message !== 'Unexpected end of JSON input') throw e;
         }
 
-        // Fallback for unhandled non-2xx responses
+        // Fallback for any unhandled JSON responses
         throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     // Safely handle DELETE/PUT responses that have no body
     if (response.status === 204) {
         return undefined as T;
+    }
+
+    // Protect successful fetches from unexpected HTML payloads
+    if (!isContentJson) {
+        throw new Error(CoreApiMessages.UnexpectedFormat);
     }
 
     return response.json();
