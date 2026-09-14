@@ -8,6 +8,7 @@ import { mockValidArtist } from "../tests/artistMocks";
 import { server } from "../../../tests/mocks/server";
 import { mockValidSong } from "../../songs/tests/songMocks";
 import { ArtistUILabels } from "../constants/uiText";
+import { API_ENDPOINTS } from "../../../core/api/config";
 
 const renderArtistDetailsPage = (artistId: string) => {
     const queryClient = new QueryClient({
@@ -39,7 +40,7 @@ describe('ArtistDetailsPage Component', () => {
 
     it('displays an error message if the artist fetch fails', async () => {
         server.use(
-            http.get('/api/artists/:id', () => {
+            http.get(`${API_ENDPOINTS.artists}/:id`, () => {
                 return new HttpResponse(null, { status: 500 });
             })
         );
@@ -59,7 +60,7 @@ describe('ArtistDetailsPage Component', () => {
 
     it('displays an empty discography message if the artist has no songs', async () => {
         server.use(
-            http.get('/api/songs', () => {
+            http.get(API_ENDPOINTS.songs, () => {
                 return HttpResponse.json([]);
             })
         );

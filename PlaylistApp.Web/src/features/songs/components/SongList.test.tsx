@@ -8,6 +8,7 @@ import { mockArtistWithoutSong, mockValidArtist } from "../../artists/tests/arti
 import { mockValidSong, mockValidSong2 } from "../tests/songMocks";
 import { SongUILabels } from "../constants/uiText";
 import { ArtistUILabels } from "../../artists/constants/uiText";
+import { API_ENDPOINTS } from "../../../core/api/config";
 
 describe('SongList Component', () => {
     it('displays a loading indicator while fetching songs', () => {
@@ -18,7 +19,7 @@ describe('SongList Component', () => {
 
     it('displays an empty state message when no songs are returned', async () => {
         server.use(
-            http.get('/api/songs', () => {
+            http.get(API_ENDPOINTS.songs, () => {
                 return HttpResponse.json([]);
             })
         );
