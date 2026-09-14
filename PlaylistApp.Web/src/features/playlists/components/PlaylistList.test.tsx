@@ -5,6 +5,7 @@ import { server } from "../../../tests/mocks/server";
 import { http, HttpResponse } from "msw";
 import { mockEmptyPlaylist, mockValidPlaylist } from "../tests/playlistMocks";
 import { PlaylistUILabels } from "../constants/uiText";
+import { API_ENDPOINTS } from "../../../core/api/config";
 
 describe('PlaylistList Component', () => {
     it('displays a loading indicator while fetching playlists', () => {
@@ -15,7 +16,7 @@ describe('PlaylistList Component', () => {
 
     it('displays an error message when fetching fails', async () => {
         server.use(
-            http.get('/api/playlists', () => {
+            http.get(API_ENDPOINTS.playlists, () => {
                 return new HttpResponse(null, { status: 500 });
             })
         );
@@ -27,7 +28,7 @@ describe('PlaylistList Component', () => {
 
     it('displays an empty state message when no playlists are returned', async () => {
         server.use(
-            http.get('/api/playlists', () => {
+            http.get(API_ENDPOINTS.playlists, () => {
                 return HttpResponse.json([]);
             })
         );

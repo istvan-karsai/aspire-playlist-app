@@ -8,6 +8,7 @@ import { PlaylistUILabels } from "../constants/uiText";
 import { server } from "../../../tests/mocks/server";
 import { http, HttpResponse } from "msw";
 import { mockValidSong } from "../../songs/tests/songMocks";
+import { API_ENDPOINTS } from "../../../core/api/config";
 
 const renderPlaylistDetailsPage = (playlistId: string) => {
     const queryClient = new QueryClient({
@@ -38,7 +39,7 @@ describe('PlaylistDetailsPage Component', () => {
 
     it('displays an error message if the playlist fetch fails', async () => {
         server.use(
-            http.get('/api/playlists/:id', () => {
+            http.get(`${API_ENDPOINTS.playlists}/:id`, () => {
                 return new HttpResponse(null, { status: 500 });
             })
         );

@@ -6,6 +6,7 @@ import { http, HttpResponse } from "msw";
 import { mockArtists, mockValidArtist } from "../tests/artistMocks";
 import { ArtistUILabels } from "../constants/uiText";
 import { CoreUILabels } from "../../../core/constants/uiText";
+import { API_ENDPOINTS } from "../../../core/api/config";
 
 describe('ArtistList Component', () => {
     it('displays a loading indicator while fetching artists', () => {
@@ -16,7 +17,7 @@ describe('ArtistList Component', () => {
 
     it('displays an empty state message when no artists are returned', async () => {
         server.use(
-            http.get('/api/artists', () => {
+            http.get(API_ENDPOINTS.artists, () => {
                 return HttpResponse.json([]);
             })
         );

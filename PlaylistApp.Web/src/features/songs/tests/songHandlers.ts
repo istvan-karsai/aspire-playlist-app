@@ -2,9 +2,10 @@ import { http, HttpResponse } from "msw";
 import { mockSongs } from "./songMocks";
 import type { SongPayload } from "../types";
 import { mockArtists } from "../../artists/tests/artistMocks";
+import { API_ENDPOINTS } from "../../../core/api/config";
 
 export const songHandlers = [
-    http.get('/api/songs', ({ request }) => {
+    http.get(`${API_ENDPOINTS.songs}`, ({ request }) => {
         const url = new URL(request.url);
         const artistId = url.searchParams.get('artistId');
 
@@ -19,7 +20,7 @@ export const songHandlers = [
         return HttpResponse.json(mockSongs);
     }),
 
-    http.post('/api/songs', async ({ request }) => {
+    http.post(`${API_ENDPOINTS.songs}`, async ({ request }) => {
         const payload = await request.json() as SongPayload;
 
         const newSong = {
@@ -32,12 +33,12 @@ export const songHandlers = [
         return HttpResponse.json(newSong, { status: 201 });
     }),
 
-    http.put('/api/songs/:id', async ({ request }) => {
+    http.put(`${API_ENDPOINTS.songs}/:id`, async ({ request }) => {
         await request.json();
         return new HttpResponse(null, { status: 204 });
     }),
 
-    http.delete('/api/songs/:id', () => {
+    http.delete(`${API_ENDPOINTS.songs}/:id`, () => {
         return new HttpResponse(null, { status: 204 });
     }),
 ];
