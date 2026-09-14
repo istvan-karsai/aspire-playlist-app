@@ -50,7 +50,12 @@ export const PlaylistDetailsPage = () => {
                                         <li key={song.id} className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
                                             <div className="w-0 flex-1 flex items-center">
                                                 <span className="ml-2 flex-1 w-0 truncate font-medium">
-                                                    {song.title}
+                                                    <Link
+                                                        to={`/songs/${song.id}`}
+                                                        className="ml-2 flex-1 w-0 truncate font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                                    >
+                                                        {song.title}
+                                                    </Link>
                                                 </span>
                                             </div>
                                         </li>

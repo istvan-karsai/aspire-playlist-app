@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createSong, deleteSong, fetchSongs, updateSong } from "../api/songsClient";
+import { createSong, deleteSong, fetchSongById, fetchSongs, updateSong } from "../api/songsClient";
 import type { SongPayload } from "../types";
 import { SongApiMessages } from "../constants/uiText";
 
@@ -9,6 +9,14 @@ export const useSongs = (artistId?: string) => {
         queryFn: () => fetchSongs(artistId),
     });
 };
+
+export const useSong = (id: string | undefined) => {
+    return useQuery({
+        queryKey: ['songs', id],
+        queryFn: () => fetchSongById(id!),
+        enabled: !!id,
+    });
+}; 
 
 export const useCreateSong = () => {
     const queryClient = useQueryClient();

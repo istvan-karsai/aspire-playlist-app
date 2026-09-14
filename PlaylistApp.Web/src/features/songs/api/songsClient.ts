@@ -8,6 +8,10 @@ export const fetchSongs = async (artistId?: string): Promise<Song[]> => {
     return await apiGet<Song[]>(url);
 };
 
+export const fetchSongById = async (id: string): Promise<Song> => {
+    return await apiGet<Song>(`${API_ENDPOINTS.songs}/${id}`);
+};
+
 export const createSong = async (newSong: SongPayload): Promise<Song> => {
     return await apiPost<Song, SongPayload>(`${API_ENDPOINTS.songs}`, newSong);
 };

@@ -25,6 +25,11 @@ export const SongUILabels = {
     NoArtistsAvailable: "No artists available.",
     FilterByArtist: "Filter by Artist",
     AllArtists: "All Artists",
+    // SongDetailsPage
+    LoadingSongDetails: "Loading song details...",
+    ErrorLoadingSong: "Failed to load song details.",
+    BackToSongs: "Back to Songs",
+    EmptyArtistsList: "No artists are assigned to this song.",
 } as const;
 
 export const SongUIPlaceholders = {

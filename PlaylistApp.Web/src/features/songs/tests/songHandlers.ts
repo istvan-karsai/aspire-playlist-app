@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { mockSongs } from "./songMocks";
+import { mockSongs, mockValidSong, mockValidSong2 } from "./songMocks";
 import type { SongPayload } from "../types";
 import { mockArtists } from "../../artists/tests/artistMocks";
 import { API_ENDPOINTS } from "../../../core/api/config";
@@ -18,6 +18,20 @@ export const songHandlers = [
         }
 
         return HttpResponse.json(mockSongs);
+    }),
+
+    http.get(`${API_ENDPOINTS.songs}/:id`, ({ params }) => {
+        const { id } = params;
+    
+        if (id === mockValidSong.id) {
+            return HttpResponse.json(mockValidSong);
+        }
+            
+        if (id === mockValidSong2.id) {
+            return HttpResponse.json(mockValidSong2);
+        }
+    
+        return new HttpResponse(null, { status: 404 });
     }),
 
     http.post(`${API_ENDPOINTS.songs}`, async ({ request }) => {

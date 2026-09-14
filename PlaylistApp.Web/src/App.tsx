@@ -8,6 +8,7 @@ import { PlaylistsPage } from './features/playlists/pages/PlaylistsPage';
 import { Footer } from './components/Footer';
 import { PlaylistDetailsPage } from './features/playlists/pages/PlaylistDetailsPage';
 import { NotFoundPage } from './components/NotFoundPage';
+import { SongDetailsPage } from './features/songs/pages/SongDetailsPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/songs" replace />} />
           <Route path="/songs" element={<SongsPage />} />
+          <Route path="/songs/:id" element={<SongDetailsPage />} />
           <Route path="/artists" element={<ArtistsPage />} />
           <Route path="/artists/:id" element={<ArtistDetailsPage />} />
           <Route path="/playlists" element={<PlaylistsPage />} />
