@@ -1,0 +1,26 @@
+# .github/dependabot.yml
+version: 2
+updates:
+  # 1. React Frontend (NPM)
+  - package-ecosystem: "npm"
+    directory: "/PlaylistApp.Web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    # Consolidates non-critical version updates into a single PR
+    groups:
+      frontend-dependencies:
+        patterns:
+          - "*"
+
+  # 2. .NET Backend (NuGet)
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    # Consolidates non-critical version updates into a single PR
+    groups:
+      backend-dependencies:
+        patterns:
+          - "*"
