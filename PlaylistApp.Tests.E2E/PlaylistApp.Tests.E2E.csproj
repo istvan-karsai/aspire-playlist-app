@@ -8,6 +8,7 @@
     <PackageReference Include="Aspire.Hosting.Testing" />
     <PackageReference Include="Bogus" />
     <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Microsoft.Playwright" />
     <PackageReference Include="xunit" />
