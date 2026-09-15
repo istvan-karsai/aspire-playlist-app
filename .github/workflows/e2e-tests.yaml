@@ -20,17 +20,26 @@ jobs:
         with:
           dotnet-version: '10.0.x'
       
-      - name: Setup Node.js (for Playwright dependencies)
+      - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: 'PlaylistApp.Web/package-lock.json'
+
+      - name: Install Frontend Dependencies
+        working-directory: ./PlaylistApp.Web
+        run: npm ci
+
+      - name: Build E2E Project (Generates Playwright CLI)
+        run: dotnet build PlaylistApp.Tests.E2E/PlaylistApp.Tests.E2E.csproj
 
       - name: Install Playwright Browsers
-        # The --with-deps flag ensures Linux system dependencies for Chromium are installed
-        run: npx playwright install --with-deps chromium
+        # Uses the .NET-specific PowerShell script to guarantee version parity
+        run: pwsh PlaylistApp.Tests.E2E/bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
 
       - name: Execute E2E Tests
-        run: dotnet test PlaylistApp.Tests.E2E/PlaylistApp.Tests.E2E.csproj --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test PlaylistApp.Tests.E2E/PlaylistApp.Tests.E2E.csproj --logger "console;verbosity=normal" --logger "trx;LogFileName=test-results.trx"
 
       - name: Upload Playwright Traces
         if: failure()
