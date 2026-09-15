@@ -21,7 +21,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // You can log the error to an error reporting service here in the future
+    // Log the error to an error reporting service here in the future
     console.error("Uncaught React error:", error, errorInfo);
   }
 
@@ -33,6 +33,16 @@ export class GlobalErrorBoundary extends Component<Props, State> {
           <p className="text-gray-600 mb-8 max-w-lg">
             An unexpected error occurred in the application. Please try refreshing the page or returning home.
           </p>
+
+          {/* Diagnostic error display */}
+          {this.state.error && (
+            <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-md text-left overflow-auto max-w-2xl w-full shadow-sm">
+              <p className="text-sm font-mono text-red-800 wrap-break-word">
+                {this.state.error.toString()}
+              </p>
+            </div>
+          )}
+
           <div className="flex gap-4">
             <button
               onClick={() => window.location.reload()}
