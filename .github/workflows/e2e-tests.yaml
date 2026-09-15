@@ -1,0 +1,50 @@
+name: E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Enables the manual "Run workflow" button in the GitHub UI
+
+jobs:
+  playwright-tests:
+    name: Run E2E Smoke & Journey Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+      
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      
+      - name: Setup Node.js (for Playwright dependencies)
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Install Playwright Browsers
+        # The --with-deps flag ensures Linux system dependencies for Chromium are installed
+        run: npx playwright install --with-deps chromium
+
+      - name: Execute E2E Tests
+        run: dotnet test PlaylistApp.Tests.E2E/PlaylistApp.Tests.E2E.csproj --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload Playwright Traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-failed-traces
+          # Uses a glob pattern to find the traces wherever they are dropped in the bin/Debug folder
+          path: PlaylistApp.Tests.E2E/**/playwright-traces/*.zip
+          retention-days: 7
+      
+      - name: Publish E2E Test Report
+        uses: dorny/test-reporter@v3
+        if: success() || failure()
+        with:
+          name: E2E Test Summary
+          path: ./PlaylistApp.Tests.E2E/TestResults/test-results.trx
+          reporter: dotnet-trx
