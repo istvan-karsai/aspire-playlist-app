@@ -23,7 +23,7 @@ export const useCreateArtist = () => {
     return useMutation({
         mutationFn: createArtist,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['artists'] });
+            return queryClient.invalidateQueries({ queryKey: ['artists'] });
         },
     });
 };
@@ -33,7 +33,7 @@ export const useUpdateArtist = () => {
     return useMutation({
         mutationFn: ({ id, payload }: { id: string; payload: ArtistPayload }) => updateArtist(id, payload),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['artists'] });
+            return queryClient.invalidateQueries({ queryKey: ['artists'] });
         },
     });
 };
@@ -43,7 +43,7 @@ export const useDeleteArtist = () => {
     return useMutation({
         mutationFn: deleteArtist,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['artists'] });
+            return queryClient.invalidateQueries({ queryKey: ['artists'] });
         },
         onError: (err) => {
             alert(ArtistApiMessages.DeleteArtistError(err.message));

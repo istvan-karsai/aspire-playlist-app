@@ -35,9 +35,9 @@ async function apiFetch<T = void>(endpoint: string, options?: RequestInit): Prom
         if (!isContentJson) throw new Error(`HTTP error! status: ${response.status}`);
 
         try {
-            const errorData = await response.json();
+            const errorData = (await response.json()) as { errors?: Record<string, string[]> };
             if (errorData?.errors) {
-                const allMessages = Object.values(errorData.errors).flat() as string[];
+                const allMessages = Object.values(errorData.errors).flat();
                 throw new ApiValidationError(allMessages);
             }
         } catch (e) {
@@ -59,7 +59,7 @@ async function apiFetch<T = void>(endpoint: string, options?: RequestInit): Prom
         throw new Error(CoreApiMessages.UnexpectedFormat);
     }
 
-    return response.json();
+    return response.json() as T;
 }
 
 export const apiGet = async<T>(endpoint: string): Promise<T> => {

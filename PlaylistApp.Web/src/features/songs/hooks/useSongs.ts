@@ -23,7 +23,7 @@ export const useCreateSong = () => {
     return useMutation({
         mutationFn: createSong,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['songs'] });
+            return queryClient.invalidateQueries({ queryKey: ['songs'] });
         },
     });
 };
@@ -33,7 +33,7 @@ export const useUpdateSong = () => {
     return useMutation({
         mutationFn: ({ id, payload }: { id: string; payload: SongPayload }) => updateSong(id, payload),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['songs'] });
+            return queryClient.invalidateQueries({ queryKey: ['songs'] });
         },
     });
 };
@@ -43,7 +43,7 @@ export const useDeleteSong = () => {
     return useMutation({
         mutationFn: deleteSong,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['songs'] });
+            return queryClient.invalidateQueries({ queryKey: ['songs'] });
         },
         onError: (err) => {
             alert(SongApiMessages.DeleteError(err.message));

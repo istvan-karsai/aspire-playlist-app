@@ -30,7 +30,7 @@ export const PlaylistList = () => {
         return (
             <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200 w-full">
                 <h3 className="font-bold">{PlaylistUILabels.ErrorLoadingPlaylistsHeader}</h3>
-                <p className="text-sm">{(error as Error).message}</p>
+                <p className="text-sm">{error.message}</p>
             </div>
         );
     }
@@ -68,7 +68,7 @@ export const PlaylistList = () => {
                                     </Link>
                                 </td>
                                 <td className="hidden sm:table-cell p-4 text-gray-600 truncate" title={playlist.description || ""}>
-                                    {playlist.description || "-"}
+                                    {playlist.description || CoreUILabels.EmptyValueFallback}
                                 </td>
                                 <td className="p-4 text-gray-600 text-right">
                                     {playlist.songs.length}

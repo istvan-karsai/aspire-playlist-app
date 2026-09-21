@@ -67,7 +67,7 @@ export const SongList = () => {
             ) : isError ? (
                 <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200 w-full">
                     <h3 className="font-bold">{SongUILabels.ErrorLoadingHeader}</h3>
-                    <p className="text-sm">{(error as Error).message}</p>
+                    <p className="text-sm">{error.message}</p>
                 </div>
             ) : !songs || songs.length === 0 ? (
                 <div className="text-center p-10 bg-gray-50 rounded-lg border border-dashed text-gray-500 w-full">

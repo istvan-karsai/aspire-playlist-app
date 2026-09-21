@@ -46,7 +46,7 @@ export const EditPlaylistModal = ({ playlist, onClose }: EditPlaylistModalProps)
                                     <li key={index}>{message}</li>
                                 ))
                             ) : (
-                                <li>{(error as Error).message}</li>
+                                <li>{error.message}</li>
                             )}
                         </ul>
                     </div>
