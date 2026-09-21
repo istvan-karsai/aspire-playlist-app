@@ -1,4 +1,3 @@
-import './App.css'
 import { Navbar } from './components/Navbar'
 import { SongsPage } from './features/songs/pages/SongsPage'
 import { ArtistsPage } from './features/artists/pages/ArtistsPage';

@@ -45,7 +45,7 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
                                     <li key={i}>{msg}</li>
                                 )
                             ) : (
-                                <li>{(error as Error).message}</li>
+                                <li>{error.message}</li>
                             )}
                         </ul>
                     </div>

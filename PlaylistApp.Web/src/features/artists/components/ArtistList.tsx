@@ -30,7 +30,7 @@ export const ArtistList = () => {
         return (
             <div className="bg-red-500 text-red-700 p-4 rounded-lg border border-red-200 w-full">
                 <h3 className="font-bold">{ArtistUILabels.ErrorLoadingArtistsHeader}</h3>
-                <p className="text-sm">{(error as Error).message}</p>
+                <p className="text-sm">{error.message}</p>
             </div>
         )
     }
@@ -77,9 +77,9 @@ export const ArtistList = () => {
                                         </span>
                                     </Link>
                                 </td>
-                                <td className="hidden lg:table-cell p-4 text-gray-600 truncate">{artist.bio || "-"}</td>
-                                <td className="hidden sm:table-cell p-4 text-gray-600 truncate">{artist.country || "-"}</td>
-                                <td className="p-4 text-gray-600 text-right">{artist.activeFromYear || "-"}</td>
+                                <td className="hidden lg:table-cell p-4 text-gray-600 truncate">{artist.bio || CoreUILabels.EmptyValueFallback}</td>
+                                <td className="hidden sm:table-cell p-4 text-gray-600 truncate">{artist.country || CoreUILabels.EmptyValueFallback}</td>
+                                <td className="p-4 text-gray-600 text-right">{artist.activeFromYear || CoreUILabels.EmptyValueFallback}</td>
                                 <td className="p-4 text-right">
                                     <button
                                         onClick={() => setEditingArtist(artist)}

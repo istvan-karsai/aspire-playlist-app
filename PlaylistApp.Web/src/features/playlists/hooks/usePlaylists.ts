@@ -13,7 +13,7 @@ export const usePlaylists = () => {
 export const usePlaylist = (id: string) => {
     return useQuery({
         queryKey: ['playlists', id],
-        queryFn: () => fetchPlaylistById(id!),
+        queryFn: () => fetchPlaylistById(id),
         enabled: !!id,
     });
 };
@@ -23,7 +23,7 @@ export const useCreatePlaylist = () => {
     return useMutation({
         mutationFn: createPlaylist,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['playlists'] });
+            return queryClient.invalidateQueries({ queryKey: ['playlists'] });
         },
     });
 };
@@ -33,7 +33,7 @@ export const useUpdatePlaylist = () => {
     return useMutation({
         mutationFn: ({ id, payload }: { id: string; payload: PlaylistPayload }) => updatePlaylist(id, payload),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['playlists'] });
+            return queryClient.invalidateQueries({ queryKey: ['playlists'] });
         },
     });
 };
@@ -43,7 +43,7 @@ export const useDeletePlaylist = () => {
     return useMutation({
         mutationFn: deletePlaylist,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['playlists'] });
+            return queryClient.invalidateQueries({ queryKey: ['playlists'] });
         },
         onError: (err) => {
             alert(PlaylistApiMessages.DeletePlaylistError(err.message));
