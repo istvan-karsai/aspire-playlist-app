@@ -2,6 +2,10 @@ import { useState } from "react";
 import { ValidationBounds } from "../constants/validation";
 import { ArtistUILabels, ArtistUIPlaceholders, ArtistValidationMessages } from "../constants/uiText";
 import { CoreUIButtons } from "../../../core/constants/uiText";
+import { Input } from "../../../components/ui/Input";
+import { Textarea } from "../../../components/ui/Textarea";
+import { Button } from "../../../components/ui/Button";
+import { Alert } from "../../../components/ui/Alert";
 
 export interface ArtistFormData {
     name: string;
@@ -61,92 +65,85 @@ export const SharedArtistForm = ({
     return (
         <form onSubmit={handleSubmit} className={isHorizontal ? "flex gap-4 items-end flex-wrap" : "space-y-4"}>
 
-            {clientError && (
-                <div className="p-3 bg-red-100 text-red-700 rounded-md w-full text-sm">
-                    {clientError}
-                </div>
-            )}
+            {clientError && <Alert>{clientError}</Alert>}
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">{ArtistUILabels.InputNameLabel}</label>
-                <input 
+                <Input 
                     id="name"
+                    label={ArtistUILabels.InputNameLabel}
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
                     placeholder={ArtistUIPlaceholders.Name}
                 />
             </div>
             
             <div className={isHorizontal ? "w-32" : ""}>
-                <label htmlFor="activeFromYear" className="block text-sm font-medium text-gray-700 mb-1">{ArtistUILabels.InputActiveFromLabel}</label>
-                <input 
+                <Input 
                     id="activeFromYear"
+                    label={ArtistUILabels.InputActiveFromLabel}
                     type="number"
                     value={activeFromYear}
                     onChange={(e) => setActiveFromYear(e.target.value === "" ? "" : Number(e.target.value))}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
                     placeholder={ArtistUIPlaceholders.ActiveFrom}
                 />
             </div>
 
             <div className={isHorizontal ? "flex-1 min-w-37.5" : ""}>
-                <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">{ArtistUILabels.InputCountryLabel}</label>
-                <input 
+                <Input
                     id="country"
+                    label={ArtistUILabels.InputCountryLabel}
                     type="text"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
                     placeholder={ArtistUIPlaceholders.Country}
                 />
             </div>
 
             <div className={`w-full ${isHorizontal ? "min-w-full mt-2" : ""}`}>
-                <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">{ArtistUILabels.InputImageLabel}</label>
-                <input 
+                <Input
                     id="imageUrl"
+                    label={ArtistUILabels.InputImageLabel}
                     type="text"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
                     placeholder={ArtistUIPlaceholders.ImageUrl}
                 />
             </div>
 
             <div className={`w-full ${isHorizontal ? "min-w-full mt-2" : ""}`}>
-                <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">{ArtistUILabels.InputBioLabel}</label>
-                <textarea 
+                <Textarea
                     id="bio"
+                    label={ArtistUILabels.InputBioLabel}
                     rows={3}
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white resize-y"
                     placeholder={ArtistUIPlaceholders.Bio}
                 />
             </div>
 
             <div className={`flex w-full ${isHorizontal ? "justify-end mt-2" : "justify-end space-x-3 mt-4"}`}>
                 {onCancel && (
-                    <button
+                    <Button
                         type="button"
+                        variant="secondary"
                         onClick={onCancel}
-                        className="px-4 py-2 mr-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md h-10 flex items-center justify-center"
+                        className="mr-3 h-10"
                     >
                         {CoreUIButtons.Cancel}
-                    </button>
+                    </Button>
                 )}
 
-                <button 
+                <Button 
                     type="submit"
+                    variant="primary"
                     data-testid="submit-button"
-                    disabled={isPending}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors h-10 flex items-center justify-center"
+                    isLoading={isPending}
+                    className="h-10 px-6"
                 >
                     {isPending ? CoreUIButtons.Saving : submitButtonText}
-                </button>
+                </Button>
             </div>
         </form>
     );

@@ -2,7 +2,11 @@ import { useState } from "react";
 import { FormatConstants, ValidationRegex } from "../constants/validation";
 import { useArtists } from "../../artists/hooks/useArtists";
 import { SongUIHints, SongUILabels, SongUIPlaceholders, SongValidationMessages } from "../constants/uiText";
-import { CoreUIButtons, CoreUILabels } from "../../../core/constants/uiText";
+import { CoreUIButtons } from "../../../core/constants/uiText";
+import { Input } from "../../../components/ui/Input";
+import { Button } from "../../../components/ui/Button";
+import { Alert } from "../../../components/ui/Alert";
+import { MultiSelectBox } from "../../../components/ui/MultiSelectBox";
 
 export interface SongFormData {
     title: string;
@@ -75,57 +79,42 @@ export const SharedSongForm = ({
     return (
         <form onSubmit={handleSubmit} className={isHorizontal ? "flex gap-4 items-end flex-wrap" : "space-y-4"}>
             
-            {clientError && (
-                <div className="p-3 bg-red-100 text-red-700 rounded-md w-full text-sm">
-                    {clientError}
-                </div>
-            )}
+            {clientError && <Alert>{clientError}</Alert>}
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">{SongUILabels.InputTitleLabel}</label>
-                <input
+                <Input
                     id="title"
+                    label={SongUILabels.InputTitleLabel}
                     type="text"
                     required
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
                     placeholder={SongUIPlaceholders.Title} 
                 />
             </div>
 
             <div className={isHorizontal ? "flex-1 min-w-50" : ""}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {SongUILabels.Artists} {isArtistsLoading && <span className="text-gray-400 text-xs ml-2 animate-pulse">{CoreUILabels.LoadingStatus}</span>}
-                </label>
-                <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2 bg-white space-y-2">
-                    {artists?.map((artist) => (
-                        <label key={artist.id} className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                            <input 
-                                type="checkbox"
-                                value={artist.id}
-                                checked={artistIds.includes(artist.id)}
-                                onChange={() => handleArtistToggle(artist.id)}
-                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer" 
-                            />
-                            <span className="text-sm text-gray-700 select-none truncate">{artist.name}</span>
-                        </label>
-                    ))}
-                    {!isArtistsLoading && artists?.length === 0 && (
-                        <span className="text-sm text-gray-500 italic">{SongUILabels.NoArtistsAvailable}</span>
-                    )}
-                </div>
+                <MultiSelectBox 
+                    label={SongUILabels.Artists}
+                    isLoading={isArtistsLoading}
+                    emptyMessage={SongUILabels.NoArtistsAvailable}
+                    selectedIds={artistIds}
+                    onToggle={handleArtistToggle}
+                    options={artists?.map(artist => ({
+                        id: artist.id,
+                        label: artist.name
+                    }))}
+                />
             </div>
 
             <div className={isHorizontal ? "w-32" : ""}>
-                <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-1">{SongUILabels.InputDurationLabel}</label>
-                <input
+                <Input
                     id="duration"
+                    label={SongUILabels.InputDurationLabel}
                     type="text"
                     required
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    className="w-full rounded-md border-gray-300 shadow-sm p-2 border bg-white"
                     placeholder={SongUIPlaceholders.Duration}
                     pattern={ValidationRegex.DurationFormat.source}
                     title={SongUIHints.DurationFormat} 
@@ -134,23 +123,25 @@ export const SharedSongForm = ({
 
             <div className={`flex ${isHorizontal ? "" : "justify-end space-x-3 mt-4"}`}>
                 {onCancel && (
-                    <button
+                    <Button
                         type="button"
+                        variant="secondary"
                         onClick={onCancel}
-                        className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md h-10 flex items-center justify-center"
+                        className="mr-3 h-10"
                     >
                         {CoreUIButtons.Cancel}
-                    </button>
+                    </Button>
                 )}
 
-                <button
+                <Button
                     type="submit"
+                    variant="primary"
                     data-testid="submit-button"
-                    disabled={isPending}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors h-10 flex items-center justify-center"
+                    isLoading={isPending}
+                    className="h-10 px-6"
                 >
                     {isPending ? CoreUIButtons.Saving : submitButtonText}
-                </button>
+                </Button>
             </div>
         </form>
     );

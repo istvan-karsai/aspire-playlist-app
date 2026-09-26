@@ -1,6 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { screen } from "@testing-library/react";
 import { PlaylistDetailsPage } from "./PlaylistDetailsPage";
 import { describe, expect, it } from "vitest";
 import { mockEmptyPlaylist, mockValidPlaylist } from "../tests/playlistMocks";
@@ -9,25 +7,13 @@ import { server } from "../../../tests/mocks/server";
 import { http, HttpResponse } from "msw";
 import { mockValidSong } from "../../songs/tests/songMocks";
 import { API_ENDPOINTS } from "../../../core/api/config";
+import { renderWithRouteParams } from "../../../tests/utils/test-utils";
 
 const renderPlaylistDetailsPage = (playlistId: string) => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false
-            }
-        },
+    return renderWithRouteParams(<PlaylistDetailsPage />, {
+        routePath: "/playlists/:id",
+        initialUrl: `/playlists/${playlistId}`
     });
-
-    return render(
-        <QueryClientProvider client={queryClient}>
-            <MemoryRouter initialEntries={[`/playlists/${playlistId}`]}>
-                <Routes>
-                    <Route path="/playlists/:id" element={<PlaylistDetailsPage />} />
-                </Routes>
-            </MemoryRouter>
-        </QueryClientProvider>
-    );
 };
 
 describe('PlaylistDetailsPage Component', () => {

@@ -1,6 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { http, HttpResponse } from "msw";
 import { ArtistDetailsPage } from "./ArtistDetailsPage";
@@ -9,26 +7,13 @@ import { server } from "../../../tests/mocks/server";
 import { mockValidSong } from "../../songs/tests/songMocks";
 import { ArtistUILabels } from "../constants/uiText";
 import { API_ENDPOINTS } from "../../../core/api/config";
+import { renderWithRouteParams } from "../../../tests/utils/test-utils";
 
 const renderArtistDetailsPage = (artistId: string) => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                retry: false
-            }
-        },
+    return renderWithRouteParams(<ArtistDetailsPage />, {
+        routePath: "/artists/:id",
+        initialUrl: `/artists/${artistId}`
     });
-
-    return render(
-        <QueryClientProvider client={queryClient}>
-            {/* initialEntries simulates the user navigating directly to this URL */}
-            <MemoryRouter initialEntries={[`/artists/${artistId}`]}>
-                <Routes>
-                    <Route path="/artists/:id" element={<ArtistDetailsPage />} />
-                </Routes>
-            </MemoryRouter>
-        </QueryClientProvider>
-    );
 };
 
 describe('ArtistDetailsPage Component', () => {

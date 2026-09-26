@@ -1,66 +1,49 @@
 import { Link, useParams } from "react-router-dom";
 import { useSong } from "../hooks/useSongs";
 import { SongUILabels } from "../constants/uiText";
+import { LoadingState } from "../../../components/ui/LoadingState";
+import { ErrorBanner } from "../../../components/ui/ErrorBanner";
+import { DetailCard, DetailCardHeader, DetailCardList, DetailCardListItem, DetailRelationList, DetailRelationListItem } from "../../../components/ui/DetailCard";
 
 export const SongDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
 
-    const { data: song, isLoading, isError } = useSong(id);
+    const { data: song, isLoading, isError, error } = useSong(id);
 
     if (isLoading) {
-        return <div className="text-gray-500 py-8">{SongUILabels.LoadingSongDetails}</div>;
+        return <LoadingState message={SongUILabels.LoadingSongDetails} />;
     }
 
-    if (isError || !song) {
-        return <div className="text-red-500 py-8">{SongUILabels.ErrorLoadingSong}</div>;
+    if (isError) {
+        return <ErrorBanner title={SongUILabels.ErrorLoadingSong} message={error.message} />;
     }
+
+    if (!song) return null;
 
     return (
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6">
-                <Link
-                    to="/songs"
-                    className="text-sm text-blue-600 hover:text-blue-800 hover:underline mb-4 inline-block"
-                >
-                    &larr; {SongUILabels.BackToSongs}
-                </Link>
-
-                <h3 className="text-2xl leading-6 font-bold text-gray-900">
-                    {song.title}
-                </h3>
-
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    {SongUILabels.TableDuration}: {song.duration}
-                </p>
-            </div>
-
-            <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-                <dl className="sm:divide-y sm:divide-gray-200">
-                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">{SongUILabels.Artists}</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {song.artists && song.artists.length > 0 ? (
-                                <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
-                                    {song.artists.map((artist) => (
-                                        <li key={artist.id} className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                                            <div className="w-0 flex-1 flex items-center">
-                                                <Link
-                                                    to={`/artists/${artist.id}`}
-                                                    className="ml-2 flex-1 w-0 truncate font-medium text-blue-600 hover:text-blue-800 hover:underline"
-                                                >
-                                                    {artist.name}
-                                                </Link>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <span className="text-gray-400 italic">{SongUILabels.EmptyArtistsList}</span>
-                            )}
-                        </dd>
-                    </div>
-                </dl>
-            </div>
-        </div>
+        <DetailCard>
+            <DetailCardHeader
+                title={song.title}
+                subtitle={`${SongUILabels.TableDuration}: ${song.duration}`}
+                backTo="/songs"
+                backLabel={SongUILabels.BackToSongs}
+            />
+            <DetailCardList>
+                <DetailCardListItem label={SongUILabels.Artists}>
+                    <DetailRelationList isEmpty={!song.artists || song.artists.length === 0} emptyMessage={SongUILabels.EmptyArtistsList}>
+                        {song.artists?.map((artist) => (
+                            <DetailRelationListItem key={artist.id}>
+                                <Link
+                                    to={`/artists/${artist.id}`}
+                                    className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                >
+                                    {artist.name}
+                                </Link>
+                            </DetailRelationListItem>
+                        ))}
+                    </DetailRelationList>
+                </DetailCardListItem>
+            </DetailCardList>
+        </DetailCard>
     );
 };

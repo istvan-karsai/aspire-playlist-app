@@ -2,85 +2,61 @@ import { Link, useParams } from "react-router-dom";
 import { useArtist } from "../hooks/useArtists";
 import { useSongs } from "../../songs/hooks/useSongs";
 import { ArtistUILabels } from "../constants/uiText";
+import { LoadingState } from "../../../components/ui/LoadingState";
+import { ErrorBanner } from "../../../components/ui/ErrorBanner";
+import { DetailCard, DetailCardHeader, DetailCardList, DetailCardListItem, DetailRelationList, DetailRelationListItem } from "../../../components/ui/DetailCard";
 
 export const ArtistDetailsPage = () => {
     const { id } = useParams<{ id: string}>();
 
-    const { data: artist, isLoading: isArtistsLoading, isError: isArtistError } = useArtist(id);
-
-    const { data: songs, isLoading: isSongsLoading, isError: isSongsError } = useSongs(id);
+    const { data: artist, isLoading: isArtistsLoading, isError: isArtistError, error: artistError } = useArtist(id);
+    const { data: songs, isLoading: isSongsLoading, isError: isSongsError, error: songsError } = useSongs(id);
 
     if (isArtistsLoading || isSongsLoading) {
-        return <div className="text-gray-500 py-8">{ArtistUILabels.LoadingArtistDetails}</div>
+        return <LoadingState message={ArtistUILabels.LoadingArtistDetails} />;
     }
-
-    if (isArtistError || !artist) {
-        return <div className="text-red-500 py-8">{ArtistUILabels.ErrorLoadingArtistProfile}</div>
+    
+    if (isArtistError) {
+        return <ErrorBanner title={ArtistUILabels.ErrorLoadingArtistProfile} message={artistError.message} />;
     }
 
     if (isSongsError) {
-        return <div className="text-red-500 py-8">{ArtistUILabels.ErrorLoadingDiscography}</div>
+        return <ErrorBanner title={ArtistUILabels.ErrorLoadingDiscography} message={songsError.message} />;
     }
 
+    if (!artist) return null;
+
     return (
-        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6">
-                <Link
-                    to="/artists"
-                    className="text-sm text-blue-600 hover:text-blue-800 hover:underline mb-4 inline-block"
-                >
-                    &larr; {ArtistUILabels.BackToArtists}
-                </Link>
+        <DetailCard>
+            <DetailCardHeader 
+                title={artist.name}
+                subtitle={artist.country ? `${artist.country} • ${ArtistUILabels.ActiveSince} ${artist.activeFromYear}` : undefined}
+                backTo="/artists"
+                backLabel={ArtistUILabels.BackToArtists}
+            />
 
-                <h3 className="text-2xl leading-6 font-bold text-gray-900">
-                    {artist.name}
-                </h3>
-
-                {artist.country && (
-                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                        {artist.country} • {ArtistUILabels.ActiveSince} {artist.activeFromYear}
-                    </p>
+            <DetailCardList>
+                {artist.bio && (
+                    <DetailCardListItem label={ArtistUILabels.Biography}>
+                        {artist.bio}
+                    </DetailCardListItem>
                 )}
-            </div>
 
-            <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-                <dl className="sm:divide-y sm:divide-gray-200">
-                    {artist.bio && (
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">{ArtistUILabels.Biography}</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {artist.bio}
-                            </dd>
-                        </div>
-                    )}
-
-                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">{ArtistUILabels.Discography} ({songs?.length || 0})</dt>
-                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {songs && songs.length > 0 ? (
-                                <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
-                                    {songs.map((song) => (
-                                        <li key={song.id} className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                                            <div className="w-0 flex-1 flex items-center">
-                                                <span className="ml-2 flex-1 w-0 truncate font-medium">
-                                                    <Link
-                                                        to={`/songs/${song.id}`}
-                                                        className="hover:text-blue-600 hover:underline transition-colors"
-                                                    >
-                                                        {song.title}
-                                                    </Link>
-                                                </span>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <span className="text-gray-500 italic">{ArtistUILabels.EmptyDiscography}</span>
-                            )}
-                        </dd>
-                    </div>
-                </dl>
-            </div>
-        </div>
+                <DetailCardListItem label={`${ArtistUILabels.Discography} (${songs?.length || 0})`}>
+                    <DetailRelationList isEmpty={!songs || songs.length === 0} emptyMessage={ArtistUILabels.EmptyDiscography}>
+                        {songs?.map((song) => (
+                            <DetailRelationListItem key={song.id}>
+                                <Link
+                                    to={`/songs/${song.id}`}
+                                    className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                >
+                                    {song.title}
+                                </Link>
+                            </DetailRelationListItem>
+                        ))}
+                    </DetailRelationList>
+                </DetailCardListItem>
+            </DetailCardList>
+        </DetailCard>
     );
 };
