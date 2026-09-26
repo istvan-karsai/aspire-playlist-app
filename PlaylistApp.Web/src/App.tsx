@@ -1,12 +1,12 @@
-import { Navbar } from './components/Navbar'
+import { Navbar } from './components/layout/Navbar'
 import { SongsPage } from './features/songs/pages/SongsPage'
 import { ArtistsPage } from './features/artists/pages/ArtistsPage';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ArtistDetailsPage } from './features/artists/pages/ArtistDetailsPage';
 import { PlaylistsPage } from './features/playlists/pages/PlaylistsPage';
-import { Footer } from './components/Footer';
+import { Footer } from './components/layout/Footer';
 import { PlaylistDetailsPage } from './features/playlists/pages/PlaylistDetailsPage';
-import { NotFoundPage } from './components/NotFoundPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { SongDetailsPage } from './features/songs/pages/SongDetailsPage';
 
 function App() {

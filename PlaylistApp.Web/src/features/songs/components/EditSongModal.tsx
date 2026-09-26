@@ -1,9 +1,10 @@
 import type { Song } from "../types";
-import { ApiValidationError } from "../../../core/api/client";
 import { SharedSongForm, type SongFormData } from "./SharedSongForm";
 import { SongUILabels } from "../constants/uiText";
 import { CoreUIButtons } from "../../../core/constants/uiText";
 import { useUpdateSong } from "../hooks/useSongs";
+import { Modal } from "../../../components/ui/Modal";
+import { FormErrorAlert } from "../../../components/ui/FormErrorAlert";
 
 interface EditSongModalProps {
     song: Song;
@@ -33,23 +34,12 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                <h2 className="text-xl font-bold mb-4">{SongUILabels.EditSongHeader}</h2>
+        <Modal
+            title={SongUILabels.EditSongHeader}
+            onClose={onClose}
+        >
                 
-                {isError && (
-                    <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
-                        <ul className="list-disc pl-5">
-                            {error instanceof ApiValidationError ? (
-                                error.messages.map((msg, i) => 
-                                    <li key={i}>{msg}</li>
-                                )
-                            ) : (
-                                <li>{error.message}</li>
-                            )}
-                        </ul>
-                    </div>
-                )}
+                {isError && error && <FormErrorAlert error={error} />}
 
                 <SharedSongForm 
                     initialValues={{
@@ -63,7 +53,6 @@ export const EditSongModal = ({ song, onClose }: EditSongModalProps) => {
                     layout="vertical"
                     onCancel={onClose}
                 />
-            </div>
-        </div>
+        </Modal>
     );
 };

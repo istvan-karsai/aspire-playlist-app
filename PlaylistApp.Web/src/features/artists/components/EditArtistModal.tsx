@@ -1,9 +1,10 @@
 import type { Artist } from "../types";
-import { ApiValidationError } from "../../../core/api/client";
 import { SharedArtistForm, type ArtistFormData } from "./SharedArtistForm";
 import { CoreUIButtons } from "../../../core/constants/uiText";
 import { ArtistUILabels } from "../constants/uiText";
 import { useUpdateArtist } from "../hooks/useArtists";
+import { Modal } from "../../../components/ui/Modal";
+import { FormErrorAlert } from "../../../components/ui/FormErrorAlert";
 
 interface EditArtistModalProps {
     artist: Artist;
@@ -34,23 +35,12 @@ export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg my-8">
-                <h2 className="text-xl font-bold mb-4">{ArtistUILabels.EditArtistHeader}</h2>
-
-                {isError && (
-                    <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
-                        <ul className="list-disc pl-5">
-                            {error instanceof ApiValidationError ? (
-                                error.messages.map((message, index) => (
-                                    <li key={index}>{message}</li>
-                                ))
-                            ) : (
-                                <li>{error.message}</li>
-                            )}
-                        </ul>
-                    </div>
-                )}
+        <Modal
+            title={ArtistUILabels.EditArtistHeader}
+            onClose={onClose}
+            maxWidth="lg"
+        >
+                {isError && error && <FormErrorAlert error={error} />}
 
                 <SharedArtistForm 
                     initialValues={{
@@ -66,7 +56,6 @@ export const EditArtistModal = ({ artist, onClose }: EditArtistModalProps) => {
                     layout="vertical"
                     onCancel={onClose}
                 />
-            </div>
-        </div>
+        </Modal>
     );
 };

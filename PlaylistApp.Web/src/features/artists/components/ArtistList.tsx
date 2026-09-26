@@ -5,6 +5,10 @@ import { useArtists, useDeleteArtist } from "../hooks/useArtists";
 import { Link } from "react-router-dom";
 import { ArtistUILabels } from "../constants/uiText";
 import { CoreUIButtons, CoreUILabels, CoreUIPrompts } from "../../../core/constants/uiText";
+import { LoadingState } from "../../../components/ui/LoadingState";
+import { ErrorBanner } from "../../../components/ui/ErrorBanner";
+import { EmptyState } from "../../../components/ui/EmptyState";
+import { Table, TableAction, TableBody, TableCell, TableHeadCell, TableHeader, TableRow } from "../../../components/ui/Table";
 
 export const ArtistList = () => {
     const [editingArtist, setEditingArtist] = useState<Artist | null>(null);
@@ -19,48 +23,32 @@ export const ArtistList = () => {
     };
 
     if (isLoading) {
-        return (
-            <div className="text-center p-10 text-gray-500 w-full">
-                <span className="animate-pulse">{ArtistUILabels.LoadingArtistLibrary}</span>
-            </div>
-        )
+        return <LoadingState message={ArtistUILabels.LoadingArtistLibrary} />;
     }
 
     if (isError) {
-        return (
-            <div className="bg-red-500 text-red-700 p-4 rounded-lg border border-red-200 w-full">
-                <h3 className="font-bold">{ArtistUILabels.ErrorLoadingArtistsHeader}</h3>
-                <p className="text-sm">{error.message}</p>
-            </div>
-        )
+        return <ErrorBanner title={ArtistUILabels.ErrorLoadingArtistsHeader} message={error.message} />;
     }
 
     if (!artists || artists.length === 0) {
-        return (
-            <div className="text-center p-10 bg-gray-50 rounded-lg border border-dashed text-gray-500 w-full">
-                {ArtistUILabels.EmptyArtistLibrary}
-            </div>
-        )
+        return <EmptyState message={ArtistUILabels.EmptyArtistLibrary} />;
     }
     
     return (
         <div className="space-y-4 w-full">
             <h2 className="text-2xl font-semibold tracking-tight">{ArtistUILabels.ArtistLibraryHeader}</h2>
-            <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                <table className="w-full min-w-full text-sm table-fixed">
-                    <thead className="bg-gray-50 border-b">
-                        <tr>
-                            <th className="h-12 px-4 text-left font-medium text-gray-500 w-6/12 lg:w-3/12">{ArtistUILabels.TableName}</th>
-                            <th className="hidden lg:table-cell h-12 px-4 text-left font-medium text-gray-500 lg:w-4/12">{ArtistUILabels.TableBio}</th>
-                            <th className="hidden sm:table-cell h-12 px-4 text-left font-medium text-gray-500 sm:w-3/12">{ArtistUILabels.TableCountry}</th>
-                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-1/12">{ArtistUILabels.TableActiveFrom}</th>
-                            <th className="h-12 px-4 text-right font-medium text-gray-500 w-3/12 sm:w-2/12 lg:w-1/12">{CoreUILabels.TableActions}</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
+            <Table>
+                    <TableHeader>
+                            <TableHeadCell className="w-6/12 lg:w-3/12">{ArtistUILabels.TableName}</TableHeadCell>
+                            <TableHeadCell className="hidden lg:table-cell lg:w-4/12">{ArtistUILabels.TableBio}</TableHeadCell>
+                            <TableHeadCell className="hidden sm:table-cell sm:w-3/12">{ArtistUILabels.TableCountry}</TableHeadCell>
+                            <TableHeadCell className="text-right w-3/12 sm:w-1/12">{ArtistUILabels.TableActiveFrom}</TableHeadCell>
+                            <TableHeadCell className="text-right w-3/12 sm:w-2/12 lg:w-1/12">{CoreUILabels.TableActions}</TableHeadCell>
+                    </TableHeader>
+                    <TableBody>
                         {artists.map((artist) => (
-                            <tr key={artist.id} className="hover:bg-gray-50 transition-colors">
-                                <td className="p-4 font-medium text-gray-900 truncate">
+                            <TableRow key={artist.id}>
+                                <TableCell className="font-medium text-gray-900 truncate">
                                     <Link
                                         to={`/artists/${artist.id}`}
                                         className="flex items-center gap-3 group"
@@ -76,31 +64,28 @@ export const ArtistList = () => {
                                             {artist.name}
                                         </span>
                                     </Link>
-                                </td>
-                                <td className="hidden lg:table-cell p-4 text-gray-600 truncate">{artist.bio || CoreUILabels.EmptyValueFallback}</td>
-                                <td className="hidden sm:table-cell p-4 text-gray-600 truncate">{artist.country || CoreUILabels.EmptyValueFallback}</td>
-                                <td className="p-4 text-gray-600 text-right">{artist.activeFromYear || CoreUILabels.EmptyValueFallback}</td>
-                                <td className="p-4 text-right">
-                                    <button
-                                        onClick={() => setEditingArtist(artist)}
-                                        className="text-indigo-600 hover:text-indigo-900 mr-4"
-                                    >
+                                </TableCell>
+                                <TableCell className="hidden lg:table-cell truncate">{artist.bio || CoreUILabels.EmptyValueFallback}</TableCell>
+                                <TableCell className="hidden sm:table-cell truncate">{artist.country || CoreUILabels.EmptyValueFallback}</TableCell>
+                                <TableCell className="text-right">{artist.activeFromYear || CoreUILabels.EmptyValueFallback}</TableCell>
+                                <TableCell className="text-right">
+                                    <TableAction onClick={() => setEditingArtist(artist)}>
                                         {CoreUIButtons.Edit}
-                                    </button>
-                                    <button
-                                        type="button"
+                                    </TableAction>
+
+                                    <TableAction
+                                        variant="danger"
                                         onClick={() => handleDelete(artist.id, artist.name)}
                                         disabled={isPending}
-                                        className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors disabled:opacity-50"
                                     >
                                         {isPending && variables === artist.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
-                                    </button>
-                                </td>
-                            </tr>
+                                    </TableAction>
+                                </TableCell>
+                            </TableRow>
                         ))}
-                    </tbody>
-                </table>
-            </div>
+                    </TableBody>
+                </Table>
+
             {editingArtist && (
                 <EditArtistModal 
                     artist={editingArtist}
