@@ -1,6 +1,7 @@
 export const PlaylistApiMessages = {
     SavePlaylistErrorPrefix: "Failed to save playlist because of the following error(s):",
     DeletePlaylistError: (message: string) => `Error deleting playlist: ${message}`,
+    IdRequired: "Playlist ID is required",
 } as const;
 
 export const PlaylistValidationMessages = {
@@ -28,6 +29,8 @@ export const PlaylistUILabels = {
     Description: "Description",
     Tracks: "Tracks",
     EmptyTracks: "No songs found in this playlist.",
+    // Modal Title
+    DeletePlaylistHeader: "Delete Playlist",
 } as const;
 
 export const PlaylistUIPlaceholders = {

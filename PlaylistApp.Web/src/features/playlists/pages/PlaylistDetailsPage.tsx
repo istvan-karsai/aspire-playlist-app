@@ -4,11 +4,12 @@ import { PlaylistUILabels } from "../constants/uiText";
 import { LoadingState } from "../../../components/ui/LoadingState";
 import { ErrorBanner } from "../../../components/ui/ErrorBanner";
 import { DetailCard, DetailCardHeader, DetailCardList, DetailCardListItem, DetailRelationList, DetailRelationListItem } from "../../../components/ui/DetailCard";
+import { ROUTES } from "../../../core/constants/routes";
 
 export const PlaylistDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
 
-    const { data: playlist, isLoading: isPlaylistLoading, isError: isPlaylistError, error: playlistError } = usePlaylist(id!);
+    const { data: playlist, isLoading: isPlaylistLoading, isError: isPlaylistError, error: playlistError } = usePlaylist(id);
 
     if (isPlaylistLoading) {
         return <LoadingState message={PlaylistUILabels.LoadingPlaylistDetails} />;
@@ -24,7 +25,7 @@ export const PlaylistDetailsPage = () => {
         <DetailCard>
             <DetailCardHeader 
                 title={playlist.name}
-                backTo="/playlists"
+                backTo={ROUTES.PLAYLISTS}
                 backLabel={PlaylistUILabels.BackToPlaylists}
             />
             <DetailCardList>
@@ -39,7 +40,7 @@ export const PlaylistDetailsPage = () => {
                         {playlist.songs.map((song) => (
                             <DetailRelationListItem key={song.id}>
                                 <Link
-                                    to={`/songs/${song.id}`}
+                                    to={ROUTES.SONG_DETAILS(song.id)}
                                     className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                                 >
                                     {song.title}

@@ -9,17 +9,22 @@ import { LoadingState } from "../../../components/ui/LoadingState";
 import { ErrorBanner } from "../../../components/ui/ErrorBanner";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import { Table, TableAction, TableBody, TableCell, TableHeadCell, TableHeader, TableRow } from "../../../components/ui/Table";
+import { ROUTES } from "../../../core/constants/routes";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 
 export const ArtistList = () => {
     const [editingArtist, setEditingArtist] = useState<Artist | null>(null);
+    const [artistToDelete, setArtistToDelete] = useState<{ id: string; name: string } | null>(null);
 
     const { data: artists, isLoading, isError, error } = useArtists();
     const { mutate: deleteArtist, isPending, variables } = useDeleteArtist();
 
-    const handleDelete = (id: string, name: string) => {
-        if (window.confirm(CoreUIPrompts.ConfirmDelete(name))) {
-            deleteArtist(id);
-        }
+    const confirmDelete = () => {
+        if (!artistToDelete) return;
+
+        deleteArtist(artistToDelete.id, {
+            onSuccess: () => setArtistToDelete(null)
+        });
     };
 
     if (isLoading) {
@@ -50,7 +55,7 @@ export const ArtistList = () => {
                             <TableRow key={artist.id}>
                                 <TableCell className="font-medium text-gray-900 truncate">
                                     <Link
-                                        to={`/artists/${artist.id}`}
+                                        to={ROUTES.ARTIST_DETAILS(artist.id)}
                                         className="flex items-center gap-3 group"
                                     >
                                         {artist.imageUrl && (
@@ -75,7 +80,7 @@ export const ArtistList = () => {
 
                                     <TableAction
                                         variant="danger"
-                                        onClick={() => handleDelete(artist.id, artist.name)}
+                                        onClick={() => setArtistToDelete({ id: artist.id, name: artist.name})}
                                         disabled={isPending}
                                     >
                                         {isPending && variables === artist.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
@@ -92,6 +97,15 @@ export const ArtistList = () => {
                     onClose={() => setEditingArtist(null)}
                 />
             )}
+
+            <ConfirmDialog 
+                isOpen={artistToDelete !== null}
+                title={ArtistUILabels.DeleteArtistHeader}
+                message={artistToDelete ? CoreUIPrompts.ConfirmDelete(artistToDelete.name) : ""}
+                onConfirm={confirmDelete}
+                onCancel={() => setArtistToDelete(null)}
+                isPending={isPending}
+            />
         </div>
     )
 };

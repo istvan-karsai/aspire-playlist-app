@@ -2,18 +2,22 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createArtist, deleteArtist, fetchArtistById, fetchArtists, updateArtist } from "../api/artistsClient";
 import type { ArtistPayload } from "../types";
 import { ArtistApiMessages } from "../constants/uiText";
+import { artistKeys } from "../../../core/api/config";
 
 export const useArtists = () => {
     return useQuery({
-        queryKey: ['artists'],
+        queryKey: artistKeys.all,
         queryFn: fetchArtists,
     });
 };
 
 export const useArtist = (id: string | undefined) => {
     return useQuery({
-        queryKey: ['artists', id],
-        queryFn: () => fetchArtistById(id!),
+        queryKey: id ? artistKeys.detail(id) : artistKeys.all,
+        queryFn: () => {
+            if (!id) throw new Error(ArtistApiMessages.IdRequired);
+            return fetchArtistById(id);
+        },
         enabled: !!id,
     });
 }; 
@@ -23,7 +27,7 @@ export const useCreateArtist = () => {
     return useMutation({
         mutationFn: createArtist,
         onSuccess: () => {
-            return queryClient.invalidateQueries({ queryKey: ['artists'] });
+            return queryClient.invalidateQueries({ queryKey: artistKeys.all });
         },
     });
 };
@@ -33,7 +37,7 @@ export const useUpdateArtist = () => {
     return useMutation({
         mutationFn: ({ id, payload }: { id: string; payload: ArtistPayload }) => updateArtist(id, payload),
         onSuccess: () => {
-            return queryClient.invalidateQueries({ queryKey: ['artists'] });
+            return queryClient.invalidateQueries({ queryKey: artistKeys.all });
         },
     });
 };
@@ -43,10 +47,7 @@ export const useDeleteArtist = () => {
     return useMutation({
         mutationFn: deleteArtist,
         onSuccess: () => {
-            return queryClient.invalidateQueries({ queryKey: ['artists'] });
-        },
-        onError: (err) => {
-            alert(ArtistApiMessages.DeleteArtistError(err.message));
+            return queryClient.invalidateQueries({ queryKey: artistKeys.all });
         }
     });
 };

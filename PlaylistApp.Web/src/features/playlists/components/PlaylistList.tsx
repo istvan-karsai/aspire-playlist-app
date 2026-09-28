@@ -9,17 +9,22 @@ import { LoadingState } from "../../../components/ui/LoadingState";
 import { ErrorBanner } from "../../../components/ui/ErrorBanner";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import { Table, TableAction, TableBody, TableCell, TableHeadCell, TableHeader, TableRow } from "../../../components/ui/Table";
+import { ROUTES } from "../../../core/constants/routes";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 
 export const PlaylistList = () => {
     const [editingPlaylist, setEditingPlaylist] = useState<Playlist | null>(null);
+    const [playlistToDelete, setPlaylistToDelete] = useState<{ id: string; name: string } | null>(null);
 
     const { data: playlists, isLoading, isError, error } = usePlaylists();
     const { mutate: deletePlaylist, isPending, variables } = useDeletePlaylist();
 
-    const handleDelete = (id: string, name: string) => {
-        if (window.confirm(CoreUIPrompts.ConfirmDelete(name))) {
-            deletePlaylist(id);
-        }
+    const confirmDelete = () => {
+        if (!playlistToDelete) return;
+
+        deletePlaylist(playlistToDelete.id, {
+            onSuccess: () => setPlaylistToDelete(null)
+        });
     };
 
     if (isLoading) {
@@ -49,7 +54,7 @@ export const PlaylistList = () => {
                             <TableRow key={playlist.id}>
                                 <TableCell className="font-medium text-gray-900 truncate">
                                     <Link
-                                        to={`/playlists/${playlist.id}`}
+                                        to={ROUTES.PLAYLIST_DETAILS(playlist.id)}
                                         className="text-blue-600 hover:text-blue-800 hover:underline font-semibold"
                                     >
                                         {playlist.name}
@@ -68,7 +73,7 @@ export const PlaylistList = () => {
                                     
                                     <TableAction
                                         variant="danger"
-                                        onClick={() => handleDelete(playlist.id, playlist.name)}
+                                        onClick={() => setPlaylistToDelete({ id: playlist.id, name: playlist.name })}
                                         disabled={isPending && variables === playlist.id}
                                     >
                                         {isPending && variables === playlist.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
@@ -85,6 +90,15 @@ export const PlaylistList = () => {
                     onClose={() => setEditingPlaylist(null)}
                 />
             )}
+
+            <ConfirmDialog 
+                isOpen={playlistToDelete !== null}
+                title={PlaylistUILabels.DeletePlaylistHeader}
+                message={playlistToDelete ? CoreUIPrompts.ConfirmDelete(playlistToDelete.name) : ""}
+                onConfirm={confirmDelete}
+                onCancel={() => setPlaylistToDelete(null)}
+                isPending={isPending}
+            />
         </div>
     );
 };
