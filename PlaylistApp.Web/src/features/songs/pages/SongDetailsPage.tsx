@@ -4,6 +4,7 @@ import { SongUILabels } from "../constants/uiText";
 import { LoadingState } from "../../../components/ui/LoadingState";
 import { ErrorBanner } from "../../../components/ui/ErrorBanner";
 import { DetailCard, DetailCardHeader, DetailCardList, DetailCardListItem, DetailRelationList, DetailRelationListItem } from "../../../components/ui/DetailCard";
+import { ROUTES } from "../../../core/constants/routes";
 
 export const SongDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -25,7 +26,7 @@ export const SongDetailsPage = () => {
             <DetailCardHeader
                 title={song.title}
                 subtitle={`${SongUILabels.TableDuration}: ${song.duration}`}
-                backTo="/songs"
+                backTo={ROUTES.SONGS}
                 backLabel={SongUILabels.BackToSongs}
             />
             <DetailCardList>
@@ -34,7 +35,7 @@ export const SongDetailsPage = () => {
                         {song.artists?.map((artist) => (
                             <DetailRelationListItem key={artist.id}>
                                 <Link
-                                    to={`/artists/${artist.id}`}
+                                    to={ROUTES.ARTIST_DETAILS(artist.id)}
                                     className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                                 >
                                     {artist.name}

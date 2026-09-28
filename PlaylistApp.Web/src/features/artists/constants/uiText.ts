@@ -1,6 +1,7 @@
 export const ArtistApiMessages = {
     DeleteArtistError: (message: string) => `Error deleting artist: ${message}`,
     SaveArtistErrorPrefix: "Failed to save artist because of the following error(s):",
+    IdRequired: "Artist ID is required",
 } as const;
 
 export const ArtistValidationMessages = {
@@ -33,6 +34,8 @@ export const ArtistUILabels = {
     Biography: "Biography",
     Discography: "Discography",
     EmptyDiscography: "No songs found for this artist.",
+    // Modal Title
+    DeleteArtistHeader: "Delete Artist",
 } as const;
 
 export const ArtistUIPlaceholders = {

@@ -1,6 +1,7 @@
 export const SongApiMessages = {
     DeleteError: (message: string) => `Error deleting song: ${message}`,
     SaveErrorPrefix: "Failed to save song because of the following error(s):",
+    IdRequired: "Song ID is required",
 } as const;
 
 export const SongValidationMessages = {
@@ -30,6 +31,12 @@ export const SongUILabels = {
     ErrorLoadingSong: "Failed to load song details.",
     BackToSongs: "Back to Songs",
     EmptyArtistsList: "No artists are assigned to this song.",
+    // Modal Title
+    DeleteSongHeader: "Delete Song"
+} as const;
+
+export const SongQueryParams = {
+    ArtistId: "artistId",
 } as const;
 
 export const SongUIPlaceholders = {

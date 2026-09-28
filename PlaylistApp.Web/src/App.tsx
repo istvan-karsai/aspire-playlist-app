@@ -8,6 +8,7 @@ import { Footer } from './components/layout/Footer';
 import { PlaylistDetailsPage } from './features/playlists/pages/PlaylistDetailsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { SongDetailsPage } from './features/songs/pages/SongDetailsPage';
+import { ROUTES } from './core/constants/routes';
 
 function App() {
   return (
@@ -15,13 +16,13 @@ function App() {
       <Navbar />
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <Routes>
-          <Route path="/" element={<Navigate to="/songs" replace />} />
-          <Route path="/songs" element={<SongsPage />} />
-          <Route path="/songs/:id" element={<SongDetailsPage />} />
-          <Route path="/artists" element={<ArtistsPage />} />
-          <Route path="/artists/:id" element={<ArtistDetailsPage />} />
-          <Route path="/playlists" element={<PlaylistsPage />} />
-          <Route path="/playlists/:id" element={<PlaylistDetailsPage />} />
+          <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.SONGS} replace />} />
+          <Route path={ROUTES.SONGS} element={<SongsPage />} />
+          <Route path={`${ROUTES.SONGS}/:id`} element={<SongDetailsPage />} />
+          <Route path={ROUTES.ARTISTS} element={<ArtistsPage />} />
+          <Route path={`${ROUTES.ARTISTS}/:id`} element={<ArtistDetailsPage />} />
+          <Route path={ROUTES.PLAYLISTS} element={<PlaylistsPage />} />
+          <Route path={`${ROUTES.PLAYLISTS}/:id`} element={<PlaylistDetailsPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

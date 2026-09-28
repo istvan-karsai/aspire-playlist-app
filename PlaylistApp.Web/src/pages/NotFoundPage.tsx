@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ROUTES } from '../core/constants/routes';
 
 export const NotFoundPage = () => {
   return (
@@ -9,7 +10,7 @@ export const NotFoundPage = () => {
         The page you are looking for doesn't exist or has been moved.
       </p>
       <Link
-        to="/songs"
+        to={ROUTES.SONGS}
         className="px-6 py-3 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 transition-colors"
       >
         Back to Songs

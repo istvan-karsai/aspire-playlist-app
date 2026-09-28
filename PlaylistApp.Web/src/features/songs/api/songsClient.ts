@@ -1,10 +1,18 @@
 import { apiDelete, apiGet, apiPost, apiPut } from "../../../core/api/client";
 import { API_ENDPOINTS } from "../../../core/api/config";
+import { SongQueryParams } from "../constants/uiText";
 import type { Song, SongPayload } from "../types";
 
 
 export const fetchSongs = async (artistId?: string): Promise<Song[]> => {
-    const url = artistId ? `${API_ENDPOINTS.songs}?artistId=${artistId}` : API_ENDPOINTS.songs;
+    const params = new URLSearchParams();
+    if (artistId) {
+        params.append(SongQueryParams.ArtistId, artistId);
+    }
+
+    const queryString = params.toString();
+    const url = queryString ? `${API_ENDPOINTS.songs}?${queryString}` : API_ENDPOINTS.songs;
+
     return await apiGet<Song[]>(url);
 };
 

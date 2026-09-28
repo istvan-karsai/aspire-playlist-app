@@ -8,11 +8,12 @@ import { http, HttpResponse } from "msw";
 import { mockValidSong } from "../../songs/tests/songMocks";
 import { API_ENDPOINTS } from "../../../core/api/config";
 import { renderWithRouteParams } from "../../../tests/utils/test-utils";
+import { ROUTES } from "../../../core/constants/routes";
 
 const renderPlaylistDetailsPage = (playlistId: string) => {
     return renderWithRouteParams(<PlaylistDetailsPage />, {
-        routePath: "/playlists/:id",
-        initialUrl: `/playlists/${playlistId}`
+        routePath: `${ROUTES.PLAYLISTS}/:id`,
+        initialUrl: ROUTES.PLAYLIST_DETAILS(playlistId)
     });
 };
 

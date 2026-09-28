@@ -4,37 +4,42 @@ import { EditSongModal } from "./EditSongModal";
 import { useDeleteSong, useSongs } from "../hooks/useSongs";
 import { Link, useSearchParams } from "react-router-dom";
 import { useArtists } from "../../artists/hooks/useArtists";
-import { SongUILabels } from "../constants/uiText";
+import { SongQueryParams, SongUILabels } from "../constants/uiText";
 import { CoreUIButtons, CoreUILabels, CoreUIPrompts } from "../../../core/constants/uiText";
 import { ArtistUILabels } from "../../artists/constants/uiText";
 import { LoadingState } from "../../../components/ui/LoadingState";
 import { ErrorBanner } from "../../../components/ui/ErrorBanner";
 import { EmptyState } from "../../../components/ui/EmptyState";
 import { Table, TableAction, TableBody, TableCell, TableHeadCell, TableHeader, TableRow } from "../../../components/ui/Table";
+import { ROUTES } from "../../../core/constants/routes";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 
 export const SongList = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [editingSong, setEditingSong] = useState<Song | null>(null);
+    const [songToDelete, setSongToDelete] = useState<{ id: string; title: string } | null>(null);
 
-    const selectedArtistId = searchParams.get('artistId') || "";
+    const selectedArtistId = searchParams.get(SongQueryParams.ArtistId) || "";
     
     const { data: songs, isLoading, isError, error } = useSongs(selectedArtistId || undefined);
     const { data: artists } = useArtists();
     const { mutate: deleteSong, isPending, variables } = useDeleteSong();
 
-    const handleDelete = (id: string, title: string) => {
-        if (window.confirm(CoreUIPrompts.ConfirmDelete(title))) {
-            deleteSong(id);
-        }
+    const confirmDelete = () => {
+        if (!songToDelete) return;
+
+        deleteSong(songToDelete.id, {
+            onSuccess: () => setSongToDelete(null)
+        });
     };
 
     const handleArtistFilterChange = (artistId: string) => {
         setSearchParams((prevParams) => {
             if (artistId) {
-                prevParams.set('artistId', artistId);
+                prevParams.set(SongQueryParams.ArtistId, artistId);
             } else {
-                prevParams.delete('artistId');
+                prevParams.delete(SongQueryParams.ArtistId);
             }
             return prevParams;
         }, { replace: true });
@@ -83,7 +88,7 @@ export const SongList = () => {
                                 <TableRow key={song.id}>
                                     <TableCell className="font-medium text-gray-900 truncate">
                                         <Link
-                                            to={`/songs/${song.id}`}
+                                            to={ROUTES.SONG_DETAILS(song.id)}
                                             className="hover:text-blue-600 hover:underline transition-colors"
                                         >
                                             {song.title}
@@ -94,7 +99,7 @@ export const SongList = () => {
                                             song.artists.map((artist, index) => (
                                                 <span key={artist.id}>
                                                     <Link
-                                                        to={`/artists/${artist.id}`}
+                                                        to={ROUTES.ARTIST_DETAILS(artist.id)}
                                                         className="text-blue-600 hover:text-blue-800 hover:underline"
                                                     >
                                                         {artist.name}
@@ -114,7 +119,7 @@ export const SongList = () => {
                                         
                                         <TableAction
                                             variant="danger"
-                                            onClick={() => handleDelete(song.id, song.title)}
+                                            onClick={() => setSongToDelete({ id: song.id, title: song.title })}
                                             disabled={isPending}
                                         >
                                             {isPending && variables === song.id ? CoreUIButtons.Deleting : CoreUIButtons.Delete}
@@ -132,6 +137,15 @@ export const SongList = () => {
                     onClose={() => setEditingSong(null)} 
                 />
             )}
+
+            <ConfirmDialog 
+                isOpen={songToDelete !== null}
+                title={SongUILabels.DeleteSongHeader}
+                message={songToDelete ? CoreUIPrompts.ConfirmDelete(songToDelete.title) : ""}
+                onConfirm={confirmDelete}
+                onCancel={() => setSongToDelete(null)}
+                isPending={isPending}
+            />
         </div>
     );
 };

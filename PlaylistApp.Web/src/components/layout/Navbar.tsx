@@ -4,6 +4,7 @@ import { MobileMenuButton, MobileMenuDropdown, NavbarContent, NavbarShell } from
 import { DesktopNavLink, MobileNavLink } from "./NavigationLinks";
 import { HamburgerMenuIcon } from "../ui/icons/HamburgerMenuIcon";
 import { CloseIcon } from "../ui/icons/CloseIcon";
+import { ROUTES } from "../../core/constants/routes";
 
 
 export const Navbar = () => {
@@ -22,13 +23,13 @@ export const Navbar = () => {
 
                     {/* Desktop Menu */}
                     <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <DesktopNavLink to="/songs" testId="nav-songs-link">
+                        <DesktopNavLink to={ROUTES.SONGS} testId="nav-songs-link">
                             {CoreUILabels.NavSongs}
                         </DesktopNavLink>
-                        <DesktopNavLink to="/artists" testId="nav-artists-link">
+                        <DesktopNavLink to={ROUTES.ARTISTS} testId="nav-artists-link">
                             {CoreUILabels.NavArtists}
                         </DesktopNavLink>
-                        <DesktopNavLink to="/playlists" testId="nav-playlists-link">
+                        <DesktopNavLink to={ROUTES.PLAYLISTS} testId="nav-playlists-link">
                             {CoreUILabels.NavPlaylists}
                         </DesktopNavLink>
                     </div>
@@ -54,13 +55,13 @@ export const Navbar = () => {
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
                 <MobileMenuDropdown>
-                    <MobileNavLink to="/songs" onClick={closeMobileMenu}>
+                    <MobileNavLink to={ROUTES.SONGS} onClick={closeMobileMenu}>
                         {CoreUILabels.NavSongs}
                     </MobileNavLink>
-                    <MobileNavLink to="/artists" onClick={closeMobileMenu}>
+                    <MobileNavLink to={ROUTES.ARTISTS} onClick={closeMobileMenu}>
                         {CoreUILabels.NavArtists}
                     </MobileNavLink>
-                    <MobileNavLink to="/playlists" onClick={closeMobileMenu}>
+                    <MobileNavLink to={ROUTES.PLAYLISTS} onClick={closeMobileMenu}>
                         {CoreUILabels.NavPlaylists}
                     </MobileNavLink>
                 </MobileMenuDropdown>

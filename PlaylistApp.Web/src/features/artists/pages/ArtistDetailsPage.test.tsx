@@ -8,11 +8,12 @@ import { mockValidSong } from "../../songs/tests/songMocks";
 import { ArtistUILabels } from "../constants/uiText";
 import { API_ENDPOINTS } from "../../../core/api/config";
 import { renderWithRouteParams } from "../../../tests/utils/test-utils";
+import { ROUTES } from "../../../core/constants/routes";
 
 const renderArtistDetailsPage = (artistId: string) => {
     return renderWithRouteParams(<ArtistDetailsPage />, {
-        routePath: "/artists/:id",
-        initialUrl: `/artists/${artistId}`
+        routePath: `${ROUTES.ARTISTS}/:id`,
+        initialUrl: ROUTES.ARTIST_DETAILS(artistId)
     });
 };
 

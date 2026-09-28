@@ -7,11 +7,12 @@ import { SongUILabels } from "../constants/uiText";
 import { API_ENDPOINTS } from "../../../core/api/config";
 import { mockValidSong } from "../tests/songMocks";
 import { renderWithRouteParams } from "../../../tests/utils/test-utils";
+import { ROUTES } from "../../../core/constants/routes";
 
 const renderSongDetailsPage = (songId: string) => {
     return renderWithRouteParams(<SongDetailsPage />, {
-        routePath: "/songs/:id",
-        initialUrl: `/songs/${songId}`
+        routePath: `${ROUTES.SONGS}/:id`,
+        initialUrl: ROUTES.SONG_DETAILS(songId)
     });
 };
 
