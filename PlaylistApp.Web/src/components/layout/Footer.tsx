@@ -1,9 +1,11 @@
+import { CoreUILayout } from "../../core/constants/uiText";
+
 export const Footer = () => {
     return (
         <footer className="w-full border-t border-gray-200 bg-white py-6 mt-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
                 <p>
-                    Built by <span className="font-semibold text-gray-700">István Karsai</span>
+                    {CoreUILayout.FooterBuiltBy} <span className="font-semibold text-gray-700">{CoreUILayout.FooterAuthor}</span>
                     {' • '}
                     <a 
                         href="https://github.com/istvan-karsai/aspire-playlist-app"
@@ -11,14 +13,14 @@ export const Footer = () => {
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:underline"
                     >
-                        GitHub
+                        {CoreUILayout.FooterGithub}
                     </a>
                     {' • '}
                     <a 
-                        href="mailto:contact@istvankarsai.com"
+                        href={`mailto:${CoreUILayout.FooterEmail}`}
                         className="text-blue-600 hover:underline"
                     >
-                        contact@istvankarsai.com
+                        {CoreUILayout.FooterEmail}
                     </a>
                 </p>
             </div>

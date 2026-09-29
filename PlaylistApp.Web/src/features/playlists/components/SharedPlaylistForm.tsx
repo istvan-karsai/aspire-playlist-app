@@ -8,6 +8,7 @@ import { Textarea } from "../../../components/ui/Textarea";
 import { Button } from "../../../components/ui/Button";
 import { Alert } from "../../../components/ui/Alert";
 import { MultiSelectBox } from "../../../components/ui/MultiSelectBox";
+import { CoreTestIds } from "../../../core/constants/testIds";
 
 interface SharedPlaylistFormProps {
     initialValues?: PlaylistFormData;
@@ -113,7 +114,7 @@ export const SharedPlaylistForm = ({
                 <Button
                     type="submit"
                     variant="primary"
-                    data-testid="submit-button"
+                    data-testid={CoreTestIds.SubmitButton}
                     isLoading={isPending}
                     className="h-10 px-6"
                 >

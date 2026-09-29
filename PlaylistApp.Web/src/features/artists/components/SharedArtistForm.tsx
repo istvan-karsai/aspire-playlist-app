@@ -6,6 +6,7 @@ import { Input } from "../../../components/ui/Input";
 import { Textarea } from "../../../components/ui/Textarea";
 import { Button } from "../../../components/ui/Button";
 import { Alert } from "../../../components/ui/Alert";
+import { CoreTestIds } from "../../../core/constants/testIds";
 
 export interface ArtistFormData {
     name: string;
@@ -138,7 +139,7 @@ export const SharedArtistForm = ({
                 <Button 
                     type="submit"
                     variant="primary"
-                    data-testid="submit-button"
+                    data-testid={CoreTestIds.SubmitButton}
                     isLoading={isPending}
                     className="h-10 px-6"
                 >

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { CoreUILabels } from "../../core/constants/uiText";
+import { CoreUILabels, CoreUILayout } from "../../core/constants/uiText";
 import { MobileMenuButton, MobileMenuDropdown, NavbarContent, NavbarShell } from "./NavbarLayouts";
 import { DesktopNavLink, MobileNavLink } from "./NavigationLinks";
 import { HamburgerMenuIcon } from "../ui/icons/HamburgerMenuIcon";
 import { CloseIcon } from "../ui/icons/CloseIcon";
 import { ROUTES } from "../../core/constants/routes";
+import { CoreTestIds } from "../../core/constants/testIds";
 
 
 export const Navbar = () => {
@@ -23,13 +24,13 @@ export const Navbar = () => {
 
                     {/* Desktop Menu */}
                     <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <DesktopNavLink to={ROUTES.SONGS} testId="nav-songs-link">
+                        <DesktopNavLink to={ROUTES.SONGS} testId={CoreTestIds.NavSongsLink}>
                             {CoreUILabels.NavSongs}
                         </DesktopNavLink>
-                        <DesktopNavLink to={ROUTES.ARTISTS} testId="nav-artists-link">
+                        <DesktopNavLink to={ROUTES.ARTISTS} testId={CoreTestIds.NavArtistsLink}>
                             {CoreUILabels.NavArtists}
                         </DesktopNavLink>
-                        <DesktopNavLink to={ROUTES.PLAYLISTS} testId="nav-playlists-link">
+                        <DesktopNavLink to={ROUTES.PLAYLISTS} testId={CoreTestIds.NavPlaylistsLink}>
                             {CoreUILabels.NavPlaylists}
                         </DesktopNavLink>
                     </div>
@@ -42,7 +43,7 @@ export const Navbar = () => {
                         aria-controls="mobile-menu"
                         aria-expanded={isMobileMenuOpen}
                     >
-                        <span className="sr-only">Open main menu</span>
+                        <span className="sr-only">{CoreUILayout.OpenMainMenu}</span>
                         {!isMobileMenuOpen ? (
                             <HamburgerMenuIcon className="block h-6 w-6" />
                         ) : (
