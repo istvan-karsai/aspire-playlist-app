@@ -30,3 +30,24 @@ export const CoreUIButtons = {
 export const CoreUIPrompts = {
     ConfirmDelete: (title: string) => `Are you sure you want to permanently delete "${title}"?`,
 } as const;
+
+export const CoreUILayout = {
+    FooterBuiltBy: "Built by",
+    FooterAuthor: "István Karsai",
+    FooterGithub: "GitHub",
+    FooterEmail: "contact@istvankarsai.com",
+    OpenMainMenu: "Open main menu",
+} as const;
+
+export const CoreUIErrors = {
+    // Global Error Boundary
+    BoundaryTitle: "Something went wrong.",
+    BoundaryMessage: "An unexpected error occurred in the application. Please try refreshing the page or returning home.",
+    BoundaryRefreshPage: "Refresh Page",
+    BoundaryBackToHome: "Back to Home Page",
+    // 404 Page
+    NotFoundTitle: "404",
+    NotFoundSubtitle: "Page Not Found",
+    NotFoundMessage: "The page you are looking for doesn't exist or has been moved.",
+    NotFoundBackLink: "Back to Songs",
+} as const;

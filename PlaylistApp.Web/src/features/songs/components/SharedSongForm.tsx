@@ -7,6 +7,7 @@ import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
 import { Alert } from "../../../components/ui/Alert";
 import { MultiSelectBox } from "../../../components/ui/MultiSelectBox";
+import { CoreTestIds } from "../../../core/constants/testIds";
 
 export interface SongFormData {
     title: string;
@@ -136,7 +137,7 @@ export const SharedSongForm = ({
                 <Button
                     type="submit"
                     variant="primary"
-                    data-testid="submit-button"
+                    data-testid={CoreTestIds.SubmitButton}
                     isLoading={isPending}
                     className="h-10 px-6"
                 >

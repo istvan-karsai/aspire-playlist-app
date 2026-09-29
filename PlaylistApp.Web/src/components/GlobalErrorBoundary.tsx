@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { CoreUIErrors } from "../core/constants/uiText";
 
 interface Props {
   children?: ReactNode;
@@ -29,9 +30,9 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 py-20 text-center px-4">
-          <h1 className="text-4xl font-extrabold text-red-600 mb-4">Something went wrong.</h1>
+          <h1 className="text-4xl font-extrabold text-red-600 mb-4">{CoreUIErrors.BoundaryTitle}</h1>
           <p className="text-gray-600 mb-8 max-w-lg">
-            An unexpected error occurred in the application. Please try refreshing the page or returning home.
+            {CoreUIErrors.BoundaryMessage}
           </p>
 
           {/* Diagnostic error display */}
@@ -48,13 +49,13 @@ export class GlobalErrorBoundary extends Component<Props, State> {
               onClick={() => window.location.reload()}
               className="px-6 py-3 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 transition-colors"
             >
-              Refresh Page
+              {CoreUIErrors.BoundaryRefreshPage}
             </button>
             <button
               onClick={() => window.location.href = '/'}
               className="px-6 py-3 bg-white text-gray-900 font-medium rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
             >
-              Back to Home
+              {CoreUIErrors.BoundaryBackToHome}
             </button>
           </div>
         </div>
