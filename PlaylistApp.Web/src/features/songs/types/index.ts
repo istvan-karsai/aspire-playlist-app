@@ -1,14 +1,14 @@
-import type { Artist } from "../../artists/types";
+import type { Artist } from '../../artists/types';
 
 export interface Song {
-    id: string;
-    title: string;
-    artists: Artist[];
-    duration: string;
+  id: string;
+  title: string;
+  artists: Artist[];
+  duration: string;
 }
 
 export interface SongPayload {
-    title: string;
-    artistIds: string[];
-    duration: string;
+  title: string;
+  artistIds: string[];
+  duration: string;
 }

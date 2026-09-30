@@ -1,0 +1,1 @@
+cd PlaylistApp.Web && npx lint-staged

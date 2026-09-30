@@ -1,71 +1,71 @@
-import { describe, expect, it } from "vitest";
-import { http, HttpResponse } from "msw";
-import userEvent from "@testing-library/user-event";
-import { render, screen } from "../../../tests/utils/test-utils";
-import { SongList } from "./SongList";
-import { server } from "../../../tests/mocks/server";
-import { mockArtistWithoutSong, mockValidArtist } from "../../artists/tests/artistMocks";
-import { mockValidSong, mockValidSong2 } from "../tests/songMocks";
-import { SongUILabels } from "../constants/uiText";
-import { ArtistUILabels } from "../../artists/constants/uiText";
-import { API_ENDPOINTS } from "../../../core/api/config";
+import { describe, expect, it } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import userEvent from '@testing-library/user-event';
+import { render, screen } from '../../../tests/utils/test-utils';
+import { SongList } from './SongList';
+import { server } from '../../../tests/mocks/server';
+import { mockArtistWithoutSong, mockValidArtist } from '../../artists/tests/artistMocks';
+import { mockValidSong, mockValidSong2 } from '../tests/songMocks';
+import { SongUILabels } from '../constants/uiText';
+import { ArtistUILabels } from '../../artists/constants/uiText';
+import { API_ENDPOINTS } from '../../../core/api/config';
 
 describe('SongList Component', () => {
-    it('displays a loading indicator while fetching songs', () => {
-        render(<SongList />);
+  it('displays a loading indicator while fetching songs', () => {
+    render(<SongList />);
 
-        expect(screen.getByText(SongUILabels.LoadingLibrary)).toBeInTheDocument();
-    });
+    expect(screen.getByText(SongUILabels.LoadingLibrary)).toBeInTheDocument();
+  });
 
-    it('displays an empty state message when no songs are returned', async () => {
-        server.use(
-            http.get(API_ENDPOINTS.songs, () => {
-                return HttpResponse.json([]);
-            })
-        );
+  it('displays an empty state message when no songs are returned', async () => {
+    server.use(
+      http.get(API_ENDPOINTS.songs, () => {
+        return HttpResponse.json([]);
+      }),
+    );
 
-        render(<SongList />);
+    render(<SongList />);
 
-        expect(await screen.findByText(SongUILabels.EmptyLibrary)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(SongUILabels.EmptyLibrary)).toBeInTheDocument();
+  });
 
-    it('renders a list of songs when data is successfully fetched', async () => {
-        // Arrange: Render the component
-        render(<SongList />);
+  it('renders a list of songs when data is successfully fetched', async () => {
+    // Arrange: Render the component
+    render(<SongList />);
 
-        // Act & Assert: Wait for the async API call to finish and populate the DOM
-        expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
+    // Act & Assert: Wait for the async API call to finish and populate the DOM
+    expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
 
-        // Use getAllByText because the name is in the dropdown AND the table
-        expect(screen.getAllByText(mockValidSong.artists[0].name)).toHaveLength(2);
-        
-        expect(screen.getByText(mockValidSong.duration)).toBeInTheDocument();
-    });
+    // Use getAllByText because the name is in the dropdown AND the table
+    expect(screen.getAllByText(mockValidSong.artists[0].name)).toHaveLength(2);
 
-    it('filters the song list and displays the empty discography message when selected artist has no songs', async () => {
-        const user = userEvent.setup();
-        render(<SongList />);
+    expect(screen.getByText(mockValidSong.duration)).toBeInTheDocument();
+  });
 
-        expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
+  it('filters the song list and displays the empty discography message when selected artist has no songs', async () => {
+    const user = userEvent.setup();
+    render(<SongList />);
 
-        const filterSelect = screen.getByLabelText(SongUILabels.FilterByArtist);
-        await user.selectOptions(filterSelect, mockArtistWithoutSong.id);
+    expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
 
-        expect(await screen.findByText(ArtistUILabels.EmptyDiscography)).toBeInTheDocument();
-        expect(screen.queryByText(mockValidSong.title)).not.toBeInTheDocument();
-    });
+    const filterSelect = screen.getByLabelText(SongUILabels.FilterByArtist);
+    await user.selectOptions(filterSelect, mockArtistWithoutSong.id);
 
-    it('filters the song list and displays only the songs for the selected artist', async () => {
-        const user = userEvent.setup();
-        render(<SongList />);
+    expect(await screen.findByText(ArtistUILabels.EmptyDiscography)).toBeInTheDocument();
+    expect(screen.queryByText(mockValidSong.title)).not.toBeInTheDocument();
+  });
 
-        expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
-        expect(screen.getByText(mockValidSong2.title)).toBeInTheDocument();
+  it('filters the song list and displays only the songs for the selected artist', async () => {
+    const user = userEvent.setup();
+    render(<SongList />);
 
-        const filterSelect = screen.getByLabelText(SongUILabels.FilterByArtist);
-        await user.selectOptions(filterSelect, mockValidArtist.id);
+    expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
+    expect(screen.getByText(mockValidSong2.title)).toBeInTheDocument();
 
-        expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
-        expect(screen.queryByText(mockValidSong2.title)).not.toBeInTheDocument();
-    });
+    const filterSelect = screen.getByLabelText(SongUILabels.FilterByArtist);
+    await user.selectOptions(filterSelect, mockValidArtist.id);
+
+    expect(await screen.findByText(mockValidSong.title)).toBeInTheDocument();
+    expect(screen.queryByText(mockValidSong2.title)).not.toBeInTheDocument();
+  });
 });
