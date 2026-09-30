@@ -1,33 +1,32 @@
-import { apiDelete, apiGet, apiPost, apiPut } from "../../../core/api/client";
-import { API_ENDPOINTS } from "../../../core/api/config";
-import { SongQueryParams } from "../constants/uiText";
-import type { Song, SongPayload } from "../types";
-
+import { apiDelete, apiGet, apiPost, apiPut } from '../../../core/api/client';
+import { API_ENDPOINTS } from '../../../core/api/config';
+import { SongQueryParams } from '../constants/uiText';
+import type { Song, SongPayload } from '../types';
 
 export const fetchSongs = async (artistId?: string): Promise<Song[]> => {
-    const params = new URLSearchParams();
-    if (artistId) {
-        params.append(SongQueryParams.ArtistId, artistId);
-    }
+  const params = new URLSearchParams();
+  if (artistId) {
+    params.append(SongQueryParams.ArtistId, artistId);
+  }
 
-    const queryString = params.toString();
-    const url = queryString ? `${API_ENDPOINTS.songs}?${queryString}` : API_ENDPOINTS.songs;
+  const queryString = params.toString();
+  const url = queryString ? `${API_ENDPOINTS.songs}?${queryString}` : API_ENDPOINTS.songs;
 
-    return await apiGet<Song[]>(url);
+  return await apiGet<Song[]>(url);
 };
 
 export const fetchSongById = async (id: string): Promise<Song> => {
-    return await apiGet<Song>(`${API_ENDPOINTS.songs}/${id}`);
+  return await apiGet<Song>(`${API_ENDPOINTS.songs}/${id}`);
 };
 
 export const createSong = async (newSong: SongPayload): Promise<Song> => {
-    return await apiPost<Song, SongPayload>(`${API_ENDPOINTS.songs}`, newSong);
+  return await apiPost<Song, SongPayload>(`${API_ENDPOINTS.songs}`, newSong);
 };
 
 export const deleteSong = async (id: string): Promise<void> => {
-    await apiDelete(`${API_ENDPOINTS.songs}/${id}`);
+  await apiDelete(`${API_ENDPOINTS.songs}/${id}`);
 };
 
 export const updateSong = async (id: string, song: SongPayload): Promise<void> => {
-    await apiPut<SongPayload>(`${API_ENDPOINTS.songs}/${id}`, song);
+  await apiPut<SongPayload>(`${API_ENDPOINTS.songs}/${id}`, song);
 };

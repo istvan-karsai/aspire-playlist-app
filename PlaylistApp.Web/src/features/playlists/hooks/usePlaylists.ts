@@ -1,53 +1,60 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createPlaylist, deletePlaylist, fetchPlaylistById, fetchPlaylists, updatePlaylist } from "../api/playlistsClient";
-import type { PlaylistPayload } from "../types";
-import { PlaylistApiMessages } from "../constants/uiText";
-import { playlistKeys } from "../../../core/api/config";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  createPlaylist,
+  deletePlaylist,
+  fetchPlaylistById,
+  fetchPlaylists,
+  updatePlaylist,
+} from '../api/playlistsClient';
+import type { PlaylistPayload } from '../types';
+import { PlaylistApiMessages } from '../constants/uiText';
+import { playlistKeys } from '../../../core/api/config';
 
 export const usePlaylists = () => {
-    return useQuery({
-        queryKey: playlistKeys.all,
-        queryFn: fetchPlaylists
-    });
+  return useQuery({
+    queryKey: playlistKeys.all,
+    queryFn: fetchPlaylists,
+  });
 };
 
 export const usePlaylist = (id: string | undefined) => {
-    return useQuery({
-        queryKey: id ? playlistKeys.detail(id) : playlistKeys.all,
-        queryFn: () => {
-            if (!id) throw new Error(PlaylistApiMessages.IdRequired);
-            return fetchPlaylistById(id);
-        },
-        enabled: !!id,
-    });
+  return useQuery({
+    queryKey: id ? playlistKeys.detail(id) : playlistKeys.all,
+    queryFn: () => {
+      if (!id) throw new Error(PlaylistApiMessages.IdRequired);
+      return fetchPlaylistById(id);
+    },
+    enabled: !!id,
+  });
 };
 
 export const useCreatePlaylist = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: createPlaylist,
-        onSuccess: () => {
-            return queryClient.invalidateQueries({ queryKey: playlistKeys.all });
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createPlaylist,
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: playlistKeys.all });
+    },
+  });
 };
 
 export const useUpdatePlaylist = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: ({ id, payload }: { id: string; payload: PlaylistPayload }) => updatePlaylist(id, payload),
-        onSuccess: () => {
-            return queryClient.invalidateQueries({ queryKey: playlistKeys.all });
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: PlaylistPayload }) =>
+      updatePlaylist(id, payload),
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: playlistKeys.all });
+    },
+  });
 };
 
 export const useDeletePlaylist = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: deletePlaylist,
-        onSuccess: () => {
-            return queryClient.invalidateQueries({ queryKey: playlistKeys.all });
-        }
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deletePlaylist,
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: playlistKeys.all });
+    },
+  });
 };

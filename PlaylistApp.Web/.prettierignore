@@ -1,0 +1,10 @@
+.gitignore
+node_modules
+dist
+build
+coverage
+public
+.env*
+package-lock.json
+Dockerfile
+nginx.conf
